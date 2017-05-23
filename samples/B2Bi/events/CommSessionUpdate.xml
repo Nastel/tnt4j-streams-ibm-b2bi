@@ -1,0 +1,27 @@
+<SCIEvent>
+    <exceptionLevel>
+        <name>Normal</name>
+        <ordinal>0</ordinal>
+    </exceptionLevel>
+    <attributes>
+        <entry>
+            <string>secureMode</string>
+            <string>none</string>
+        </entry>
+        <entry>
+            <string>sessionId</string>
+            <string>TEST_FTP_SERVER_ADAPTER_1432304832938471:62241</string>
+        </entry>
+        <entry>
+            <string>state</string>
+            <string>Not logged in.</string>
+        </entry>
+    </attributes>
+    <id>Aft.Visibility.CommSessionUpdate.1</id>
+    <scope>Aft</scope>
+    <subsystem>Visibility</subsystem>
+    <name>CommSessionUpdate</name>
+    <numericTag>1</numericTag>
+    <schemaKey>Aft.Visibility.CommSessionUpdate</schemaKey>
+    <timestamp>1432304832950</timestamp>
+</SCIEvent>
