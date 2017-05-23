@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jkoolcloud.tnt4j.streams</groupId>
-    <artifactId>tnt4j-streams-b2bi-dep-install</artifactId>
+    <artifactId>tnt4j-streams-ibm-b2bi-dep-install</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
-    <name>tnt4j-streams-B2Bi-dep-install</name>
-    <description>Installs TNT4J-Streams-B2Bi 3rd party dependencies</description>
+    <name>tnt4j-streams-ibm-b2bi-dep-install</name>
+    <description>Installs TNT4J-Streams-IBM-B2Bi 3rd party dependencies</description>
 
     <prerequisites>
         <maven>3.0.0</maven>
@@ -26,7 +26,7 @@
                 <executions>
                     <execution>
                         <id>install-platform_ifcbase</id>
-                        <phase>validate</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
@@ -41,7 +41,7 @@
                     </execution>
                     <execution>
                         <id>install-install_foundation</id>
-                        <phase>validate</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
