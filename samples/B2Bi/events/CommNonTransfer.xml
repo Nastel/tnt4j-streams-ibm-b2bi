@@ -1,0 +1,55 @@
+<SCIEvent>
+    <exceptionLevel>
+        <name>Normal</name>
+        <ordinal>0</ordinal>
+    </exceptionLevel>
+    <attributes>
+        <entry>
+            <string>startTime</string>
+            <string>2015-05-22 10:27:13.066</string>
+        </entry>
+        <entry>
+            <string>isSuccessful</string>
+            <string>true</string>
+        </entry>
+        <entry>
+            <string>sessionId</string>
+            <string>TEST_FTP_SERVER_ADAPTER_1432304832938471:62241</string>
+        </entry>
+        <entry>
+            <string>wfId</string>
+            <string>-2</string>
+        </entry>
+        <entry>
+            <string>value</string>
+            <string>/</string>
+        </entry>
+        <entry>
+            <string>nonTransferId</string>
+            <string>TEST_FTP_SERVER_ADAPTER_1432304832938471:62241-2353</string>
+        </entry>
+        <entry>
+            <string>type</string>
+            <string>CWD</string>
+        </entry>
+        <entry>
+            <string>endTime</string>
+            <string>2015-05-22 10:27:13.069</string>
+        </entry>
+        <entry>
+            <string>wfStep</string>
+            <string>-1</string>
+        </entry>
+        <entry>
+            <string>sessionArchiveId</string>
+            <string>62241</string>
+        </entry>
+    </attributes>
+    <id>Aft.Visibility.CommNonTransfer.1</id>
+    <scope>Aft</scope>
+    <subsystem>Visibility</subsystem>
+    <name>CommNonTransfer</name>
+    <numericTag>1</numericTag>
+    <schemaKey>Aft.Visibility.CommNonTransfer</schemaKey>
+    <timestamp>1432304833072</timestamp>
+</SCIEvent>

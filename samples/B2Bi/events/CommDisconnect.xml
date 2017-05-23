@@ -1,0 +1,39 @@
+<SCIEvent>
+    <exceptionLevel>
+        <name>Normal</name>
+        <ordinal>0</ordinal>
+    </exceptionLevel>
+    <attributes>
+        <entry>
+            <string>startTime</string>
+            <string>2015-05-22 10:27:13.664</string>
+        </entry>
+        <entry>
+            <string>isSuccessful</string>
+            <string>true</string>
+        </entry>
+        <entry>
+            <string>sessionId</string>
+            <string>TEST_FTP_SERVER_ADAPTER_1432304832938471:62241</string>
+        </entry>
+        <entry>
+            <string>wfId</string>
+            <string>-2</string>
+        </entry>
+        <entry>
+            <string>wfStep</string>
+            <string>-1</string>
+        </entry>
+        <entry>
+            <string>endTime</string>
+            <string>2015-05-22 10:27:13.664</string>
+        </entry>
+    </attributes>
+    <id>Aft.Visibility.CommDisconnect.1</id>
+    <scope>Aft</scope>
+    <subsystem>Visibility</subsystem>
+    <name>CommDisconnect</name>
+    <numericTag>1</numericTag>
+    <schemaKey>Aft.Visibility.CommDisconnect</schemaKey>
+    <timestamp>1432304833666</timestamp>
+</SCIEvent>

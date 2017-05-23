@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tnt-data-source
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Nastel/tnt4j-streams/master/config/tnt-data-source.xsd">
+
+    <parser name="AttributesParser" class="com.jkoolcloud.tnt4j.streams.parsers.MessageActivityXmlParser">
+        <field name="${FieldNameLoc}" locator="/entry/*[2]/text()" locator-type="Label" split="true">
+            <field-locator id="FieldNameLoc" locator="/entry/*[1]/text()" locator-type="Label"/>
+        </field>
+    </parser>
+
+    <parser name="B2BEventParser" class="com.jkoolcloud.tnt4j.streams.parsers.MessageActivityXmlParser">
+        <field name="EventType" value="Event"/>
+        <field name="StartTime" locator="/SCIEvent/timestamp/text()" locator-type="Label" datatype="Timestamp" units="Milliseconds"/>
+        <field name="EventName" locator="/SCIEvent/name/text()" locator-type="Label"/>
+        <field name="NumericTag" locator="/SCIEvent/numericTag/text()" locator-type="Label"/>
+        <field name="Scope" locator="/SCIEvent/scope/text()" locator-type="Label"/>
+        <field name="Subsystem" locator="/SCIEvent/subsystem/text()" locator-type="Label"/>
+        <field name="Exception" locator="/SCIEvent/exceptionLevel/name/text()" locator-type="Label"/>
+
+        <embedded-activity name="Attributes" locator="/SCIEvent/attributes/*" locator-type="Label">
+            <parser-ref name="AttributesParser" aggregation="Merge"/>
+        </embedded-activity>
+
+        <field name="ResourceName" required="false" separator=" ">
+            <field-locator id="resource" locator="resource" locator-type="Activity" required="false"/>
+            <field-locator id="documentName" locator="documentName" locator-type="Activity" required="false"/>
+            <field-locator id="value" locator="value" locator-type="Activity" required="false"/>
+        </field>
+    </parser>
+
+</tnt-data-source>

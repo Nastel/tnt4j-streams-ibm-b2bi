@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.jkoolcloud.tnt4j.streams</groupId>
+    <artifactId>tnt4j-streams-ibm-b2bi-dep-install</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>tnt4j-streams-ibm-b2bi-dep-install</name>
+    <description>Installs TNT4J-Streams-IBM-B2Bi 3rd party dependencies</description>
+
+    <prerequisites>
+        <maven>3.0.0</maven>
+    </prerequisites>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+                    <execution>
+                        <id>install-platform_ifcbase</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.sterlingcommerce</groupId>
+                            <artifactId>platform_ifcbase</artifactId>
+                            <version>1.3</version>
+                            <packaging>jar</packaging>
+                            <file>platform_ifcbase.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-install_foundation</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.sterlingcommerce</groupId>
+                            <artifactId>install_foundation</artifactId>
+                            <version>1.3</version>
+                            <packaging>jar</packaging>
+                            <file>install_foundation.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
