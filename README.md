@@ -38,4 +38,9 @@ Update entry for listener in install_location/install/properties/listenerStartup
 ```
    Note: You can comment out this entry to disable the listener
    
+ 3. You should provide enviroment variables in modyfying IBM Strerling startup:
+ 
+		"streams.config" - parser configuration. See .\tnt4j-streams-ibm-b2bi\samples\B2Bi\tnt-data-source.xml 
+		"log4j.configuration" configuration provided in ./config. 
+		"tnt4j.config" configuration provided in ./config/. You MUST change TOKEN changing property `event.sink.factory.Token`
    
