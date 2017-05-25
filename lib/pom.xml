@@ -17,7 +17,7 @@
     </prerequisites>
 
     <build>
-        <defaultGoal>install</defaultGoal>
+        <defaultGoal>initialize</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -26,7 +26,7 @@
                 <executions>
                     <execution>
                         <id>install-platform_ifcbase</id>
-                        <phase>install</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
@@ -41,7 +41,7 @@
                     </execution>
                     <execution>
                         <id>install-install_foundation</id>
-                        <phase>install</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>

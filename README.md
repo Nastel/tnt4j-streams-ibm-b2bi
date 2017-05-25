@@ -79,7 +79,7 @@ it manually.
 
 Some of required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this 
 case we would recommend to download those dependencies manually into [`lib`](./lib/) directory and install into local maven repository by 
-running maven script [`lib/pom.xml`](./lib/pom.xml) using `install` goal.
+running maven script [`lib/pom.xml`](./lib/pom.xml) using `initialize` goal.
 
 **NOTE:** `TNT4J-Streams-IBM-B2Bi` project will be ready to build only when manually downloaded libraries will be installed to local maven 
 repository.
@@ -110,7 +110,7 @@ directory.
 
 So resuming build process quick "how to build" steps would be like this:
 1. download `platform_ifcbase.jar` and `install_foundation.jar` to `tnt4j-streams-ibm-b2bi/lib` directory.
-2. install manually managed dependencies from `tnt4j-streams-ibm-b2bi/lib` directory running `mvn install`.
+2. install manually managed dependencies from `tnt4j-streams-ibm-b2bi/lib` directory running `mvn initialize`.
 3. if `tnt4j-streams` not built yet build it: run `mvn clean install` for a [`pom.xml`](https://github.com/Nastel/tnt4j-streams/blob/master/pom.xml) 
 file located in `tnt4j-streams` directory. 
 4. now you can build `tnt4j-streams-ibm-b2bi`: run `mvn clean install` for a [`pom.xml`](./pom.xml) file located in `tnt4j-streams-ibm-b2bi` 
