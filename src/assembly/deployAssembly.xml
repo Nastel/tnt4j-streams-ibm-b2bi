@@ -11,18 +11,6 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <baseDirectory></baseDirectory>
 
-    <dependencySets>
-        <dependencySet>
-            <useProjectArtifact>false</useProjectArtifact>
-            <useTransitiveDependencies>true</useTransitiveDependencies>
-            <outputDirectory>lib</outputDirectory>
-            <unpack>false</unpack>
-            <excludes>
-                <exclude>${project.groupId}:${project.artifactId}:*</exclude>
-            </excludes>
-        </dependencySet>
-    </dependencySets>
-
     <fileSets>
         <!-- produced jar -->
         <fileSet>
@@ -30,6 +18,9 @@
             <includes>
                 <include>${project.build.finalName}*.jar</include>
             </includes>
+            <excludes>
+                <exclude>${project.build.finalName}*-shaded.jar</exclude>
+            </excludes>
             <outputDirectory></outputDirectory>
         </fileSet>
 
@@ -72,7 +63,7 @@
         </fileSet>
         <!-- static content -->
         <fileSet>
-            <directory></directory>
+            <directory>.</directory>
             <includes>
                 <include>README*</include>
                 <include>LICENSE*</include>

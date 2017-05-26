@@ -68,11 +68,11 @@
         <release.deploy.name>${project.artifactId}</release.deploy.name>
         <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
-        <release.deploy.assembly>src/assembly/deployAssembly.xml</release.deploy.assembly>
+        <release.deploy.assembly>src/assembly/deployAssembly_dev.xml</release.deploy.assembly>
 
         <skipTests>true</skipTests>
         <gpg.skip.sign>true</gpg.skip.sign>
-        <build.assemblies.phase>package</build.assemblies.phase>
+        <build.assemblies.attach>false</build.assemblies.attach>
 
         <platform.ifcbase.version>1.3</platform.ifcbase.version>
         <powermock.version>1.7.0RC4</powermock.version>
@@ -89,15 +89,6 @@
                 <javadoc.failOnError>false</javadoc.failOnError>
             </properties>
         </profile>
-
-        <profile>
-            <id>releaseBuild</id>
-
-            <properties>
-                <release.deploy.assembly>src/assembly/deployAssembly_dev.xml</release.deploy.assembly>
-                <build.assemblies.phase>deploy</build.assemblies.phase>
-            </properties>
-        </profile>
     </profiles>
 
     <build>
@@ -110,7 +101,7 @@
                 </includes>
             </resource>
             <resource>
-                <directory></directory>
+                <directory>.</directory>
                 <targetPath>META-INF</targetPath>
                 <includes>
                     <include>LICENSE</include>
@@ -158,25 +149,43 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
-                <configuration>
-                    <archive>
-                        <!--<index>true</index> -->
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <Implementation-Vendor>${product.vendor}</Implementation-Vendor>
-                            <Implementation-Title>${product.name}</Implementation-Title>
-                            <Implementation-Version>${project.version}</Implementation-Version>
-                            <Main-Class>com.jkoolcloud.tnt4j.streams.StreamsAgent</Main-Class>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>jar</goal>
                             <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <finalName>${release.deploy.finalName}</finalName>
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <manifestEntries>
+                                <Implementation-Vendor>${product.vendor}</Implementation-Vendor>
+                                <Implementation-Title>${product.name}</Implementation-Title>
+                                <Implementation-Version>${project.version}</Implementation-Version>
+                                <Main-Class>com.jkoolcloud.tnt4j.streams.StreamsAgent</Main-Class>
+                            </manifestEntries>
+                        </transformer>
+                    </transformers>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>org.powermock:*</exclude>
+                            <exclude>com.sterlingcommerce:*</exclude>
+                        </excludes>
+                    </artifactSet>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -233,7 +242,7 @@
                 <executions>
                     <execution>
                         <id>make-deploy-assembly</id>
-                        <phase>${build.assemblies.phase}</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -243,7 +252,7 @@
                                 <descriptor>${release.deploy.assembly}</descriptor>
                             </descriptors>
                             <outputDirectory>${release.deploy.dir}</outputDirectory>
-                            <attach>true</attach>
+                            <attach>${build.assemblies.attach}</attach>
                             <finalName>${release.deploy.finalName}</finalName>
                         </configuration>
                     </execution>
@@ -303,16 +312,19 @@
             <groupId>com.sterlingcommerce</groupId>
             <artifactId>platform_ifcbase</artifactId>
             <version>${platform.ifcbase.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>1.4.9</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- test scope -->
@@ -346,8 +358,8 @@
         <dependency>
             <groupId>com.sterlingcommerce</groupId>
             <artifactId>install_foundation</artifactId>
-            <scope>test</scope>
             <version>${platform.ifcbase.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
