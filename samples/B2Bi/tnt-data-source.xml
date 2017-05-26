@@ -4,7 +4,7 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Nastel/tnt4j-streams/master/config/tnt-data-source.xsd">
 
     <parser name="AttributesParser" class="com.jkoolcloud.tnt4j.streams.parsers.MessageActivityXmlParser">
-        <field name="${FieldNameLoc}" locator="/entry/*[2]/text()" locator-type="Label" split="true">
+        <field name="${FieldNameLoc}_attr" locator="/entry/*[2]/text()" locator-type="Label" split="true">
             <field-locator id="FieldNameLoc" locator="/entry/*[1]/text()" locator-type="Label"/>
         </field>
     </parser>
@@ -23,9 +23,9 @@
         </embedded-activity>
 
         <field name="ResourceName" required="false" separator=" ">
-            <field-locator id="resource" locator="resource" locator-type="Activity" required="false"/>
-            <field-locator id="documentName" locator="documentName" locator-type="Activity" required="false"/>
-            <field-locator id="value" locator="value" locator-type="Activity" required="false"/>
+            <field-locator id="resource" locator="resource_attr" locator-type="Activity" required="false"/>
+            <field-locator id="documentName" locator="documentName_attr" locator-type="Activity" required="false"/>
+            <field-locator id="value" locator="value" locator-type="Activity_attr" required="false"/>
         </field>
     </parser>
 
