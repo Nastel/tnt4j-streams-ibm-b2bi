@@ -31,6 +31,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import com.google.common.io.Files;
+import com.jkoolcloud.tnt4j.streams.configure.StreamsConfigLoader;
 import com.jkoolcloud.tnt4j.streams.utils.Utils;
 import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.util.frame.log.Logger;
@@ -62,7 +63,7 @@ public class B2BiSfgEventStreamTest {
 		final File log4jConfig = new File(B2BiDir + "/config/log4j_dev.properties");
 		final File tnt4jConfig = new File(B2BiDir + "/config/tnt4j_dev.properties");
 
-		System.setProperty("streams.config", streamsConfig.getAbsolutePath());
+		System.setProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, streamsConfig.getAbsolutePath());
 		System.setProperty("log4j.configuration", "file:///" + log4jConfig.getAbsolutePath());
 		System.setProperty("tnt4j.config", tnt4jConfig.getAbsolutePath());
 

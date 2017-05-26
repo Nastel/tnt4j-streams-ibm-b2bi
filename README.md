@@ -56,7 +56,7 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
         **Note:** You can comment out this entry to disable the listener.          
     * Write stream parsers configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration) chapter for more details
     * Configure Java system properties for IBM Sterling B2B Integrator startup:
-        * `streams.config` - referring parser configuration. See `./samples/B2Bi/tnt-data-source.xml`
+        * `tnt4j.streams.config` - referring parser configuration. See `./samples/B2Bi/tnt-data-source.xml`
         * `log4j.configuration` - referring logger configuration. See `./config/log4j.properties`
         * `tnt4j.config` - referring TNT4J configuration. See `./config/tnt4j.properties`
          **NOTE:** Do not forget to set cloud TOKEN value by changing property `event.sink.factory.Token`.
@@ -86,7 +86,7 @@ repository.
 
 What to download manually or copy from your existing IBM Sterling B2B Integrator installation:
 * platform_ifcbase
-* install_foundation
+* install_foundation (O)
 
 Download the above libraries and place into the `tnt4j-streams-ibm-b2bi/lib` directory like this:
 ```

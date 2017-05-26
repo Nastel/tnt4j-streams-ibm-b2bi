@@ -54,7 +54,8 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 		setName(STREAM_NAME);
 		try {
 			checkPrecondition();
-			StreamsConfigLoader streamsConfig = new StreamsConfigLoader(System.getProperty("streams.config"));
+			StreamsConfigLoader streamsConfig = new StreamsConfigLoader(
+					System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY));
 			Collection<ActivityParser> parsers = streamsConfig.getParsers();
 			addParsers(parsers);
 			StreamsAgent.runFromAPI(this);
@@ -123,7 +124,7 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 	}
 
 	private static void checkPrecondition() throws Exception {
-		checkFileFromProperty("streams.config", ""); // NON-NLS
+		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, ""); // NON-NLS
 		checkFileFromProperty("log4j.configuration", SystemUtils.IS_OS_LINUX ? "file:/" : "file:///"); // NON-NLS
 		checkFileFromProperty("tnt4j.config", ""); // NON-NLS
 	}
