@@ -18,9 +18,9 @@
             <includes>
                 <include>${project.build.finalName}*.jar</include>
             </includes>
-			<excludes>
-			<exclude>${project.build.finalName}*-shaded.jar</exclude>
-			</excludes>
+            <excludes>
+                <exclude>${project.build.finalName}*-shaded.jar</exclude>
+            </excludes>
             <outputDirectory></outputDirectory>
         </fileSet>
 
@@ -63,7 +63,7 @@
         </fileSet>
         <!-- static content -->
         <fileSet>
-            <directory></directory>
+            <directory>.</directory>
             <includes>
                 <include>README*</include>
                 <include>LICENSE*</include>

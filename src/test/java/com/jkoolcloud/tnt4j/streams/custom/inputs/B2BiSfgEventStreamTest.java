@@ -44,7 +44,6 @@ import com.sterlingcommerce.woodstock.util.frame.log.Logger;
 @PowerMockIgnore("javax.net.ssl.*")
 public class B2BiSfgEventStreamTest {
 
-	private static final String baseDir = "../"; // NON-NLS
 	private static final String B2BiDir = "./"; // NON-NLS
 
 	@Test
@@ -59,10 +58,9 @@ public class B2BiSfgEventStreamTest {
 
 	@Test
 	public void testStartStreams() throws Exception {
-
 		final File streamsConfig = new File(B2BiDir + "/samples/B2Bi/tnt-data-source.xml");
-		final File log4jConfig = new File(baseDir + "/config/log4j.properties");
-		final File tnt4jConfig = new File(baseDir + "/config/tnt4j.properties");
+		final File log4jConfig = new File(B2BiDir + "/config/log4j_dev.properties");
+		final File tnt4jConfig = new File(B2BiDir + "/config/tnt4j_dev.properties");
 
 		System.setProperty("streams.config", streamsConfig.getAbsolutePath());
 		System.setProperty("log4j.configuration", "file:///" + log4jConfig.getAbsolutePath());

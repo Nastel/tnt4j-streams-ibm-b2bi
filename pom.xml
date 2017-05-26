@@ -56,8 +56,7 @@
         <product.name>${project.name}</product.name>
         <product.name.hr>TNT4J Streams IBM Sterling B2B Integrator stream</product.name.hr>
         <product.copyright.html>
-            <![CDATA[<font size="-1">Copyright &#169; 2015-2017 ${project.organization.name}. All Rights Reserved.</font>]]>
-        </product.copyright.html>
+            <![CDATA[<font size="-1">Copyright &#169; 2015-2017 ${project.organization.name}. All Rights Reserved.</font>]]></product.copyright.html>
 
         <project.java.version>1.7</project.java.version>
         <java.source.version>${project.java.version}</java.source.version>
@@ -69,7 +68,7 @@
         <release.deploy.name>${project.artifactId}</release.deploy.name>
         <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
-        <release.deploy.assembly>src/assembly/deployAssembly.xml</release.deploy.assembly>
+        <release.deploy.assembly>src/assembly/deployAssembly_dev.xml</release.deploy.assembly>
 
         <skipTests>true</skipTests>
         <gpg.skip.sign>true</gpg.skip.sign>
@@ -88,14 +87,6 @@
             <properties>
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
                 <javadoc.failOnError>false</javadoc.failOnError>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>releaseBuild</id>
-
-            <properties>
-                <release.deploy.assembly>src/assembly/deployAssembly_dev.xml</release.deploy.assembly>
             </properties>
         </profile>
     </profiles>
@@ -154,7 +145,6 @@
                     <encoding>${project.resources.encoding}</encoding>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -167,7 +157,7 @@
                             <exclude>com.sterlingcommerce:*</exclude>
                         </excludes>
                     </artifactSet>
-
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
                 <executions>
                     <execution>
@@ -228,22 +218,6 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.6</version>
                 <executions>
-                    <execution>
-                        <id>make-jar-with-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                            <outputDirectory>${release.deploy.dir}/${release.deploy.finalName}</outputDirectory>
-                            <attach>${build.assemblies.attach}</attach>
-                            <finalName>${release.deploy.finalName}</finalName>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>make-deploy-assembly</id>
                         <phase>package</phase>
@@ -322,11 +296,13 @@
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>1.4.9</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>dom4j</groupId> 
+            <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- test scope -->
