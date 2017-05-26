@@ -56,7 +56,8 @@
         <product.name>${project.name}</product.name>
         <product.name.hr>TNT4J Streams IBM Sterling B2B Integrator stream</product.name.hr>
         <product.copyright.html>
-            <![CDATA[<font size="-1">Copyright &#169; 2015-2017 ${project.organization.name}. All Rights Reserved.</font>]]></product.copyright.html>
+            <![CDATA[<font size="-1">Copyright &#169; 2015-2017 ${project.organization.name}. All Rights Reserved.</font>]]>
+        </product.copyright.html>
 
         <project.java.version>1.7</project.java.version>
         <java.source.version>${project.java.version}</java.source.version>
@@ -68,7 +69,7 @@
         <release.deploy.name>${project.artifactId}</release.deploy.name>
         <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
-        <release.deploy.assembly>src/assembly/deployAssembly_dev.xml</release.deploy.assembly>
+        <release.deploy.assembly>src/assembly/deployAssembly.xml</release.deploy.assembly>
 
         <skipTests>true</skipTests>
         <gpg.skip.sign>true</gpg.skip.sign>
@@ -109,7 +110,7 @@
                 </includes>
             </resource>
             <resource>
-                <directory></directory>
+                <directory>.</directory>
                 <targetPath>META-INF</targetPath>
                 <includes>
                     <include>LICENSE</include>
@@ -153,29 +154,26 @@
                     <encoding>${project.resources.encoding}</encoding>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
-                    <archive>
-                        <!--<index>true</index> -->
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <Implementation-Vendor>${product.vendor}</Implementation-Vendor>
-                            <Implementation-Title>${product.name}</Implementation-Title>
-                            <Implementation-Version>${project.version}</Implementation-Version>
-                            <Main-Class>com.jkoolcloud.tnt4j.streams.StreamsAgent</Main-Class>
-                        </manifestEntries>
-                    </archive>
+                    <finalName>${release.deploy.finalName}</finalName>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>org.powermock:*</exclude>
+                            <exclude>com.sterlingcommerce:*</exclude>
+                        </excludes>
+                    </artifactSet>
+
                 </configuration>
                 <executions>
                     <execution>
+                        <phase>package</phase>
                         <goals>
-                            <goal>jar</goal>
-                            <goal>test-jar</goal>
+                            <goal>shade</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -326,7 +324,7 @@
             <version>1.4.9</version>
         </dependency>
         <dependency>
-            <groupId>dom4j</groupId>
+            <groupId>dom4j</groupId> 
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
         </dependency>
