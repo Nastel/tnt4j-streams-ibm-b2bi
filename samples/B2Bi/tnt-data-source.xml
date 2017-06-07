@@ -3,13 +3,13 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Nastel/tnt4j-streams/master/config/tnt-data-source.xsd">
 
-    <parser name="AttributesParser" class="com.jkoolcloud.tnt4j.streams.parsers.MessageActivityXmlParser">
+    <parser name="AttributesParser" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityXmlParser">
         <field name="${FieldNameLoc}_attr" locator="/entry/*[2]/text()" locator-type="Label" split="true">
             <field-locator id="FieldNameLoc" locator="/entry/*[1]/text()" locator-type="Label"/>
         </field>
     </parser>
 
-    <parser name="B2BEventParser" class="com.jkoolcloud.tnt4j.streams.parsers.MessageActivityXmlParser">
+    <parser name="B2BEventParser" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityXmlParser">
         <field name="EventType" value="Event"/>
         <field name="StartTime" locator="/SCIEvent/timestamp/text()" locator-type="Label" datatype="Timestamp" units="Milliseconds"/>
         <field name="EventName" locator="/SCIEvent/name/text()" locator-type="Label"/>
