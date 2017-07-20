@@ -47,7 +47,6 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 
 	private static Cache<String, Event> streamedEventsCache;
 
-	private boolean started;
 	private boolean ended;
 
 	public B2BiSfgEventStream() {
@@ -81,8 +80,6 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 	protected void start() throws Exception {
 		super.start();
 
-		started = true;
-
 		logger().log(OpLevel.DEBUG,
 				StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, "TNTInputStream.stream.start"),
 				getClass().getSimpleName(), getName());
@@ -100,19 +97,14 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 
 	@Override
 	public void handleEvent(Event event) throws Exception {
-		if (started) {
-			addInputToBuffer(event.toXMLString());
-			String id = event.getId();
-			streamedEventsCache.put(id, event);
-			LOGGER.log(OpLevel.TRACE, StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventStream.eventRegistered", id));
+		addInputToBuffer(event.toXMLString());
+		String id = event.getId();
+		streamedEventsCache.put(id, event);
+		LOGGER.log(OpLevel.TRACE, StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
+				"B2BiSfgEventStream.eventRegistered", id));
 
-			if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
-				ended = true;
-			}
-		} else {
-			Thread.sleep(500);
-			handleEvent(event);
+		if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
+			ended = true;
 		}
 	}
 
