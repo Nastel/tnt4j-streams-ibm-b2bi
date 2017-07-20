@@ -45,12 +45,18 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 	private static final long DEFAULT_CACHE_EXPIRE_IN_MINUTES = 10;
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 
-	private static Cache<String, Event> eventStreamed;
+	private static Cache<String, Event> streamedEventsCache;
 
 	private boolean started;
 	private boolean ended;
 
 	public B2BiSfgEventStream() {
+		if (streamedEventsCache == null) {
+			initStream();
+		}
+	}
+
+	private synchronized void initStream() {
 		setName(STREAM_NAME);
 		try {
 			checkPrecondition();
@@ -59,7 +65,7 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 			Collection<ActivityParser> parsers = streamsConfig.getParsers();
 			addParsers(parsers);
 			StreamsAgent.runFromAPI(this);
-			eventStreamed = buildCache(DEFAULT_CACHE_MAX_SIZE, DEFAULT_CACHE_EXPIRE_IN_MINUTES);
+			streamedEventsCache = buildCache(DEFAULT_CACHE_MAX_SIZE, DEFAULT_CACHE_EXPIRE_IN_MINUTES);
 		} catch (Exception e) {
 			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
 					"B2BiSfgEventStream.failed", e.getStackTrace()));
@@ -97,7 +103,7 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 		if (started) {
 			addInputToBuffer(event.toXMLString());
 			String id = event.getId();
-			eventStreamed.put(id, event);
+			streamedEventsCache.put(id, event);
 			LOGGER.log(OpLevel.TRACE, StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
 					"B2BiSfgEventStream.eventRegistered", id));
 
@@ -112,7 +118,7 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
-		if (eventStreamed != null && eventStreamed.getIfPresent(eventId) != null) {
+		if (streamedEventsCache != null && streamedEventsCache.getIfPresent(eventId) != null) {
 			return true;
 		} else {
 			return false;
