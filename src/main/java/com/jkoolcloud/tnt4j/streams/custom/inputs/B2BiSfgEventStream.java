@@ -110,11 +110,8 @@ public class B2BiSfgEventStream extends AbstractBufferedStream<String> implement
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
-		if (streamedEventsCache != null && streamedEventsCache.getIfPresent(eventId) != null) {
-			return true;
-		} else {
-			return false;
-		}
+		// TODO:filtering by eventId and schemaKey
+		return true;
 	}
 
 	private static Cache<String, Event> buildCache(long cSize, long duration) {
