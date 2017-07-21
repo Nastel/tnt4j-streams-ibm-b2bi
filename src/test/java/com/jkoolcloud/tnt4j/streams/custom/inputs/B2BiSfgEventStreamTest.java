@@ -48,20 +48,10 @@ public class B2BiSfgEventStreamTest {
 	private static final String B2BiDir = "./"; // NON-NLS
 
 	@Test
-	public void testHandleEvent() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsHandled() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testStartStreams() throws Exception {
 		final File streamsConfig = new File(B2BiDir + "/samples/B2Bi/tnt-data-source.xml");
-		final File log4jConfig = new File(B2BiDir + "/config/log4j_dev.properties");
-		final File tnt4jConfig = new File(B2BiDir + "/config/tnt4j_dev.properties");
+		final File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
+		final File tnt4jConfig = new File(B2BiDir + "/config/tnt4j.properties");
 
 		System.setProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, streamsConfig.getAbsolutePath());
 		System.setProperty("log4j.configuration", "file:///" + log4jConfig.getAbsolutePath());
@@ -88,6 +78,12 @@ public class B2BiSfgEventStreamTest {
 		}
 
 		Thread.sleep(50000);
+	}
+	
+	@Test
+	public void testSendWelcomeMessage() {
+		B2BiSfgEventStream plugin = new B2BiSfgEventStream();
+		plugin.sendWelcomeMessage();
 	}
 
 }
