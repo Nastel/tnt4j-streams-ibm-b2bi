@@ -16,8 +16,6 @@
 
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 
@@ -48,16 +46,6 @@ public class B2BiSfgEventStreamTest {
 	private static final String B2BiDir = "./"; // NON-NLS
 
 	@Test
-	public void testHandleEvent() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsHandled() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testStartStreams() throws Exception {
 		final File streamsConfig = new File(B2BiDir + "/samples/B2Bi/tnt-data-source.xml");
 		final File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
@@ -74,20 +62,20 @@ public class B2BiSfgEventStreamTest {
 		Logger loggerMock = Mockito.mock(Logger.class, Mockito.RETURNS_MOCKS);
 		Whitebox.setInternalState(Event.class, loggerMock);
 
-		String lastEvent = null;
-		for (File file : exampleFiles)
-		// File file = exampleFiles[0];
-		{
+		for (File file : exampleFiles) {
 			final String fileContent = Files.toString(file, StandardCharsets.UTF_8);
 			Event event = Event.createEvent(fileContent);
+			Assert.assertTrue(plugin.isHandled(event.getId(), null, null));
 			plugin.handleEvent(event);
-			if (lastEvent != null) {
-				Assert.assertTrue(plugin.isHandled(lastEvent, null, null));
-			}
-			lastEvent = event.getId();
 		}
 
 		Thread.sleep(50000);
+	}
+
+	@Test
+	public void testSendWelcomeMessage() {
+		B2BiSfgEventStream plugin = new B2BiSfgEventStream();
+		// plugin.sendWelcomeMessage();
 	}
 
 }
