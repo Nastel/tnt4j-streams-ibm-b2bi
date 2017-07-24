@@ -65,6 +65,8 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 	private InputStreamListener streamListener = new B2BiTNTStreamListener();
 
+	private boolean ended;
+
 	/**
 	 * Initiates stream.
 	 */
@@ -127,7 +129,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 	@Override
 	protected boolean isInputEnded() {
-		return false;
+		return ended;
 	}
 
 	@Override
@@ -169,7 +171,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		addInputToBuffer(event.toXMLString());
 
 		if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
-			offerDieMarker(false);
+			ended = true;
 		}
 	}
 
