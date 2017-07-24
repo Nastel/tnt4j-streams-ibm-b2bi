@@ -23,13 +23,21 @@ import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.event.EventListener;
 import com.sterlingcommerce.woodstock.event.ExceptionLevel;
 
+/**
+ * Sterling B2Bi event listener implementation, using {@link B2BiSfqTNTStream} singleton instance to stream
+ * {@link #handleEvent(Event)} received {@link Event}'s to JKool Cloud.
+ *
+ * @version $Revision: 1 $
+ */
 public class B2BiSfgEventStream implements EventListener {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventStream.class);
+	private final Object STREAM_INIT_LOCK = new Object();
 
 	private static B2BiSfqTNTStream tntStream;
 
-	private final Object STREAM_INIT_LOCK = new Object();
-
+	/**
+	 * Constructs a new B2BiSfgEventStream.
+	 */
 	public B2BiSfgEventStream() {
 		LOGGER.log(OpLevel.DEBUG, "Creating new {} instance {}", getClass().getName(), hashCode());
 
@@ -48,11 +56,7 @@ public class B2BiSfgEventStream implements EventListener {
 		LOGGER.log(OpLevel.TRACE, "B2BiSfgEventStream.handleEvent: event={}, listener={}, stream={}", event, hashCode(),
 				tntStream.hashCode());
 
-		tntStream.addInputToBuffer(event.toXMLString());
-
-		if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
-			tntStream.informInputEnded(true);
-		}
+		tntStream.handleSterlingEvent(event);
 	}
 
 	@Override
@@ -60,7 +64,7 @@ public class B2BiSfgEventStream implements EventListener {
 		LOGGER.log(OpLevel.TRACE, "B2BiSfgEventStream.isHandled: event={}, listener={}, stream={}", eventId, hashCode(),
 				tntStream.hashCode());
 
-		// TODO:filtering by event id and
+		// TODO: filtering by event id and schema key
 		return true;
 	}
 

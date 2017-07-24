@@ -38,46 +38,36 @@ import com.jkoolcloud.tnt4j.streams.outputs.TNTStreamOutput;
 import com.jkoolcloud.tnt4j.streams.parsers.ActivityParser;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
+import com.sterlingcommerce.woodstock.event.Event;
 
+/**
+ * Implements IBM Sterling B2Bi {@link com.sterlingcommerce.woodstock.event.Event} XML content stream, where each event
+ * data is assumed to represent a single activity or event which should be recorded.
+ * <p>
+ * Incoming Sterling events are piped from
+ * {@link B2BiSfgEventStream#handleEvent(com.sterlingcommerce.woodstock.event.Event)}, so stream configuration does not
+ * require stream definition - only parsers configuration is required to map Sterling event data to TNT4J entities
+ * fields.
+ * <p>
+ * This activity stream requires parsers that can support XML data.
+ * <p>
+ * This activity stream supports properties from {@link AbstractBufferedStream} (and higher hierarchy streams).
+ *
+ * @version $Revision: 1 $
+ *
+ * @see com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventStream
+ */
 public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfqTNTStream.class);
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 	private static final String BASE_PROPERTIES_PATH = "./properties/";
 
-	private boolean ended;
+	private InputStreamListener streamListener = new B2BiTNTStreamListener();
 
-	private InputStreamListener streamListener = new InputStreamListener() {
-		@Override
-		public void onSuccess(TNTInputStream<?, ?> stream) {
-		}
-
-		@Override
-		public void onStreamEvent(TNTInputStream<?, ?> stream, OpLevel level, String message, Object source) {
-		}
-
-		@Override
-		public void onStatusChange(TNTInputStream<?, ?> stream, StreamStatus status) {
-			LOGGER.log(OpLevel.DEBUG, "New {} stream status: {}", stream.getName(), status.name());
-
-			if (status.equals(StreamStatus.STARTED)) {
-				sendWelcomeMessage(stream);
-			}
-		}
-
-		@Override
-		public void onProgressUpdate(TNTInputStream<?, ?> stream, int current, int total) {
-		}
-
-		@Override
-		public void onFinish(TNTInputStream<?, ?> stream, TNTInputStream.StreamStats stats) {
-		}
-
-		@Override
-		public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
-		}
-	};
-
+	/**
+	 * Initiates stream.
+	 */
 	protected void initStream() {
 		setName(STREAM_NAME);
 		try {
@@ -94,13 +84,20 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		}
 	}
 
+	/**
+	 * Sends "welcome" message to jKool. It is simple event to inform user, that stream has been initialized on Sterling
+	 * and is ready to process events.
+	 *
+	 * @param stream
+	 *            the stream instance to send event
+	 */
 	@SuppressWarnings("unchecked")
 	protected static void sendWelcomeMessage(TNTInputStream<?, ?> stream) {
 		try {
 			ActivityInfo ai = new ActivityInfo();
 			ai.setFieldValue(new ActivityField(StreamFieldType.EventType.name()), "EVENT");
 			ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()),
-					"Sterling B2B TNT4J Streams listener sucessfully started");
+					"Sterling B2B TNT4J Streams listener successfully started");
 			TNTStreamOutput<ActivityInfo> output = (TNTStreamOutput<ActivityInfo>) stream.getOutput();
 			if (output != null) {
 				output.logItem(ai);
@@ -130,7 +127,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 	@Override
 	protected boolean isInputEnded() {
-		return ended;
+		return false;
 	}
 
 	@Override
@@ -161,12 +158,50 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		checkFileFromProperty("tnt4j.config", "", BASE_PROPERTIES_PATH + "tnt4j.properties"); // NON-NLS
 	}
 
-	@Override
-	public boolean addInputToBuffer(String inputData) {
-		return super.addInputToBuffer(inputData);
+	/**
+	 * Handles IBM Sterling B2Bi event. Adds event XML to input buffer and marks stream "logical" data input end if
+	 * event has {@code "Workflow.WFEvent.ServiceEnded"} schema key.
+	 *
+	 * @param event
+	 *            event instance to handle
+	 */
+	public void handleSterlingEvent(Event event) {
+		addInputToBuffer(event.toXMLString());
+
+		if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
+			offerDieMarker(false);
+		}
 	}
 
-	public void informInputEnded(boolean ended) {
-		this.ended = ended;
+	private static class B2BiTNTStreamListener implements InputStreamListener {
+
+		@Override
+		public void onStatusChange(TNTInputStream<?, ?> stream, StreamStatus status) {
+			LOGGER.log(OpLevel.DEBUG, "New stream status: {} -> {}", stream.getName(), status.name());
+
+			if (status.equals(StreamStatus.STARTED)) {
+				sendWelcomeMessage(stream);
+			}
+		}
+
+		@Override
+		public void onSuccess(TNTInputStream<?, ?> stream) {
+		}
+
+		@Override
+		public void onStreamEvent(TNTInputStream<?, ?> stream, OpLevel level, String message, Object source) {
+		}
+
+		@Override
+		public void onProgressUpdate(TNTInputStream<?, ?> stream, int current, int total) {
+		}
+
+		@Override
+		public void onFinish(TNTInputStream<?, ?> stream, StreamStats stats) {
+		}
+
+		@Override
+		public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
+		}
 	}
 }
