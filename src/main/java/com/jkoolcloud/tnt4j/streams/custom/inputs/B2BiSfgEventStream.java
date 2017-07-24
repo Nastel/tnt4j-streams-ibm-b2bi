@@ -16,27 +16,40 @@
 
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
+import com.jkoolcloud.tnt4j.core.OpLevel;
+import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
+import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.event.EventListener;
 import com.sterlingcommerce.woodstock.event.ExceptionLevel;
 
 public class B2BiSfgEventStream implements EventListener {
+	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventStream.class);
 
 	private static B2BiSfqTNTStream tntStream;
 
+	private final Object STREAM_INIT_LOCK = new Object();
+
 	public B2BiSfgEventStream() {
-		System.out.println("New " + this.getClass().getName() + " " + hashCode());
-		if (tntStream == null) {
-			System.out.println("Starting TNT4J event streams");
-			tntStream = new B2BiSfqTNTStream();
-			tntStream.initStream();
+		LOGGER.log(OpLevel.DEBUG, "Creating new {} instance {}", getClass().getName(), hashCode());
+
+		synchronized (STREAM_INIT_LOCK) {
+			if (tntStream == null) {
+				LOGGER.log(OpLevel.DEBUG, "Initializing B2BiSfqTNTStream instance to be used...");
+				tntStream = new B2BiSfqTNTStream();
+				tntStream.initStream();
+				LOGGER.log(OpLevel.DEBUG, "B2BiSfqTNTStream initialized!");
+			}
 		}
 	}
 
 	@Override
 	public void handleEvent(Event event) throws Exception {
-		System.out.println("tnt4j.handleEvent: " + event.getId() + " stream: " + hashCode());
+		LOGGER.log(OpLevel.TRACE, "B2BiSfgEventStream.handleEvent: event={}, listener={}, stream={}", event, hashCode(),
+				tntStream.hashCode());
+
 		tntStream.addInputToBuffer(event.toXMLString());
+
 		if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
 			tntStream.informInputEnded(true);
 		}
@@ -44,7 +57,10 @@ public class B2BiSfgEventStream implements EventListener {
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
-		System.out.print("tnt4j.isHandled: " + eventId + " stream: " + hashCode());
+		LOGGER.log(OpLevel.TRACE, "B2BiSfgEventStream.isHandled: event={}, listener={}, stream={}", eventId, hashCode(),
+				tntStream.hashCode());
+
+		// TODO:filtering by event id and
 		return true;
 	}
 
