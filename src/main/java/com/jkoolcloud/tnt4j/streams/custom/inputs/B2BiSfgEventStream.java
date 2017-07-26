@@ -55,7 +55,7 @@ public class B2BiSfgEventStream implements EventListener {
 	public void handleEvent(Event event) throws Exception {
 		LOGGER.log(OpLevel.TRACE, "B2BiSfgEventStream.handleEvent: event={}, listener={}, stream={}", event, hashCode(),
 				tntStream.hashCode());
-		System.out.println("tnt4j.handleEvent: " + event.getId() + " stream: " + hashCode());
+		System.out.println("B2BiSfgEventStream.handleEvent: " + event.getId() + " stream: " + hashCode());
 		System.out.println(event.toXMLString());
 
 		tntStream.handleSterlingEvent(event);
@@ -63,6 +63,10 @@ public class B2BiSfgEventStream implements EventListener {
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
+		LOGGER.log(OpLevel.TRACE, "B2BiSfgEventStream.isHandled: event={}, listener={}, stream={}", eventId, hashCode(),
+				tntStream.hashCode());
+
+		// TODO: filtering by event id and schema key
 		return true;
 	}
 
