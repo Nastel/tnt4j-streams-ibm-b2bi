@@ -72,10 +72,4 @@ public class B2BiSfgEventStreamTest {
 		Thread.sleep(50000);
 	}
 
-	@Test
-	public void testSendWelcomeMessage() {
-		B2BiSfgEventStream plugin = new B2BiSfgEventStream();
-		// plugin.sendWelcomeMessage();
-	}
-
 }
