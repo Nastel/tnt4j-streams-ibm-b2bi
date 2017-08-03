@@ -61,7 +61,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfqTNTStream.class);
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
-	private static final String BASE_PROPERTIES_PATH = "./properties/";
+	private static final String BASE_PROPERTIES_PATH = "./properties/"; // NON-NLS
 
 	private InputStreamListener streamListener = new B2BiTNTStreamListener();
 
@@ -80,36 +80,9 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 			addParsers(parsers);
 			StreamsAgent.runFromAPI(streamListener, null, this);
 		} catch (Exception e) {
-			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventStream.failed", e.getStackTrace()));
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Sends "welcome" message to jKool. It is simple event to inform user, that stream has been initialized on Sterling
-	 * and is ready to process events.
-	 *
-	 * @param stream
-	 *            the stream instance to send event
-	 */
-	@SuppressWarnings("unchecked")
-	protected static void sendWelcomeMessage(TNTInputStream<?, ?> stream) {
-		try {
-			ActivityInfo ai = new ActivityInfo();
-			ai.setFieldValue(new ActivityField(StreamFieldType.EventType.name()), "EVENT");
-			ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()),
-					"Sterling B2B TNT4J Streams listener successfully started");
-			TNTStreamOutput<ActivityInfo> output = (TNTStreamOutput<ActivityInfo>) stream.getOutput();
-			if (output != null) {
-				output.logItem(ai);
-			} else {
-				LOGGER.log(OpLevel.ERROR, "Streams not started. No output.");
-			}
-
-		} catch (Exception e) {
-			System.err.println("Failed to welcome. Check your settings!!!!!!!!!!!!");
-			e.printStackTrace();
+			LOGGER.log(OpLevel.CRITICAL,
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.failed"),
+					e.toString(), e);
 		}
 	}
 
@@ -138,24 +111,28 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	}
 
 	private static void checkFileFromProperty(String propertyKey, String prefix, String defaultValue) throws Exception {
-		LOGGER.log(OpLevel.TRACE, "Checking for {}", propertyKey);
+		LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+				"B2BiSfqTNTStream.props.check.checking.for"), propertyKey);
 		String propertyValue = System.getProperty(propertyKey);
 		if (propertyValue == null) {
 			System.setProperty(propertyKey, defaultValue);
-			LOGGER.log(OpLevel.TRACE, ">> {} not found, defaulting: {}", propertyKey, defaultValue);
+			LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+					"B2BiSfqTNTStream.props.check.setting.default"), propertyKey, defaultValue);
 			propertyValue = defaultValue;
 		}
 		if (!Files.exists(Paths.get(
 				prefix == null ? propertyValue : propertyValue.substring(prefix.length(), propertyValue.length())))) {
-			LOGGER.log(OpLevel.TRACE, "File {} not found. Working path: {}", propertyValue,
-					Paths.get(".").toAbsolutePath().normalize().toString());
+			LOGGER.log(OpLevel.TRACE,
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+							"B2BiSfqTNTStream.props.check.file.not.found"),
+					propertyValue, Paths.get(".").toAbsolutePath().normalize().toString()); // NON-NLS
 		}
 	}
 
 	private static void checkPrecondition() throws Exception {
 		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, "", BASE_PROPERTIES_PATH + "tnt-data-source.xml"); // NON-NLS
-		checkFileFromProperty("log4j.configuration", SystemUtils.IS_OS_LINUX ? "file:/" : "file:///",
-				SystemUtils.IS_OS_LINUX ? "file:/" + BASE_PROPERTIES_PATH + "/log4j.properties"
+		checkFileFromProperty("log4j.configuration", SystemUtils.IS_OS_LINUX ? "file:/" : "file:///", // NON-NLS
+				SystemUtils.IS_OS_LINUX ? "file:/" + BASE_PROPERTIES_PATH + "/log4j.properties" // NON-NLS
 						: "file:///" + BASE_PROPERTIES_PATH + "log4j.properties"); // NON-NLS
 		checkFileFromProperty("tnt4j.config", "", BASE_PROPERTIES_PATH + "tnt4j.properties"); // NON-NLS
 	}
@@ -179,10 +156,39 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 		@Override
 		public void onStatusChange(TNTInputStream<?, ?> stream, StreamStatus status) {
-			LOGGER.log(OpLevel.DEBUG, "New stream status: {} -> {}", stream.getName(), status.name());
+			LOGGER.log(OpLevel.DEBUG,
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.status.changed"),
+					stream.getName(), status.name());
 
 			if (status.equals(StreamStatus.STARTED)) {
 				sendWelcomeMessage(stream);
+			}
+		}
+
+		/**
+		 * Sends "welcome" message to jKool. It is simple event to inform user, that stream has been initialized on
+		 * Sterling and is ready to process events.
+		 *
+		 * @param stream
+		 *            the stream instance to send event
+		 */
+		@SuppressWarnings("unchecked")
+		protected static void sendWelcomeMessage(TNTInputStream<?, ?> stream) {
+			try {
+				ActivityInfo ai = new ActivityInfo();
+				ai.setFieldValue(new ActivityField(StreamFieldType.EventType.name()), "EVENT"); // NON-NLS
+				ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()),
+						StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.welcome.msg"));
+				TNTStreamOutput<ActivityInfo> output = (TNTStreamOutput<ActivityInfo>) stream.getOutput();
+				if (output != null) {
+					output.logItem(ai);
+				} else {
+					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+							"B2BiSfqTNTStream.stream.out.null"));
+				}
+			} catch (Exception e) {
+				LOGGER.log(OpLevel.WARNING, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+						"B2BiSfqTNTStream.welcome.failed"), e);
 			}
 		}
 
