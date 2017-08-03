@@ -82,7 +82,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		} catch (Exception e) {
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.failed"),
-					e.toString(), e);
+					e.getLocalizedMessage(), e);
 		}
 	}
 
