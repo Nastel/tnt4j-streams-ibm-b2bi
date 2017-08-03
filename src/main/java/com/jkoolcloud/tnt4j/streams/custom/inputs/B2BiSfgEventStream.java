@@ -19,6 +19,8 @@ package com.jkoolcloud.tnt4j.streams.custom.inputs;
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
+import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
+import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.event.EventListener;
 import com.sterlingcommerce.woodstock.event.ExceptionLevel;
@@ -39,30 +41,39 @@ public class B2BiSfgEventStream implements EventListener {
 	 * Constructs a new B2BiSfgEventStream.
 	 */
 	public B2BiSfgEventStream() {
-		LOGGER.log(OpLevel.DEBUG, "Creating new {} instance {}", getClass().getName(), hashCode());
+		LOGGER.log(OpLevel.DEBUG,
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.create.new"),
+				getClass().getName(), hashCode());
 
 		synchronized (STREAM_INIT_LOCK) {
 			if (tntStream == null) {
-				LOGGER.log(OpLevel.DEBUG, "Initializing B2BiSfqTNTStream instance to be used...");
+				LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+						"B2BiSfgEventStream.init.stream.instance.start"));
 				tntStream = new B2BiSfqTNTStream();
 				tntStream.initStream();
-				LOGGER.log(OpLevel.DEBUG, "B2BiSfqTNTStream initialized!");
+				LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+						"B2BiSfgEventStream.init.stream.instance.end"));
 			}
 		}
 	}
 
 	@Override
 	public void handleEvent(Event event) throws Exception {
-		LOGGER.log(OpLevel.TRACE, "B2BiSfgEventStream.handleEvent: event={}, listener={}, stream={}", event, hashCode(),
-				tntStream.hashCode());
+		LOGGER.log(OpLevel.TRACE,
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.handle.event"),
+				event, hashCode(), tntStream.hashCode());
+		System.out.println(StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
+				"B2BiSfgEventStream.handle.event2", event.getId(), hashCode()));
+		System.out.println(event.toXMLString());
 
 		tntStream.handleSterlingEvent(event);
 	}
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
-		LOGGER.log(OpLevel.TRACE, "B2BiSfgEventStream.isHandled: event={}, listener={}, stream={}", eventId, hashCode(),
-				tntStream.hashCode());
+		LOGGER.log(OpLevel.TRACE,
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.is.handled"),
+				eventId, hashCode(), tntStream.hashCode());
 
 		// TODO: filtering by event id and schema key
 		return true;
