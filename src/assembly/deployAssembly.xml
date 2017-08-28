@@ -5,8 +5,6 @@
     <id>${release.deploy.name}-deploy-asm</id>
     <formats>
         <format>dir</format>
-        <format>zip</format>
-        <format>tar.gz</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <baseDirectory></baseDirectory>

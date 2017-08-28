@@ -23,8 +23,11 @@ import java.util.Collection;
 import org.apache.commons.lang3.SystemUtils;
 
 import com.jkoolcloud.tnt4j.core.OpLevel;
+import com.jkoolcloud.tnt4j.format.DefaultFormatter;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
+import com.jkoolcloud.tnt4j.sink.SinkLogEvent;
+import com.jkoolcloud.tnt4j.sink.SinkLogEventListener;
 import com.jkoolcloud.tnt4j.streams.StreamsAgent;
 import com.jkoolcloud.tnt4j.streams.configure.StreamsConfigLoader;
 import com.jkoolcloud.tnt4j.streams.fields.ActivityField;
@@ -58,7 +61,22 @@ import com.sterlingcommerce.woodstock.event.Event;
  * @see com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventStream
  */
 public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
+
+	
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfqTNTStream.class);
+	
+	private static final DefaultFormatter formatter = new DefaultFormatter();
+	static SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
+		@Override
+		public void sinkLogEvent(SinkLogEvent ev) {
+			System.out.println(formatter.format(ev.getSinkObject(), ev.getArguments()));
+		}
+	};
+	static {
+		LOGGER.addSinkLogEventListener(logToConsoleEvenSinkListener);
+	}
+	
+	
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 	private static final String BASE_PROPERTIES_PATH = "./properties/"; // NON-NLS
@@ -66,7 +84,10 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	private InputStreamListener streamListener = new B2BiTNTStreamListener();
 
 	private boolean ended;
+	private static boolean started;
+	
 
+	
 	/**
 	 * Initiates stream.
 	 */
@@ -79,6 +100,11 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 			Collection<ActivityParser> parsers = streamsConfig.getParsers();
 			addParsers(parsers);
 			StreamsAgent.runFromAPI(streamListener, null, this);
+			while(true) {
+				Thread.sleep(500);
+				LOGGER.log(OpLevel.DEBUG, "Waiting for streams init");
+				if (started) break;
+			}
 		} catch (Exception e) {
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.failed"),
@@ -145,7 +171,28 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	 *            event instance to handle
 	 */
 	public void handleSterlingEvent(Event event) {
-		addInputToBuffer(event.toXMLString());
+		
+// TODO check is realy needed.
+		int count = 0;
+		int maxTries = 3;
+		boolean success = false;
+		while(true) {
+		    try {
+		       success  = addInputToBuffer(event.toXMLString());
+		       if (success) break;
+		    } catch (Exception e) {
+				LOGGER.log(OpLevel.DEBUG,
+						"Can't add to onput buffer: {0} : {1}",
+						started, e);
+		    	try {
+					Thread.sleep(300);
+				} catch (InterruptedException interupted) {
+					interupted.printStackTrace();
+				}
+		        if (++count == maxTries) throw e;
+		    }
+		}
+		
 
 		if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
 			ended = true;
@@ -162,6 +209,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 			if (status.equals(StreamStatus.STARTED)) {
 				sendWelcomeMessage(stream);
+				started = true;
 			}
 		}
 

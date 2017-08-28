@@ -40,24 +40,35 @@ import com.sterlingcommerce.woodstock.util.frame.log.Logger;
  */
 @RunWith(PowerMockRunner.class)
 @SuppressStaticInitializationFor("com.sterlingcommerce.woodstock.event.Event")
-@PowerMockIgnore("javax.net.ssl.*")
+@PowerMockIgnore({ "javax.net.ssl.*", "javax.security.auth.x500.X500Principal" })
 public class B2BiSfgEventStreamTest {
 
 	private static final String B2BiDir = "./"; // NON-NLS
 
 	@Test
 	public void testStartStreams() throws Exception {
-		final File streamsConfig = new File(B2BiDir + "/samples/B2Bi/tnt-data-source.xml");
-		final File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
-		final File tnt4jConfig = new File(B2BiDir + "/config/tnt4j.properties");
 
-		System.setProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, streamsConfig.getAbsolutePath());
-		System.setProperty("log4j.configuration", "file:///" + log4jConfig.getAbsolutePath());
-		System.setProperty("tnt4j.config", tnt4jConfig.getAbsolutePath());
+		if (Utils.isEmpty(System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY))
+				&& Utils.isEmpty(System.getProperty("log4j.configuration"))
+				&& Utils.isEmpty(System.getProperty("tnt4j.config"))) {
+			final File streamsConfig = new File(B2BiDir + "/samples/B2Bi/tnt4j-streams-ibm-b2bi.properties");
+			final File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
+			final File tnt4jConfig = new File(B2BiDir + "/config/tnt4j.properties");
+
+			System.setProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, streamsConfig.getAbsolutePath());
+			System.setProperty("log4j.configuration", "file:///" + log4jConfig.getAbsolutePath());
+			System.setProperty("tnt4j.config", tnt4jConfig.getAbsolutePath());
+		}
 
 		B2BiSfgEventStream plugin = new B2BiSfgEventStream();
 
-		final File[] exampleFiles = Utils.searchFiles(B2BiDir + "/samples/B2Bi/Events/*.xml"); // NON-NLS
+		File[] exampleFiles;
+		String exampleFilesPath = System.getProperty("tnt4j.b2biSasmpleEvents");
+		if (exampleFilesPath == null) {
+			exampleFilesPath = B2BiDir + "/samples/B2Bi/Events/*.xml";
+		}
+
+		exampleFiles = Utils.searchFiles(exampleFilesPath); // NON-NLS
 
 		Logger loggerMock = Mockito.mock(Logger.class, Mockito.RETURNS_MOCKS);
 		Whitebox.setInternalState(Event.class, loggerMock);
