@@ -10,48 +10,48 @@
     </parser>
 
     <parser name="B2BEventParser" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityXmlParser">
-        <field name="EventType" locator="/SCIEvent/name/text()" locator-type="Label">
-            <field-map source="AdminAudit" target="NOOP"/>
-            <field-map source="CommDisconnect" target="EVENT"/>
-            <field-map source="CommFileXferComplete" target="RECEIVE"/>
-            <field-map source="CommNonTransfer" target="EVENT"/>
-            <field-map source="ArrivedFileDescription" target="EVENT"/>
-            <field-map source="ArrivedFileDeterminingRoutes" target="EVENT"/>
-            <field-map source="ArrivedFileRouted" target="EVENT"/>
-            <field-map source="ArrivedFileRouting" target="EVENT"/>
-            <field-map source="ArrivedFileStarted" target="EVENT"/>
-            <field-map source="BusinessProcessStarting" target="EVENT"/>
-            <field-map source="BusinessProcessSuccess" target="EVENT"/>
-            <field-map source="CommAuthentication" target="EVENT"/>
-            <field-map source="CommConnect" target="EVENT"/>
-            <field-map source="CommFileXferBegin" target="SEND"/>
-            <field-map source="ConstructedLayer" target="EVENT"/>
-            <field-map source="ConsumerDestinationMailboxFound" target="EVENT"/>
-            <field-map source="ConsumerFound" target="EVENT"/>
-            <field-map source="ConsumerPayloadConstructing" target="EVENT"/>
-            <field-map source="DeliveryComplete" target="EVENT"/>
-            <field-map source="DeliveryDelivering" target="EVENT"/>
-            <field-map source="DeliveryStarted" target="EVENT"/>
-            <field-map source="DeliveryTransforming" target="EVENT"/>
-            <field-map source="ExtractedLayer" target="EVENT"/>
-            <field-map source="FactDiscovery" target="EVENT"/>
-            <field-map source="InternalLogin" target="NOOP"/>
-            <field-map source="ProducerFound" target="EVENT"/>
-            <field-map source="ProducerMailboxRouteCandidatesFound" target="EVENT"/>
-            <field-map source="ProducerPayloadExtracting" target="EVENT"/>
-            <field-map source="Route" target="EVENT"/>
-            <field-map source="RouteCandidate" target="EVENT"/>
-            <field-map source="RouteCandidatesFound" target="EVENT"/>
-            <field-map source="RouteComplete" target="RECEIVE"/>
-            <field-map source="RouteDelivering" target="EVENT"/>
-            <field-map source="RouteDeterminingDeliveries" target="EVENT"/>
-            <field-map source="RouteStarted" target="SEND"/>
-            <field-map source="RoutesFound" target="EVENT"/>
-            <field-map source="SendMessageBusinessProcessStarted" target="EVENT"/>
-            <field-map source="TransformedMessage" target="EVENT"/>
-            <field-map source="" target="EVENT"/>
-        </field>
-
+        <field name="EventType" locator="/SCIEvent/name/text()" locator-type="Label" >
+			 <field-map source="AdminAudit" target="NOOP"/>
+			 <field-map source="CommDisconnect" target="EVENT"/>
+			 <field-map source="CommFileXferComplete" target="RECEIVE"/>
+			 <field-map source="CommNonTransfer" target="EVENT"/>
+			 <field-map source="ArrivedFileDescription" target="EVENT"/>
+			 <field-map source="ArrivedFileDeterminingRoutes" target="EVENT"/>
+			 <field-map source="ArrivedFileRouted" target="EVENT"/>
+			 <field-map source="ArrivedFileRouting" target="EVENT"/>
+			 <field-map source="ArrivedFileStarted" target="EVENT"/>
+			 <field-map source="BusinessProcessStarting" target="EVENT"/>
+			 <field-map source="BusinessProcessSuccess" target="EVENT"/>
+			 <field-map source="CommAuthentication" target="EVENT"/>
+			 <field-map source="CommConnect" target="EVENT"/>
+			 <field-map source="CommFileXferBegin" target="SEND"/>
+			 <field-map source="ConstructedLayer" target="EVENT"/>
+			 <field-map source="ConsumerDestinationMailboxFound" target="EVENT"/>
+			 <field-map source="ConsumerFound" target="EVENT"/>
+			 <field-map source="ConsumerPayloadConstructing" target="EVENT"/>
+			 <field-map source="DeliveryComplete" target="EVENT"/>
+			 <field-map source="DeliveryDelivering" target="EVENT"/>
+			 <field-map source="DeliveryStarted" target="EVENT"/>
+			 <field-map source="DeliveryTransforming" target="EVENT"/>
+			 <field-map source="ExtractedLayer" target="EVENT"/>
+			 <field-map source="FactDiscovery" target="EVENT"/>
+			 <field-map source="InternalLogin" target="NOOP"/>
+			 <field-map source="ProducerFound" target="EVENT"/>
+			 <field-map source="ProducerMailboxRouteCandidatesFound" target="EVENT"/>
+			 <field-map source="ProducerPayloadExtracting" target="EVENT"/>
+			 <field-map source="Route" target="EVENT"/>
+			 <field-map source="RouteCandidate" target="EVENT"/>
+			 <field-map source="RouteCandidatesFound" target="EVENT"/>
+			 <field-map source="RouteComplete" target="RECEIVE"/>
+			 <field-map source="RouteDelivering" target="EVENT"/>
+			 <field-map source="RouteDeterminingDeliveries" target="EVENT"/>
+			 <field-map source="RouteStarted" target="SEND"/>
+			 <field-map source="RoutesFound" target="EVENT"/>
+			 <field-map source="SendMessageBusinessProcessStarted" target="EVENT"/>
+			 <field-map source="TransformedMessage" target="EVENT"/>
+			 <field-map source="" target="EVENT"/>
+		</field>
+ 
         <field name="StartTime" locator="/SCIEvent/timestamp/text()" locator-type="Label" datatype="Timestamp" units="Milliseconds"/>
         <field name="EventName" locator="/SCIEvent/name/text()" locator-type="Label"/>
         <field name="NumericTag" locator="/SCIEvent/numericTag/text()" locator-type="Label"/>
@@ -68,20 +68,20 @@
             <field-locator id="documentName" locator="documentName_attr" locator-type="Activity" required="false"/>
             <field-locator id="value" locator="value_attr" locator-type="Activity" required="false"/>
             <field-locator id="producerPayload" locator="ProducerPayload_attr" locator-type="Activity" required="false"/>
-            <field-locator id="destinationMessageName" locator="DestinationMessageName_attr" locator-type="Activity" required="false"/>
-            <field-locator id="messageName" locator="messageName_attr" locator-type="Activity" required="false"/>
+			<field-locator id="producerPayload" locator="DestinationMessageName_attr" locator-type="Activity" required="false"/>
+			<field-locator id="producerPayload" locator="messageName_attr" locator-type="Activity" required="false"/>			
         </field>
-
-        <field name="Correlator" required="false" separator=",">
+		
+		<field name="Correlator" required="false" separator=",">
             <field-locator id="transferId" locator="transferId_attr" locator-type="Activity" required="false"/>
-            <field-locator id="nonTransferId" locator="nonTransferId_attr" locator-type="Activity" required="false"/>
-            <field-locator id="documentID" locator="documentId_attr" locator-type="Activity" required="false"/>
-            <field-locator id="producerDocumentID" locator="producerDocumentId_attr" locator-type="Activity" required="false"/>
-            <field-locator id="consumerDocumentID" locator="consumerDocumentId_attr" locator-type="Activity" required="false"/>
-            <field-locator id="primaryDocumentID" locator="primaryDocumentId_attr" locator-type="Activity" required="false"/>
-            <field-locator id="sessionID" locator="sessionId_attr" locator-type="Activity" required="false"/>
+			<field-locator id="nonTransferId" locator="nonTransferId_attr" locator-type="Activity" required="false"/>
+			<field-locator id="documentID" locator="documentId_attr" locator-type="Activity" required="false"/>
+			<field-locator id="documentID" locator="producerDocumentId_attr" locator-type="Activity" required="false"/>
+			<field-locator id="documentID" locator="consumerDocumentId_attr" locator-type="Activity" required="false"/>
+			<field-locator id="documentID" locator="primaryDocumentId_attr" locator-type="Activity" required="false"/>
+			<field-locator id="sessionID" locator="sessionId_attr" locator-type="Activity" required="false"/>
         </field>
-
+		
     </parser>
 
 </tnt-data-source>

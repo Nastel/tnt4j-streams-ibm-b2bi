@@ -17,8 +17,11 @@
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
 import com.jkoolcloud.tnt4j.core.OpLevel;
+import com.jkoolcloud.tnt4j.format.DefaultFormatter;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
+import com.jkoolcloud.tnt4j.sink.SinkLogEvent;
+import com.jkoolcloud.tnt4j.sink.SinkLogEventListener;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.sterlingcommerce.woodstock.event.Event;
@@ -33,6 +36,18 @@ import com.sterlingcommerce.woodstock.event.ExceptionLevel;
  */
 public class B2BiSfgEventStream implements EventListener {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventStream.class);
+
+	private static final DefaultFormatter formatter = new DefaultFormatter();
+	static SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
+		@Override
+		public void sinkLogEvent(SinkLogEvent ev) {
+			System.out.println(formatter.format(ev.getSinkObject(), ev.getArguments()));
+		}
+	};
+	static {
+		LOGGER.addSinkLogEventListener(logToConsoleEvenSinkListener);
+	}
+
 	private final Object STREAM_INIT_LOCK = new Object();
 
 	private static B2BiSfqTNTStream tntStream;

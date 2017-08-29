@@ -70,6 +70,12 @@
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
         <release.deploy.assembly>src/assembly/deployAssembly.xml</release.deploy.assembly>
 
+        <test.deploy.assembly>src/assembly/testJarAssembly.xml</test.deploy.assembly>
+        <test.deploy.dir>${release.deploy.dir}/${release.deploy.name}-${project.version}</test.deploy.dir>
+        <test.deploy.finalName>${release.deploy.name}-${project.version}-runnableTest</test.deploy.finalName>
+
+        <pack.deploy.assembly>src/assembly/archiveAssembly.xml</pack.deploy.assembly>
+
         <skipTests>true</skipTests>
         <gpg.skip.sign>true</gpg.skip.sign>
         <build.assemblies.attach>false</build.assemblies.attach>
@@ -251,6 +257,38 @@
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
                                 <descriptor>${release.deploy.assembly}</descriptor>
+                            </descriptors>
+                            <outputDirectory>${release.deploy.dir}</outputDirectory>
+                            <attach>${build.assemblies.attach}</attach>
+                            <finalName>${release.deploy.finalName}</finalName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>make-test-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>${test.deploy.assembly}</descriptor>
+                            </descriptors>
+                            <outputDirectory>${test.deploy.dir}</outputDirectory>
+                            <attach>${build.assemblies.attach}</attach>
+                            <finalName>${test.deploy.finalName}</finalName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>make-archive-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>${pack.deploy.assembly}</descriptor>
                             </descriptors>
                             <outputDirectory>${release.deploy.dir}</outputDirectory>
                             <attach>${build.assemblies.attach}</attach>
