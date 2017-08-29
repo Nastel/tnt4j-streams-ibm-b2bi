@@ -61,10 +61,8 @@ import com.sterlingcommerce.woodstock.event.Event;
  * @see com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventStream
  */
 public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
-
-	
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfqTNTStream.class);
-	
+
 	private static final DefaultFormatter formatter = new DefaultFormatter();
 	static SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
 		@Override
@@ -75,8 +73,6 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	static {
 		LOGGER.addSinkLogEventListener(logToConsoleEvenSinkListener);
 	}
-	
-	
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 	private static final String BASE_PROPERTIES_PATH = "./properties/"; // NON-NLS
@@ -85,9 +81,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 	private boolean ended;
 	private static boolean started;
-	
 
-	
 	/**
 	 * Initiates stream.
 	 */
@@ -100,10 +94,13 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 			Collection<ActivityParser> parsers = streamsConfig.getParsers();
 			addParsers(parsers);
 			StreamsAgent.runFromAPI(streamListener, null, this);
-			while(true) {
+			while (true) {
 				Thread.sleep(500);
-				LOGGER.log(OpLevel.DEBUG, "Waiting for streams init");
-				if (started) break;
+				LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+						"B2BiSfqTNTStream.waiting.for.streams"));
+				if (started) {
+					break;
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.log(OpLevel.CRITICAL,
@@ -169,30 +166,33 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	 *
 	 * @param event
 	 *            event instance to handle
+	 * @throws Exception
+	 *             if adding event XML data to buffer fails
 	 */
-	public void handleSterlingEvent(Event event) {
-		
-// TODO check is realy needed.
+	public void handleSterlingEvent(Event event) throws Exception {
+
+		// TODO check is really needed.
 		int count = 0;
 		int maxTries = 3;
 		boolean success = false;
-		while(true) {
-		    try {
-		       success  = addInputToBuffer(event.toXMLString());
-		       if (success) break;
-		    } catch (Exception e) {
-				LOGGER.log(OpLevel.DEBUG,
-						"Can't add to onput buffer: {0} : {1}",
-						started, e);
-		    	try {
-					Thread.sleep(300);
-				} catch (InterruptedException interupted) {
-					interupted.printStackTrace();
+		while (true) {
+			try {
+				success = addInputToBuffer(event.toXMLString());
+				if (success) {
+					break;
 				}
-		        if (++count == maxTries) throw e;
-		    }
+			} catch (Exception exc) {
+				LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+						"B2BiSfqTNTStream.buffer.add.failed"), getName(), started, exc);
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException ie) {
+				}
+				if (++count == maxTries) {
+					throw exc;
+				}
+			}
 		}
-		
 
 		if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
 			ended = true;

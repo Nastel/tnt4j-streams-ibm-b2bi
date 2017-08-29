@@ -36,7 +36,7 @@ import com.sterlingcommerce.woodstock.event.ExceptionLevel;
  */
 public class B2BiSfgEventStream implements EventListener {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventStream.class);
-	
+
 	private static final DefaultFormatter formatter = new DefaultFormatter();
 	static SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
 		@Override
@@ -47,7 +47,7 @@ public class B2BiSfgEventStream implements EventListener {
 	static {
 		LOGGER.addSinkLogEventListener(logToConsoleEvenSinkListener);
 	}
-	
+
 	private final Object STREAM_INIT_LOCK = new Object();
 
 	private static B2BiSfqTNTStream tntStream;

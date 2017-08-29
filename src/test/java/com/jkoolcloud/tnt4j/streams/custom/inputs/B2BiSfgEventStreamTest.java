@@ -63,7 +63,7 @@ public class B2BiSfgEventStreamTest {
 		B2BiSfgEventStream plugin = new B2BiSfgEventStream();
 
 		File[] exampleFiles;
-		String exampleFilesPath = System.getProperty("tnt4j.b2biSasmpleEvents");
+		String exampleFilesPath = System.getProperty("tnt4j.b2biSampleEvents");
 		if (exampleFilesPath == null) {
 			exampleFilesPath = B2BiDir + "/samples/B2Bi/Events/*.xml";
 		}
