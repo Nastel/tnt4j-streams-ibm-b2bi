@@ -75,7 +75,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	}
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
-	private static final String BASE_PROPERTIES_PATH = "./properties/"; // NON-NLS
+	private static final String BASE_PROPERTIES_PATH = "./properties/jkool/1.0/"; // NON-NLS
 
 	private InputStreamListener streamListener = new B2BiTNTStreamListener();
 
@@ -103,6 +103,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace(System.out);
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.failed"),
 					e.getLocalizedMessage(), e);
@@ -153,7 +154,8 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	}
 
 	private static void checkPrecondition() throws Exception {
-		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, "", BASE_PROPERTIES_PATH + "tnt-data-source.xml"); // NON-NLS
+		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, "",
+				BASE_PROPERTIES_PATH + "tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
 		checkFileFromProperty("log4j.configuration", SystemUtils.IS_OS_LINUX ? "file:/" : "file:///", // NON-NLS
 				SystemUtils.IS_OS_LINUX ? "file:/" + BASE_PROPERTIES_PATH + "/log4j.properties" // NON-NLS
 						: "file:///" + BASE_PROPERTIES_PATH + "log4j.properties"); // NON-NLS
@@ -258,6 +260,9 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 		@Override
 		public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
+			LOGGER.log(OpLevel.CRITICAL,
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.streams.failed"),
+					code, msg, exc);
 		}
 	}
 }

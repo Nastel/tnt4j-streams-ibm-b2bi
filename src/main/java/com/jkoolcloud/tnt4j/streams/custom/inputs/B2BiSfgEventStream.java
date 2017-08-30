@@ -74,14 +74,15 @@ public class B2BiSfgEventStream implements EventListener {
 
 	@Override
 	public void handleEvent(Event event) throws Exception {
-		LOGGER.log(OpLevel.TRACE,
-				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.handle.event"),
-				event, hashCode(), tntStream.hashCode());
-		System.out.println(StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
-				"B2BiSfgEventStream.handle.event2", event.getId(), hashCode()));
-		System.out.println(event.toXMLString());
-
-		tntStream.handleSterlingEvent(event);
+		synchronized (STREAM_INIT_LOCK) {
+			LOGGER.log(OpLevel.TRACE,
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.handle.event"),
+					event, hashCode(), tntStream.hashCode());
+			System.out.println(StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
+					"B2BiSfgEventStream.handle.event2", event.getId(), hashCode()));
+			System.out.println(event.toXMLString());
+			tntStream.handleSterlingEvent(event);
+		}
 	}
 
 	@Override
