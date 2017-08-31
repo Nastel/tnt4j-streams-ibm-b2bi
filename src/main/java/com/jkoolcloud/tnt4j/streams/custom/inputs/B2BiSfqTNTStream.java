@@ -176,7 +176,6 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	 *             if adding event XML data to buffer fails
 	 */
 	public void handleSterlingEvent(Event event) throws Exception {
-		// TODO check is really needed.
 		int rCount = 0;
 		while (true) {
 			try {

@@ -40,7 +40,8 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
 ## TNT4J-Streams-IBM-B2Bi can be run
 * As API integrated into IBM Sterling B2B Integrator
     * Build a jar file containing the implementation (including the complete package directory structure)
-    * Run IBM Sterling B2B Integrator `InstallThirdParty.sh` to put the new jars and properties into the Sterling. Vendor for intalation is JKool and version 1.0.
+    * Run IBM Sterling B2B Integrator `InstallThirdParty.sh` to put the new jars and properties into the Sterling classpath. While 
+    installing, vendor is `JKool` and version is `1.0`.
     * Once an event listener is created and made available on the classpath, a simple property change is needed to enable the event listener.
     Update IBM Sterling B2B Integrator configuration file `sterling_install_location/install/properties/listenerStartup.properties` entry 
     for listener:
@@ -54,17 +55,17 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
               ## PROPERTY_END
         ```
         **Note:** You can comment out this entry to disable the listener.
-    * Write stream parsers configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration) chapter for more details
+    * Write stream parsers configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration)
+    chapter for more details
     * Configure Java system properties for IBM Sterling B2B Integrator startup:
         * `tnt4j.streams.config` - referring parser configuration. See `./samples/B2Bi/tnt4j-streams-ibm-b2bi.properties`
         * `log4j.configuration` - referring logger configuration. See `./config/log4j.properties`
         * `tnt4j.config` - referring TNT4J configuration. See `./config/tnt4j.properties`
          **NOTE:** Do not forget to set cloud TOKEN value by changing property `event.sink.factory.Token`.
 		 
-		 
-	Note: in case of listener not started check that your jar is loaded, and properties in /SI/install/properties/jkool/1.0/. 
-	There should be 3 of them: tnt4j.properties, tnt4j-streams-ibm-b2bi.properties, log4j.properties
-	
+**NOTE:** in case listener does not start - check if `tnt4j-streams-ibm-b2bi` jar is loaded, and configuration properties files are in 
+`/SI/install/properties/jkool/1.0/` directory. There should be 3 of them: `tnt4j.properties`, `tnt4j-streams-ibm-b2bi.properties` and 
+`log4j.properties`.
 
 How to Build TNT4J-Streams-IBM-B2Bi
 =========================================
@@ -140,9 +141,9 @@ Maven tests run is disabled by default. To enable Maven to run tests set Maven c
 ## Running manually from IDE
 * in `ibm-b2bi` module run JUnit test suite named `AllB2BiStreamTests`
 
-## Running the test in local enviroment
+## Running the test in local environment
+Its handy to check parser configuration before deploying it to Sterling machine. To do so run `runTest.bat/runTest.sh` and check the logs 
+generated either jKoolCloud to see that listener behaves like expected. Ensure that you've changed TOKEN in `tnt4j.properties`. Test events 
+situated in `samples/B2Bi/events` directory. You could add or change these as you like. Edit `bat/sh` script if your environment 
+configuration properties values are different.
 
-Its handy to check parser configuration before deploying to Sterling mashine. 
-To do so run runTest.bat and check the logs generated and jkoolcloud to see that listener behaves like expected. 
-Ensure that you've changed TOKEN in tnt4j.properties. Test event's situated in samples/B2Bi/events. You could add or change these as 
-you like. Edit *.bat script if you properties or events elsewhere. 
