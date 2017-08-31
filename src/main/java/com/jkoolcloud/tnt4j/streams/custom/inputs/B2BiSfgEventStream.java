@@ -37,14 +37,16 @@ import com.sterlingcommerce.woodstock.event.ExceptionLevel;
 public class B2BiSfgEventStream implements EventListener {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventStream.class);
 
-	private static final DefaultFormatter formatter = new DefaultFormatter();
-	static SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
-		@Override
-		public void sinkLogEvent(SinkLogEvent ev) {
-			System.out.println(formatter.format(ev.getSinkObject(), ev.getArguments()));
-		}
-	};
 	static {
+		SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
+			private final DefaultFormatter formatter = new DefaultFormatter();
+
+			@Override
+			public void sinkLogEvent(SinkLogEvent ev) {
+				System.out.println(formatter.format(ev.getSinkObject(), ev.getArguments()));
+			}
+		};
+
 		LOGGER.addSinkLogEventListener(logToConsoleEvenSinkListener);
 	}
 
@@ -81,6 +83,7 @@ public class B2BiSfgEventStream implements EventListener {
 			System.out.println(StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
 					"B2BiSfgEventStream.handle.event2", event.getId(), hashCode()));
 			System.out.println(event.toXMLString());
+
 			tntStream.handleSterlingEvent(event);
 		}
 	}

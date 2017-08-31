@@ -63,16 +63,20 @@ import com.sterlingcommerce.woodstock.event.Event;
 public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfqTNTStream.class);
 
-	private static final DefaultFormatter formatter = new DefaultFormatter();
-	static SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
-		@Override
-		public void sinkLogEvent(SinkLogEvent ev) {
-			System.out.println(formatter.format(ev.getSinkObject(), ev.getArguments()));
-		}
-	};
 	static {
+		SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
+			private final DefaultFormatter formatter = new DefaultFormatter();
+
+			@Override
+			public void sinkLogEvent(SinkLogEvent ev) {
+				System.out.println(formatter.format(ev.getSinkObject(), ev.getArguments()));
+			}
+		};
+
 		LOGGER.addSinkLogEventListener(logToConsoleEvenSinkListener);
 	}
+
+	private static final int BUFFER_ADD_MAX_RETRY_COUNT = 3;
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 	private static final String BASE_PROPERTIES_PATH = "./properties/jkool/1.0/"; // NON-NLS
@@ -103,7 +107,6 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace(System.out);
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.failed"),
 					e.getLocalizedMessage(), e);
@@ -172,15 +175,11 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	 *             if adding event XML data to buffer fails
 	 */
 	public void handleSterlingEvent(Event event) throws Exception {
-
 		// TODO check is really needed.
 		int count = 0;
-		int maxTries = 3;
-		boolean success = false;
 		while (true) {
 			try {
-				success = addInputToBuffer(event.toXMLString());
-				if (success) {
+				if (addInputToBuffer(event.toXMLString())) {
 					break;
 				}
 			} catch (Exception exc) {
@@ -190,7 +189,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 					Thread.sleep(300);
 				} catch (InterruptedException ie) {
 				}
-				if (++count == maxTries) {
+				if (++count == BUFFER_ADD_MAX_RETRY_COUNT) {
 					throw exc;
 				}
 			}
@@ -262,7 +261,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.streams.failed"),
-					code, msg, exc);
+					stream.getName(), code, msg, exc);
 		}
 	}
 }
