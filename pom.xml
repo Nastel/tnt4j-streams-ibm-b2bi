@@ -68,7 +68,7 @@
         <release.deploy.name>${project.artifactId}</release.deploy.name>
         <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
-        <release.deploy.assembly>src/assembly/deployAssembly.xml</release.deploy.assembly>
+        <release.deploy.assembly>src/assembly/deployAssembly_dev.xml</release.deploy.assembly>
 
         <test.deploy.assembly>src/assembly/testJarAssembly.xml</test.deploy.assembly>
         <test.deploy.dir>${release.deploy.dir}/${release.deploy.name}-${project.version}</test.deploy.dir>
