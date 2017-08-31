@@ -90,12 +90,14 @@ public class B2BiSfgEventStream implements EventListener {
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
-		LOGGER.log(OpLevel.TRACE,
-				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.is.handled"),
-				eventId, hashCode(), tntStream.hashCode());
+		synchronized (STREAM_INIT_LOCK) {
+			LOGGER.log(OpLevel.TRACE,
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.is.handled"),
+					eventId, hashCode(), tntStream.hashCode());
 
-		// TODO: filtering by event id and schema key
-		return true;
+			// TODO: filtering by event id and schema key
+			return true;
+		}
 	}
 
 }

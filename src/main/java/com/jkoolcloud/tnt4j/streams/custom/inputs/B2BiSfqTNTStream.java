@@ -176,7 +176,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	 */
 	public void handleSterlingEvent(Event event) throws Exception {
 		// TODO check is really needed.
-		int count = 0;
+		int rCount = 0;
 		while (true) {
 			try {
 				if (addInputToBuffer(event.toXMLString())) {
@@ -189,7 +189,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 					Thread.sleep(300);
 				} catch (InterruptedException ie) {
 				}
-				if (++count == BUFFER_ADD_MAX_RETRY_COUNT) {
+				if (++rCount == BUFFER_ADD_MAX_RETRY_COUNT) {
 					throw exc;
 				}
 			}
