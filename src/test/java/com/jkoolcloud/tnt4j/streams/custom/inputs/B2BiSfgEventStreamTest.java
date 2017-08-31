@@ -60,8 +60,6 @@ public class B2BiSfgEventStreamTest {
 			System.setProperty("tnt4j.config", tnt4jConfig.getAbsolutePath());
 		}
 
-		B2BiSfgEventStream plugin = new B2BiSfgEventStream();
-
 		File[] exampleFiles;
 		String exampleFilesPath = System.getProperty("tnt4j.b2biSampleEvents");
 		if (exampleFilesPath == null) {
@@ -73,9 +71,12 @@ public class B2BiSfgEventStreamTest {
 		Logger loggerMock = Mockito.mock(Logger.class, Mockito.RETURNS_MOCKS);
 		Whitebox.setInternalState(Event.class, loggerMock);
 
+		B2BiSfgEventStream plugin;
 		for (File file : exampleFiles) {
 			final String fileContent = Files.toString(file, StandardCharsets.UTF_8);
 			Event event = Event.createEvent(fileContent);
+
+			plugin = new B2BiSfgEventStream();
 			Assert.assertTrue(plugin.isHandled(event.getId(), null, null));
 			plugin.handleEvent(event);
 		}

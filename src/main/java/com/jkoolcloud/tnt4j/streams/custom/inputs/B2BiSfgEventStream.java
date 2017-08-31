@@ -37,14 +37,16 @@ import com.sterlingcommerce.woodstock.event.ExceptionLevel;
 public class B2BiSfgEventStream implements EventListener {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventStream.class);
 
-	private static final DefaultFormatter formatter = new DefaultFormatter();
-	static SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
-		@Override
-		public void sinkLogEvent(SinkLogEvent ev) {
-			System.out.println(formatter.format(ev.getSinkObject(), ev.getArguments()));
-		}
-	};
 	static {
+		SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
+			private final DefaultFormatter formatter = new DefaultFormatter();
+
+			@Override
+			public void sinkLogEvent(SinkLogEvent ev) {
+				System.out.println(formatter.format(ev.getSinkObject(), ev.getArguments()));
+			}
+		};
+
 		LOGGER.addSinkLogEventListener(logToConsoleEvenSinkListener);
 	}
 
@@ -88,12 +90,14 @@ public class B2BiSfgEventStream implements EventListener {
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
-		LOGGER.log(OpLevel.TRACE,
-				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.is.handled"),
-				eventId, hashCode(), tntStream.hashCode());
+		synchronized (STREAM_INIT_LOCK) {
+			LOGGER.log(OpLevel.TRACE,
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.is.handled"),
+					eventId, hashCode(), tntStream.hashCode());
 
-		// TODO: filtering by event id and schema key
-		return true;
+			// TODO: filtering by event id and schema key
+			return true;
+		}
 	}
 
 }
