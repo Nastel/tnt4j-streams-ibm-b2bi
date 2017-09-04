@@ -81,7 +81,8 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	private static final int BUFFER_ADD_MAX_RETRY_COUNT = 3;
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
-	private static final String STREAM_PROPERTIES_PATH = "/jkool/1.0/"; // NON-NLS
+	private static final String ENV_PROPS_DIR_PATH = envPropDirPath();
+	private static final String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/jkool/1.0/"; // NON-NLS
 
 	private InputStreamListener streamListener = new B2BiTNTStreamListener();
 
@@ -168,28 +169,10 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	}
 
 	private static void checkPrecondition() throws Exception {
-		String envPropDirPath = System.getProperty("PROP_DIR");
-		if (Utils.isEmpty(envPropDirPath)) {
-			envPropDirPath = System.getProperty("APP_DIR");
-			if (Utils.isEmpty(envPropDirPath)) {
-				envPropDirPath = System.getProperty("HOME_DIR");
-			}
-			if (Utils.isEmpty(envPropDirPath)) {
-				envPropDirPath = System.getProperty("INSTALL_DIR");
-			}
-			if (Utils.isEmpty(envPropDirPath)) {
-				envPropDirPath = "."; // NON-NLS
-			}
-
-			envPropDirPath += "/properties"; // NON-NLS
-		}
-
-		String streamCfgBasePath = envPropDirPath + STREAM_PROPERTIES_PATH;
-
 		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY,
-				streamCfgBasePath + "tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
-		checkFileFromProperty("log4j.configuration", prefixFile(streamCfgBasePath + "log4j.properties")); // NON-NLS
-		checkFileFromProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, streamCfgBasePath + "tnt4j.properties"); // NON-NLS
+				STREAM_PROPERTIES_PATH + "tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
+		checkFileFromProperty("log4j.configuration", prefixFile(STREAM_PROPERTIES_PATH + "log4j.properties")); // NON-NLS
+		checkFileFromProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, STREAM_PROPERTIES_PATH + "tnt4j.properties"); // NON-NLS
 	}
 
 	/**
@@ -292,6 +275,26 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	}
 
 	public static String prefixFile(String fileName) {
-		return (SystemUtils.IS_OS_WINDOWS ? "file:///" : "file:/") + fileName;
+		return (SystemUtils.IS_OS_WINDOWS ? "file:///" : "file:/") + fileName; // NON-NLS
+	}
+
+	public static String envPropDirPath() {
+		String envPropDirPath = System.getProperty("PROP_DIR");
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = System.getProperty("APP_DIR");
+			if (Utils.isEmpty(envPropDirPath)) {
+				envPropDirPath = System.getProperty("HOME_DIR");
+			}
+			if (Utils.isEmpty(envPropDirPath)) {
+				envPropDirPath = System.getProperty("INSTALL_DIR");
+			}
+			if (Utils.isEmpty(envPropDirPath)) {
+				envPropDirPath = "."; // NON-NLS
+			}
+
+			envPropDirPath += "/properties"; // NON-NLS
+		}
+
+		return envPropDirPath;
 	}
 }
