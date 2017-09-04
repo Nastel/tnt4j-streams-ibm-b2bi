@@ -50,15 +50,21 @@ public class B2BiSfgEventStreamTest {
 	@Test
 	public void testStartStreams() throws Exception {
 
-		if (Utils.isEmpty(System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY))
-				&& Utils.isEmpty(System.getProperty("log4j.configuration"))
-				&& Utils.isEmpty(System.getProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY))) {
-			final File streamsConfig = new File(B2BiDir + "/samples/B2Bi/tnt4j-streams-ibm-b2bi.properties");
-			final File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
-			final File tnt4jConfig = new File(B2BiDir + "/config/tnt4j.properties");
+		if (Utils.isEmpty(System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY))) {
+			File streamsConfig = new File(B2BiDir + "/samples/B2Bi/tnt4j-streams-ibm-b2bi.properties");
 
 			System.setProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, streamsConfig.getAbsolutePath());
+		}
+
+		if (Utils.isEmpty(System.getProperty("log4j.configuration"))) {
+			File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
+
 			System.setProperty("log4j.configuration", B2BiSfqTNTStream.prefixFile(log4jConfig.getAbsolutePath()));
+		}
+
+		if (Utils.isEmpty(System.getProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY))) {
+			File tnt4jConfig = new File(B2BiDir + "/config/tnt4j.properties");
+
 			System.setProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, tnt4jConfig.getAbsolutePath());
 		}
 

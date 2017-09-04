@@ -80,7 +80,8 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	private static final int BUFFER_ADD_MAX_RETRY_COUNT = 3;
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
-	private static final String BASE_PROPERTIES_PATH = "./properties/jkool/1.0/"; // NON-NLS
+	private static final String STERLING_INSTALL_DIR = System.getProperty("INSTALL_DIR", "."); // NON-NLS
+	private static final String BASE_PROPERTIES_PATH = STERLING_INSTALL_DIR + "/properties/jkool/1.0/"; // NON-NLS
 
 	private InputStreamListener streamListener = new B2BiTNTStreamListener();
 
