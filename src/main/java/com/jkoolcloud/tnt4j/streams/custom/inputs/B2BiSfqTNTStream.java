@@ -22,6 +22,7 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.SystemUtils;
 
+import com.jkoolcloud.tnt4j.config.TrackerConfigStore;
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.format.DefaultFormatter;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
@@ -138,7 +139,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		return item == null ? 0 : item.getBytes().length;
 	}
 
-	private static void checkFileFromProperty(String propertyKey, String prefix, String defaultValue) throws Exception {
+	private static void checkFileFromProperty(String propertyKey, String defaultValue) throws Exception {
 		LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 				"B2BiSfqTNTStream.props.check.checking.for"), propertyKey);
 		String propertyValue = System.getProperty(propertyKey);
@@ -148,8 +149,16 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 					"B2BiSfqTNTStream.props.check.setting.default"), propertyKey, defaultValue);
 			propertyValue = defaultValue;
 		}
-		if (!Files.exists(Paths.get(
-				prefix == null ? propertyValue : propertyValue.substring(prefix.length(), propertyValue.length())))) {
+
+		String sPrefix = prefixFile("");
+		String filePath;
+		if (propertyValue.startsWith(sPrefix)) {
+			filePath = propertyValue.substring(sPrefix.length());
+		} else {
+			filePath = propertyValue;
+		}
+
+		if (!Files.exists(Paths.get(filePath))) {
 			LOGGER.log(OpLevel.TRACE,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfqTNTStream.props.check.file.not.found"),
@@ -158,12 +167,10 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	}
 
 	private static void checkPrecondition() throws Exception {
-		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, "",
+		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY,
 				BASE_PROPERTIES_PATH + "tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
-		checkFileFromProperty("log4j.configuration", SystemUtils.IS_OS_LINUX ? "file:/" : "file:///", // NON-NLS
-				SystemUtils.IS_OS_LINUX ? "file:/" + BASE_PROPERTIES_PATH + "/log4j.properties" // NON-NLS
-						: "file:///" + BASE_PROPERTIES_PATH + "log4j.properties"); // NON-NLS
-		checkFileFromProperty("tnt4j.config", "", BASE_PROPERTIES_PATH + "tnt4j.properties"); // NON-NLS
+		checkFileFromProperty("log4j.configuration", prefixFile(BASE_PROPERTIES_PATH + "log4j.properties")); // NON-NLS
+		checkFileFromProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, BASE_PROPERTIES_PATH + "tnt4j.properties"); // NON-NLS
 	}
 
 	/**
@@ -263,5 +270,9 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.streams.failed"),
 					stream.getName(), code, msg, exc);
 		}
+	}
+
+	public static String prefixFile(String fileName) {
+		return (SystemUtils.IS_OS_WINDOWS ? "file:///" : "file:/") + fileName;
 	}
 }
