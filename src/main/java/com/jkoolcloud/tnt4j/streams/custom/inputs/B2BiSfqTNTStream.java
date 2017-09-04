@@ -42,6 +42,7 @@ import com.jkoolcloud.tnt4j.streams.outputs.TNTStreamOutput;
 import com.jkoolcloud.tnt4j.streams.parsers.ActivityParser;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
+import com.jkoolcloud.tnt4j.utils.Utils;
 import com.sterlingcommerce.woodstock.event.Event;
 
 /**
@@ -80,8 +81,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	private static final int BUFFER_ADD_MAX_RETRY_COUNT = 3;
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
-	private static final String STERLING_INSTALL_DIR = System.getProperty("INSTALL_DIR", "."); // NON-NLS
-	private static final String BASE_PROPERTIES_PATH = STERLING_INSTALL_DIR + "/properties/jkool/1.0/"; // NON-NLS
+	private static final String STREAM_PROPERTIES_PATH = "/jkool/1.0/"; // NON-NLS
 
 	private InputStreamListener streamListener = new B2BiTNTStreamListener();
 
@@ -168,10 +168,28 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	}
 
 	private static void checkPrecondition() throws Exception {
+		String envPropDirPath = System.getProperty("PROP_DIR");
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = System.getProperty("APP_DIR");
+			if (Utils.isEmpty(envPropDirPath)) {
+				envPropDirPath = System.getProperty("HOME_DIR");
+			}
+			if (Utils.isEmpty(envPropDirPath)) {
+				envPropDirPath = System.getProperty("INSTALL_DIR");
+			}
+			if (Utils.isEmpty(envPropDirPath)) {
+				envPropDirPath = "."; // NON-NLS
+			}
+
+			envPropDirPath += "/properties"; // NON-NLS
+		}
+
+		String streamCfgBasePath = envPropDirPath + STREAM_PROPERTIES_PATH;
+
 		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY,
-				BASE_PROPERTIES_PATH + "tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
-		checkFileFromProperty("log4j.configuration", prefixFile(BASE_PROPERTIES_PATH + "log4j.properties")); // NON-NLS
-		checkFileFromProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, BASE_PROPERTIES_PATH + "tnt4j.properties"); // NON-NLS
+				streamCfgBasePath + "tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
+		checkFileFromProperty("log4j.configuration", prefixFile(streamCfgBasePath + "log4j.properties")); // NON-NLS
+		checkFileFromProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, streamCfgBasePath + "tnt4j.properties"); // NON-NLS
 	}
 
 	/**

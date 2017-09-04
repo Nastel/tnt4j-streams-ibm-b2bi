@@ -71,7 +71,7 @@ public class B2BiSfgEventStreamTest {
 		File[] exampleFiles;
 		String exampleFilesPath = System.getProperty("tnt4j.b2biSampleEvents");
 		if (exampleFilesPath == null) {
-			exampleFilesPath = B2BiDir + "/samples/B2Bi/Events/*.xml";
+			exampleFilesPath = B2BiDir + "/samples/B2Bi/Events/*.xml"; // NON-NLS
 		}
 
 		exampleFiles = Utils.searchFiles(exampleFilesPath); // NON-NLS
