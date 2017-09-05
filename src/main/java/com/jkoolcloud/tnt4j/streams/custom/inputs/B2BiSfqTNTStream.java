@@ -63,8 +63,6 @@ import com.sterlingcommerce.woodstock.event.Event;
 public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfqTNTStream.class);
 
-	private static final int BUFFER_ADD_MAX_RETRY_COUNT = 3;
-
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 	private static final String VENDOR_NAME = "jkool"; // NON-NLS
 	private static final String ENV_PROPS_DIR_PATH = envPropDirPath();
