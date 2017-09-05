@@ -336,11 +336,24 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		return "1.0"; // NON-NLS
 	}
 
+	/**
+	 * Logs a given string message to {@link System#out} and given logger.
+	 *
+	 *
+	 * @param logger
+	 *            logger to be used for logging
+	 * @param lvl
+	 *            message severity to log
+	 * @param msg
+	 *            tring message to be logged
+	 * @param args
+	 *            arguments passed along the message
+	 */
 	public static void log(EventSink logger, OpLevel lvl, String msg, Object... args) {
 		if (true) {
 			boolean noArgs = args == null || args.length == 0;
 
-			System.out.println(lvl + ": " + (noArgs ? msg : MessageFormat.format(msg, args)));
+			System.out.println(lvl + ": " + (noArgs ? msg : MessageFormat.format(msg, args))); // NON-NLS
 
 			if (!noArgs) {
 				if (args[args.length - 1] instanceof Throwable) {
