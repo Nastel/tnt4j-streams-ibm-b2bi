@@ -10,8 +10,8 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>c:\workspace2\build\tnt4j-streams-ibm-b2bi\tnt4j-streams-ibm-b2bi-1.0.0-SNAPSHOT\</directory>
-            <outputDirectory>/</outputDirectory>
+            <directory>${release.deploy.dir}/${release.deploy.finalName}</directory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>**</include>
             </includes>
