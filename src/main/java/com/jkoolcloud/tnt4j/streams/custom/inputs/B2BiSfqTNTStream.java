@@ -81,8 +81,9 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	private static final int BUFFER_ADD_MAX_RETRY_COUNT = 3;
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
+	private static final String VENDOR_NAME = "jkool"; // NON-NLS
 	private static final String ENV_PROPS_DIR_PATH = envPropDirPath();
-	private static final String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/jkool/1.0/"; // NON-NLS
+	private static final String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + VENDOR_NAME + "/" + version();
 
 	private InputStreamListener streamListener = new B2BiTNTStreamListener();
 
@@ -170,9 +171,9 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 	private static void checkPrecondition() throws Exception {
 		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY,
-				STREAM_PROPERTIES_PATH + "tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
-		checkFileFromProperty("log4j.configuration", prefixFile(STREAM_PROPERTIES_PATH + "log4j.properties")); // NON-NLS
-		checkFileFromProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, STREAM_PROPERTIES_PATH + "tnt4j.properties"); // NON-NLS
+				STREAM_PROPERTIES_PATH + "/tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
+		checkFileFromProperty("log4j.configuration", prefixFile(STREAM_PROPERTIES_PATH + "/log4j.properties")); // NON-NLS
+		checkFileFromProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, STREAM_PROPERTIES_PATH + "/tnt4j.properties"); // NON-NLS
 	}
 
 	/**
@@ -274,10 +275,23 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		}
 	}
 
+	/**
+	 * Adds operating system dependent prefix to provided file name. If operating system is Windows prefix is
+	 * {@code "file:///"}, {@code "file:/"} - otherwise.
+	 *
+	 * @param fileName
+	 *            file name string
+	 * @return complete file name with prefix added
+	 */
 	public static String prefixFile(String fileName) {
 		return (SystemUtils.IS_OS_WINDOWS ? "file:///" : "file:/") + fileName; // NON-NLS
 	}
 
+	/**
+	 * Builds Sterling environment properties directory path depending on System properties set.
+	 *
+	 * @return path of Sterling environment properties directory
+	 */
 	public static String envPropDirPath() {
 		String envPropDirPath = System.getProperty("PROP_DIR");
 		if (Utils.isEmpty(envPropDirPath)) {
@@ -296,5 +310,14 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		}
 
 		return envPropDirPath;
+	}
+
+	private static String version() { // TODO: to make more advanced (dynamic) version handling
+		// Package objPackage = B2BiSfqTNTStream.class.getPackage();
+		// String name = objPackage.getSpecificationTitle();
+		// String version = objPackage.getSpecificationVersion();
+		// String version2 = objPackage.getImplementationVersion();
+
+		return "1.0"; // NON-NLS
 	}
 }
