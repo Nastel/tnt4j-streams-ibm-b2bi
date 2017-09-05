@@ -19,6 +19,7 @@ package com.jkoolcloud.tnt4j.streams.custom.inputs;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.Collection;
 
 import org.apache.commons.lang3.SystemUtils;
@@ -105,15 +106,14 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 			StreamsAgent.runFromAPI(streamListener, null, this);
 			while (true) {
 				Thread.sleep(500);
-				LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+				log(LOGGER, OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 						"B2BiSfqTNTStream.waiting.for.streams"));
 				if (started) {
 					break;
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace(System.out);
-			LOGGER.log(OpLevel.CRITICAL,
+			log(LOGGER, OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.failed"),
 					e.getLocalizedMessage(), e);
 		}
@@ -144,12 +144,12 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	}
 
 	private static void checkFileFromProperty(String propertyKey, String defaultValue) throws Exception {
-		LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+		log(LOGGER, OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 				"B2BiSfqTNTStream.props.check.checking.for"), propertyKey);
 		String propertyValue = System.getProperty(propertyKey);
 		if (propertyValue == null) {
 			System.setProperty(propertyKey, defaultValue);
-			LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+			log(LOGGER, OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 					"B2BiSfqTNTStream.props.check.setting.default"), propertyKey, defaultValue);
 			propertyValue = defaultValue;
 		}
@@ -163,7 +163,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		}
 
 		if (!Files.exists(Paths.get(filePath))) {
-			LOGGER.log(OpLevel.TRACE,
+			log(LOGGER, OpLevel.TRACE,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfqTNTStream.props.check.file.not.found"),
 					propertyValue, Paths.get(".").toAbsolutePath().normalize().toString()); // NON-NLS
@@ -194,7 +194,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 					break;
 				}
 			} catch (Exception exc) {
-				LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+				log(LOGGER, OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 						"B2BiSfqTNTStream.buffer.add.failed"), getName(), started, exc);
 				try {
 					Thread.sleep(300);
@@ -215,7 +215,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 		@Override
 		public void onStatusChange(TNTInputStream<?, ?> stream, StreamStatus status) {
-			LOGGER.log(OpLevel.DEBUG,
+			log(LOGGER, OpLevel.DEBUG,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.status.changed"),
 					stream.getName(), status.name());
 
@@ -243,11 +243,11 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 				if (output != null) {
 					output.logItem(ai);
 				} else {
-					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+					log(LOGGER, OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfqTNTStream.stream.out.null"));
 				}
 			} catch (Exception e) {
-				LOGGER.log(OpLevel.WARNING, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+				log(LOGGER, OpLevel.WARNING, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 						"B2BiSfqTNTStream.welcome.failed"), e);
 			}
 		}
@@ -270,7 +270,7 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 
 		@Override
 		public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
-			LOGGER.log(OpLevel.CRITICAL,
+			log(LOGGER, OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfqTNTStream.streams.failed"),
 					stream.getName(), code, msg, exc);
 		}
@@ -334,5 +334,21 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		// String version2 = objPackage.getImplementationVersion();
 
 		return "1.0"; // NON-NLS
+	}
+
+	public static void log(EventSink logger, OpLevel lvl, String msg, Object... args) {
+		if (true) {
+			boolean noArgs = args == null || args.length == 0;
+
+			System.out.println(lvl + ": " + (noArgs ? msg : MessageFormat.format(msg, args)));
+
+			if (!noArgs) {
+				if (args[args.length - 1] instanceof Throwable) {
+					((Throwable) args[args.length - 1]).printStackTrace();
+				}
+			}
+		}
+
+		logger.log(lvl, msg, args);
 	}
 }

@@ -58,18 +58,18 @@ public class B2BiSfgEventStream implements EventListener {
 	 * Constructs a new B2BiSfgEventStream.
 	 */
 	public B2BiSfgEventStream() {
-		LOGGER.log(OpLevel.DEBUG,
+		B2BiSfqTNTStream.log(LOGGER, OpLevel.DEBUG,
 				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.create.new"),
 				getClass().getName(), hashCode());
 
 		synchronized (STREAM_INIT_LOCK) {
 			if (tntStream == null) {
-				LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-						"B2BiSfgEventStream.init.stream.instance.start"));
+				B2BiSfqTNTStream.log(LOGGER, OpLevel.DEBUG, StreamsResources.getString(
+						B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.init.stream.instance.start"));
 				tntStream = new B2BiSfqTNTStream();
 				tntStream.initStream();
-				LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-						"B2BiSfgEventStream.init.stream.instance.end"));
+				B2BiSfqTNTStream.log(LOGGER, OpLevel.DEBUG, StreamsResources
+						.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.init.stream.instance.end"));
 			}
 		}
 	}
@@ -77,12 +77,9 @@ public class B2BiSfgEventStream implements EventListener {
 	@Override
 	public void handleEvent(Event event) throws Exception {
 		synchronized (STREAM_INIT_LOCK) {
-			LOGGER.log(OpLevel.TRACE,
+			B2BiSfqTNTStream.log(LOGGER, OpLevel.TRACE,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.handle.event"),
-					event, hashCode(), tntStream.hashCode());
-			System.out.println(StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventStream.handle.event2", event.getId(), hashCode()));
-			System.out.println(event.toXMLString());
+					event.toXMLString(), hashCode(), tntStream.hashCode());
 
 			tntStream.handleSterlingEvent(event);
 		}
@@ -91,7 +88,7 @@ public class B2BiSfgEventStream implements EventListener {
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
 		synchronized (STREAM_INIT_LOCK) {
-			LOGGER.log(OpLevel.TRACE,
+			B2BiSfqTNTStream.log(LOGGER, OpLevel.TRACE,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.is.handled"),
 					eventId, hashCode(), tntStream.hashCode());
 
