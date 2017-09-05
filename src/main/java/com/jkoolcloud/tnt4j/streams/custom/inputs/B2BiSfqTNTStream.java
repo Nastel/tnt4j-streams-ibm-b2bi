@@ -16,6 +16,7 @@
 
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -295,12 +296,18 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	public static String envPropDirPath() {
 		String envPropDirPath = System.getProperty("PROP_DIR");
 		if (Utils.isEmpty(envPropDirPath)) {
-			envPropDirPath = System.getProperty("APP_DIR");
+			envPropDirPath = System.getProperty("INSTALL_DIR");
+			if (Utils.isEmpty(envPropDirPath)) {
+				envPropDirPath = parentPath(System.getProperty("APP_DIR"));
+			}
 			if (Utils.isEmpty(envPropDirPath)) {
 				envPropDirPath = System.getProperty("HOME_DIR");
 			}
 			if (Utils.isEmpty(envPropDirPath)) {
-				envPropDirPath = System.getProperty("INSTALL_DIR");
+				envPropDirPath = parentPath(System.getProperty("NOAPP_HOME"));
+			}
+			if (Utils.isEmpty(envPropDirPath)) {
+				envPropDirPath = System.getProperty("user.dir");
 			}
 			if (Utils.isEmpty(envPropDirPath)) {
 				envPropDirPath = "."; // NON-NLS
@@ -310,6 +317,14 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 		}
 
 		return envPropDirPath;
+	}
+
+	private static String parentPath(String path) {
+		if (Utils.isEmpty(path)) {
+			return path;
+		}
+
+		return new File(path).getParent();
 	}
 
 	private static String version() { // TODO: to make more advanced (dynamic) version handling
