@@ -20,6 +20,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -28,6 +31,7 @@ import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.StreamsAgent;
+import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.configure.StreamsConfigLoader;
 import com.jkoolcloud.tnt4j.streams.fields.ActivityField;
 import com.jkoolcloud.tnt4j.streams.fields.ActivityInfo;
@@ -84,8 +88,13 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 					System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY));
 			Collection<ActivityParser> parsers = streamsConfig.getParsers();
 			addParsers(parsers);
+
+			Map<String, String> props = new HashMap<>(1);
+			props.put(StreamProperties.PROP_OFFER_TIMEOUT, String.valueOf(0));
+			setProperties(props.entrySet());
+
 			StreamsAgent.runFromAPI(streamListener, null, this);
-			waitForStreams(30000);
+			waitForStreams(TimeUnit.SECONDS.toMillis(30));
 		} catch (Exception e) {
 			log(LOGGER, OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.failed"),
@@ -170,7 +179,6 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	 */
 	public boolean handleSterlingEvent(Event event) throws Exception {
 		try {
-			// why state handling???
 			if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
 				ended = true;
 			}
