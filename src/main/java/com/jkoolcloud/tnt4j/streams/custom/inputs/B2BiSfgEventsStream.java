@@ -92,7 +92,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			addParsers(parsers);
 
 			Map<String, String> props = new HashMap<>(1);
-			props.put(StreamProperties.PROP_OFFER_TIMEOUT, String.valueOf(0));
+			props.put(StreamProperties.PROP_BUFFER_DROP_WHEN_FULL, "false");
 			setProperties(props.entrySet());
 
 			StreamsAgent.runFromAPI(streamListener, null, this);
