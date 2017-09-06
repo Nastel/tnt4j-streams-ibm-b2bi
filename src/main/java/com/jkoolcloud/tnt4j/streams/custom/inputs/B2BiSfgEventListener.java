@@ -27,53 +27,55 @@ import com.sterlingcommerce.woodstock.event.EventListener;
 import com.sterlingcommerce.woodstock.event.ExceptionLevel;
 
 /**
- * Sterling B2Bi event listener implementation, using {@link B2BiSfqTNTStream} singleton instance to stream
+ * Sterling B2Bi event listener implementation, using {@link B2BiSfgEventsStream} singleton instance to stream
  * {@link #handleEvent(Event)} received {@link Event}'s to JKool Cloud.
  *
  * @version $Revision: 1 $
  */
-public class B2BiSfgEventStream implements EventListener {
+public class B2BiSfgEventListener implements EventListener {
 	private static final EventSink LOGGER;
-	private static final B2BiSfqTNTStream tntStream;
+	private static final B2BiSfgEventsStream tntStream;
 
 	static {
 		// initialize logging
-		FileEventSinkFactory fileFactory = new FileEventSinkFactory("/tmp/b2bi-event-stream.log");
+		FileEventSinkFactory fileFactory = new FileEventSinkFactory("/tmp/b2bi-event-stream.log"); // NON-NLS
 		DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
-		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventStream.class);
+		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
 
 		// initialize stream
 		LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-		        "B2BiSfgEventStream.init.stream.instance.start"));
-		tntStream = new B2BiSfqTNTStream();
+				"B2BiSfgEventListener.init.stream.instance.start"));
+		tntStream = new B2BiSfgEventsStream();
 		tntStream.initStream();
 		LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-		        "B2BiSfgEventStream.init.stream.instance.end"));
+				"B2BiSfgEventListener.init.stream.instance.end"));
 	}
 
 	/**
-	 * Constructs a new B2BiSfgEventStream.
+	 * Constructs a new B2BiSfgEventListener.
 	 */
-	public B2BiSfgEventStream() {
+	public B2BiSfgEventListener() {
 		LOGGER.log(OpLevel.DEBUG,
-		        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.create.new"),
-		        getClass().getName(), hashCode());
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.create.new"),
+				getClass().getName(), hashCode());
 	}
 
 	@Override
 	public void handleEvent(Event event) throws Exception {
 		LOGGER.log(OpLevel.TRACE,
-		        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.handle.event"),
-		        event, hashCode(), tntStream.hashCode());
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.handle.event"),
+				event.toXMLString(), hashCode(), tntStream.hashCode());
+
 		tntStream.handleSterlingEvent(event);
 	}
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
 		LOGGER.log(OpLevel.TRACE,
-		        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventStream.is.handled"),
-		        eventId, hashCode(), tntStream.hashCode());
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.is.handled"),
+				eventId, hashCode(), tntStream.hashCode());
+
+		// TODO: filtering by event id and schema key
 		return true;
 	}
-
 }

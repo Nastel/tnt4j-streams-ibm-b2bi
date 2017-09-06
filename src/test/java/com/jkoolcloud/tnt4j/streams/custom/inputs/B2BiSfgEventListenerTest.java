@@ -43,7 +43,7 @@ import com.sterlingcommerce.woodstock.util.frame.log.Logger;
 @RunWith(PowerMockRunner.class)
 @SuppressStaticInitializationFor("com.sterlingcommerce.woodstock.event.Event")
 @PowerMockIgnore({ "javax.net.ssl.*", "javax.security.auth.x500.X500Principal" })
-public class B2BiSfgEventStreamTest {
+public class B2BiSfgEventListenerTest {
 
 	private static final String B2BiDir = "./"; // NON-NLS
 
@@ -59,7 +59,7 @@ public class B2BiSfgEventStreamTest {
 		if (Utils.isEmpty(System.getProperty("log4j.configuration"))) {
 			File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
 
-			System.setProperty("log4j.configuration", B2BiSfqTNTStream.prefixFile(log4jConfig.getAbsolutePath()));
+			System.setProperty("log4j.configuration", B2BiSfgEventsStream.prefixFile(log4jConfig.getAbsolutePath()));
 		}
 
 		if (Utils.isEmpty(System.getProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY))) {
@@ -79,12 +79,12 @@ public class B2BiSfgEventStreamTest {
 		Logger loggerMock = Mockito.mock(Logger.class, Mockito.RETURNS_MOCKS);
 		Whitebox.setInternalState(Event.class, loggerMock);
 
-		B2BiSfgEventStream plugin;
+		B2BiSfgEventListener plugin;
 		for (File file : exampleFiles) {
 			final String fileContent = Files.toString(file, StandardCharsets.UTF_8);
 			Event event = Event.createEvent(fileContent);
 
-			plugin = new B2BiSfgEventStream();
+			plugin = new B2BiSfgEventListener();
 			assertTrue(plugin.isHandled(event.getId(), null, null));
 			plugin.handleEvent(event);
 		}
