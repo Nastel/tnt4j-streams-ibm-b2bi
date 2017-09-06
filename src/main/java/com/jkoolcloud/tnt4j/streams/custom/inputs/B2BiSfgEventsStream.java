@@ -68,9 +68,11 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventsStream.class);
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
+	private static final String PROPS_ROOT_DIR_NAME = "properties"; // NON-NLS
 	private static final String VENDOR_NAME = "jkool"; // NON-NLS
+	private static final String APP_PATH = VENDOR_NAME + "/" + version(); // NON-NLS
 	private static final String ENV_PROPS_DIR_PATH = envPropDirPath();
-	private static final String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + VENDOR_NAME + "/" + version();
+	private static final String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
 
 	private InputStreamListener streamListener = new B2BiStreamListener();
 
@@ -273,28 +275,32 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	 * @return path of Sterling environment properties directory
 	 */
 	public static String envPropDirPath() {
-		String envPropDirPath = getSysProperty("PROP_DIR"); // NON-NLS
+		log(LOGGER, OpLevel.DEBUG, "--- Running JVM System properties ---");
+		log(LOGGER, OpLevel.DEBUG, "{0}", System.getProperties());
+		log(LOGGER, OpLevel.DEBUG, "-------------------------------------");
+
+		String envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
 
 		if (Utils.isEmpty(envPropDirPath)) {
-			envPropDirPath = getSysProperty("INSTALL_DIR");// NON-NLS
-			if (Utils.isEmpty(envPropDirPath)) {
-				envPropDirPath = parentPath(getSysProperty("APP_DIR")); // NON-NLS
-			}
-			if (Utils.isEmpty(envPropDirPath)) {
-				envPropDirPath = getSysProperty("HOME_DIR"); // NON-NLS
-			}
-			if (Utils.isEmpty(envPropDirPath)) {
-				envPropDirPath = parentPath(getSysProperty("NOAPP_HOME")); // NON-NLS
-			}
-			if (Utils.isEmpty(envPropDirPath)) {
-				envPropDirPath = getSysProperty("user.dir"); // NON-NLS
-			}
-			if (Utils.isEmpty(envPropDirPath)) {
-				envPropDirPath = "."; // NON-NLS
-			}
-
-			envPropDirPath += "/properties"; // NON-NLS
+			envPropDirPath = searchForPropsRoot(getSysProperty("INSTALL_DIR"));// NON-NLS
 		}
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot(getSysProperty("APP_DIR")); // NON-NLS
+		}
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot(getSysProperty("HOME_DIR")); // NON-NLS
+		}
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot(getSysProperty("NOAPP_HOME")); // NON-NLS
+		}
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot(getSysProperty("user.dir")); // NON-NLS
+		}
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot("."); // NON-NLS
+		}
+
+		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME;
 
 		log(LOGGER, OpLevel.DEBUG,
 				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.b2bi.props.root"),
@@ -311,12 +317,20 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		return pValue;
 	}
 
-	private static String parentPath(String path) {
+	private static String searchForPropsRoot(String path) {
+		return searchForPropsRoot(path, "/" + PROPS_ROOT_DIR_NAME + "/" + APP_PATH);
+	}
+
+	private static String searchForPropsRoot(String path, String pathExt) {
 		if (Utils.isEmpty(path)) {
-			return path;
+			return null;
 		}
 
-		return new File(path).getParent();
+		if (new File(path + pathExt).exists()) {
+			return path;
+		} else {
+			return searchForPropsRoot(new File(path).getParent(), pathExt);
+		}
 	}
 
 	private static String version() {
