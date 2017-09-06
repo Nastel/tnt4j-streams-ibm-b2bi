@@ -34,20 +34,20 @@ import com.sterlingcommerce.woodstock.event.ExceptionLevel;
  */
 public class B2BiSfgEventListener implements EventListener {
 	private static final EventSink LOGGER;
-	private static B2BiSfgEventsStream tntStream;
+	private static final B2BiSfgEventsStream tntStream;
 
 	static {
 		// initialize logging
-		FileEventSinkFactory fileFactory = new FileEventSinkFactory("/tmp/b2b-sink.log"); // NON-NLS
+		FileEventSinkFactory fileFactory = new FileEventSinkFactory("/tmp/b2bi-event-stream.log"); // NON-NLS
 		DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
 		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
 
 		// initialize stream
-		B2BiSfgEventsStream.log(LOGGER, OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+		LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 				"B2BiSfgEventListener.init.stream.instance.start"));
 		tntStream = new B2BiSfgEventsStream();
 		tntStream.initStream();
-		B2BiSfgEventsStream.log(LOGGER, OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+		LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 				"B2BiSfgEventListener.init.stream.instance.end"));
 	}
 
@@ -55,14 +55,14 @@ public class B2BiSfgEventListener implements EventListener {
 	 * Constructs a new B2BiSfgEventListener.
 	 */
 	public B2BiSfgEventListener() {
-		B2BiSfgEventsStream.log(LOGGER, OpLevel.DEBUG,
+		LOGGER.log(OpLevel.DEBUG,
 				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.create.new"),
 				getClass().getName(), hashCode());
 	}
 
 	@Override
 	public void handleEvent(Event event) throws Exception {
-		B2BiSfgEventsStream.log(LOGGER, OpLevel.TRACE,
+		LOGGER.log(OpLevel.TRACE,
 				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.handle.event"),
 				event.toXMLString(), hashCode(), tntStream.hashCode());
 
@@ -71,7 +71,7 @@ public class B2BiSfgEventListener implements EventListener {
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
-		B2BiSfgEventsStream.log(LOGGER, OpLevel.TRACE,
+		LOGGER.log(OpLevel.TRACE,
 				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.is.handled"),
 				eventId, hashCode(), tntStream.hashCode());
 
