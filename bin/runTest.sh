@@ -7,6 +7,6 @@ PARSER_CONFIG=-Dtnt4j.streams.config="$RUNDIR../samples/B2Bi/tnt4j-streams-ibm-b
 EVENTS_DIR=-Dtnt4j.b2biSampleEvents="$RUNDIR../samples/B2Bi/Events/*.xml"
 STREAMSOPTS=$STREAMSOPTS $LOG4JOPTS $TNT4JOPTS $EVENTS_DIR $PARSER_CONFIG
 
-java -cp $LIBPATH $STREAMSOPTS org.junit.runner.JUnitCore com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventStreamTest
+java -cp $LIBPATH $STREAMSOPTS org.junit.runner.JUnitCore com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListenerTest
 
 read -p "Press [Enter] key to exit..."

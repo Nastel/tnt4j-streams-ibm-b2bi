@@ -51,7 +51,7 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
               ## PROPERTY_TYPE: String
               ## PROPERTY_DESCRIPTION
               ## CFX Event Listeners
-              Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventStream
+              Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener
               ## PROPERTY_END
         ```
         **Note:** You can comment out this entry to disable the listener.

@@ -24,6 +24,6 @@ import org.junit.runners.Suite;
  * @version 1.0
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ B2BiSfgEventStreamTest.class })
+@Suite.SuiteClasses({ B2BiSfgEventListenerTest.class })
 public class AllCustomInputsTests {
 }
