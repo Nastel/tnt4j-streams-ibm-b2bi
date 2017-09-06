@@ -19,7 +19,6 @@ package com.jkoolcloud.tnt4j.streams.custom.inputs;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
 import java.util.Collection;
 
 import org.apache.commons.lang3.SystemUtils;
@@ -351,14 +350,11 @@ public class B2BiSfqTNTStream extends AbstractBufferedStream<String> {
 	 */
 	public static void log(EventSink logger, OpLevel lvl, String msg, Object... args) {
 		if (true) {
-			boolean noArgs = args == null || args.length == 0;
+			System.out.println(lvl + ": " + Utils.format(msg, args)); // NON-NLS
+			Throwable t = Utils.getThrowable(args);
 
-			System.out.println(lvl + ": " + (noArgs ? msg : MessageFormat.format(msg, args))); // NON-NLS
-
-			if (!noArgs) {
-				if (args[args.length - 1] instanceof Throwable) {
-					((Throwable) args[args.length - 1]).printStackTrace();
-				}
+			if (t != null) {
+				t.printStackTrace();
 			}
 		}
 
