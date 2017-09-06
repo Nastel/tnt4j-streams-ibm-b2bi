@@ -17,11 +17,9 @@
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
 import com.jkoolcloud.tnt4j.core.OpLevel;
-import com.jkoolcloud.tnt4j.format.DefaultFormatter;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
-import com.jkoolcloud.tnt4j.sink.SinkLogEvent;
-import com.jkoolcloud.tnt4j.sink.SinkLogEventListener;
+import com.jkoolcloud.tnt4j.sink.impl.FileEventSinkFactory;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.sterlingcommerce.woodstock.event.Event;
@@ -35,24 +33,23 @@ import com.sterlingcommerce.woodstock.event.ExceptionLevel;
  * @version $Revision: 1 $
  */
 public class B2BiSfgEventListener implements EventListener {
-	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
+	private static final EventSink LOGGER;
+	private static B2BiSfgEventsStream tntStream;
 
 	static {
-		SinkLogEventListener logToConsoleEvenSinkListener = new SinkLogEventListener() {
-			private final DefaultFormatter formatter = new DefaultFormatter();
+		// initialize logging
+		FileEventSinkFactory fileFactory = new FileEventSinkFactory("/tmp/b2b-sink.log"); // NON-NLS
+		DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
+		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
 
-			@Override
-			public void sinkLogEvent(SinkLogEvent ev) {
-				System.out.println(formatter.format(ev.getSinkObject(), ev.getArguments()));
-			}
-		};
-
-		LOGGER.addSinkLogEventListener(logToConsoleEvenSinkListener);
+		// initialize stream
+		B2BiSfgEventsStream.log(LOGGER, OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+				"B2BiSfgEventListener.init.stream.instance.start"));
+		tntStream = new B2BiSfgEventsStream();
+		tntStream.initStream();
+		B2BiSfgEventsStream.log(LOGGER, OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+				"B2BiSfgEventListener.init.stream.instance.end"));
 	}
-
-	private final Object STREAM_INIT_LOCK = new Object();
-
-	private static B2BiSfgEventsStream tntStream;
 
 	/**
 	 * Constructs a new B2BiSfgEventListener.
@@ -61,40 +58,24 @@ public class B2BiSfgEventListener implements EventListener {
 		B2BiSfgEventsStream.log(LOGGER, OpLevel.DEBUG,
 				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.create.new"),
 				getClass().getName(), hashCode());
-
-		synchronized (STREAM_INIT_LOCK) {
-			if (tntStream == null) {
-				B2BiSfgEventsStream.log(LOGGER, OpLevel.DEBUG, StreamsResources.getString(
-						B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.init.stream.instance.start"));
-				tntStream = new B2BiSfgEventsStream();
-				tntStream.initStream();
-				B2BiSfgEventsStream.log(LOGGER, OpLevel.DEBUG, StreamsResources.getString(
-						B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.init.stream.instance.end"));
-			}
-		}
 	}
 
 	@Override
 	public void handleEvent(Event event) throws Exception {
-		synchronized (STREAM_INIT_LOCK) {
-			B2BiSfgEventsStream.log(LOGGER, OpLevel.TRACE,
-					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.handle.event"),
-					event.toXMLString(), hashCode(), tntStream.hashCode());
+		B2BiSfgEventsStream.log(LOGGER, OpLevel.TRACE,
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.handle.event"),
+				event.toXMLString(), hashCode(), tntStream.hashCode());
 
-			tntStream.handleSterlingEvent(event);
-		}
+		tntStream.handleSterlingEvent(event);
 	}
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
-		synchronized (STREAM_INIT_LOCK) {
-			B2BiSfgEventsStream.log(LOGGER, OpLevel.TRACE,
-					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.is.handled"),
-					eventId, hashCode(), tntStream.hashCode());
+		B2BiSfgEventsStream.log(LOGGER, OpLevel.TRACE,
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.is.handled"),
+				eventId, hashCode(), tntStream.hashCode());
 
-			// TODO: filtering by event id and schema key
-			return true;
-		}
+		// TODO: filtering by event id and schema key
+		return true;
 	}
-
 }
