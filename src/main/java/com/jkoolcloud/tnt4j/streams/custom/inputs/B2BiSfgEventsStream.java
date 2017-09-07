@@ -17,7 +17,6 @@
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -26,10 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.lang3.SystemUtils;
-import org.xml.sax.SAXException;
 
 import com.jkoolcloud.tnt4j.config.TrackerConfigStore;
 import com.jkoolcloud.tnt4j.core.OpLevel;
@@ -77,14 +73,9 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private static final String PROPS_ROOT_DIR_NAME = "properties"; // NON-NLS
 	private static final String VENDOR_NAME = "jkool"; // NON-NLS
 	private static final String APP_PATH = VENDOR_NAME + "/" + version(); // NON-NLS
-<<<<<<< HEAD
-	
+
 	private static String ENV_PROPS_DIR_PATH;
 	private static String STREAM_PROPERTIES_PATH; // NON-NLS
-=======
-	private static final String ENV_PROPS_DIR_PATH = envPropDirPath();
-	private static final String STREAM_PROPERTIES_PATH = getStreamsPropertiesPath(); // NON-NLS
->>>>>>> origin/master
 
 	private InputStreamListener streamListener = new B2BiStreamListener();
 
@@ -93,19 +84,20 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 	public B2BiSfgEventsStream() {
 		ENV_PROPS_DIR_PATH = envPropDirPath();
-		STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS	
+		STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
 	}
-	
+
 	/**
 	 * Initiates stream.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	protected void initStream() throws RuntimeException {
 		setName(STREAM_NAME);
 		try {
 			checkPrecondition();
 			StreamsConfigLoader streamsConfig = new StreamsConfigLoader(
-					System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY));
+			        System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY));
 			Collection<ActivityParser> parsers = streamsConfig.getParsers();
 			addParsers(parsers);
 
@@ -117,22 +109,16 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			waitForStreams(TimeUnit.SECONDS.toMillis(30));
 		} catch (Exception e) {
 			LOGGER.log(OpLevel.CRITICAL,
-<<<<<<< HEAD
 			        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.failed"),
 			        e.getLocalizedMessage(), e);
 			throw new RuntimeException(e);
-		} 
-=======
-					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.failed"),
-					e.getLocalizedMessage(), e);
 		}
->>>>>>> origin/master
 	}
 
 	private void waitForStreams(long timeOut) throws InterruptedException {
 		synchronized (lockObject) {
 			LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.waiting.for.streams"));
+			        "B2BiSfgEventsStream.waiting.for.streams"));
 			lockObject.wait(timeOut);
 		}
 	}
@@ -147,8 +133,8 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		super.start();
 
 		LOGGER.log(OpLevel.DEBUG,
-				StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, "TNTInputStream.stream.start"),
-				getClass().getSimpleName(), getName());
+		        StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, "TNTInputStream.stream.start"),
+		        getClass().getSimpleName(), getName());
 	}
 
 	@Override
@@ -163,12 +149,12 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 	private static void checkFileFromProperty(String propertyKey, String defaultValue) throws Exception {
 		LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-				"B2BiSfgEventsStream.props.check.checking.for"), propertyKey);
+		        "B2BiSfgEventsStream.props.check.checking.for"), propertyKey);
 		String propertyValue = System.getProperty(propertyKey);
 		if (propertyValue == null) {
 			System.setProperty(propertyKey, defaultValue);
 			LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.props.check.setting.default"), propertyKey, defaultValue);
+			        "B2BiSfgEventsStream.props.check.setting.default"), propertyKey, defaultValue);
 			propertyValue = defaultValue;
 		}
 
@@ -181,16 +167,15 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		}
 
 		if (!Files.exists(Paths.get(filePath))) {
-			LOGGER.log(OpLevel.TRACE,
-					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-							"B2BiSfgEventsStream.props.check.file.not.found"),
-					propertyValue, Paths.get(".").toAbsolutePath().normalize().toString()); // NON-NLS
+			LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+			        "B2BiSfgEventsStream.props.check.file.not.found"), propertyValue, Paths.get(".").toAbsolutePath()
+			        .normalize().toString()); // NON-NLS
 		}
 	}
 
 	private static void checkPrecondition() throws Exception {
-		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY,
-				STREAM_PROPERTIES_PATH + "/tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
+		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, STREAM_PROPERTIES_PATH
+		        + "/tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
 		checkFileFromProperty("log4j.configuration", prefixFile(STREAM_PROPERTIES_PATH + "/log4j.properties")); // NON-NLS
 		checkFileFromProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, STREAM_PROPERTIES_PATH + "/tnt4j.properties"); // NON-NLS
 	}
@@ -212,7 +197,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			return addInputToBuffer(event.toXMLString());
 		} catch (Exception exc) {
 			LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.buffer.add.failed"), getName(), exc);
+			        "B2BiSfgEventsStream.buffer.add.failed"), getName(), exc);
 			throw exc;
 		}
 	}
@@ -222,7 +207,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		@Override
 		public void onStatusChange(TNTInputStream<?, ?> stream, StreamStatus status) {
 			LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.status.changed"), stream.getName(), status.name());
+			        "B2BiSfgEventsStream.status.changed"), stream.getName(), status.name());
 
 			if (status.equals(StreamStatus.STARTED)) {
 				sendWelcomeMessage(stream);
@@ -244,25 +229,25 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			try {
 				ActivityInfo ai = new ActivityInfo();
 				ai.setFieldValue(new ActivityField(StreamFieldType.EventType.name()), "EVENT"); // NON-NLS
-				ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()), StreamsResources
-						.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.welcome.msg"));
+				ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()), StreamsResources.getString(
+				        B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.welcome.msg"));
 				TNTStreamOutput<ActivityInfo> output = (TNTStreamOutput<ActivityInfo>) stream.getOutput();
 				if (output != null) {
 					output.logItem(ai);
 				} else {
 					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-							"B2BiSfgEventsStream.stream.out.null"));
+					        "B2BiSfgEventsStream.stream.out.null"));
 				}
 			} catch (Exception e) {
 				LOGGER.log(OpLevel.WARNING, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-						"B2BiSfgEventsStream.welcome.failed"), e);
+				        "B2BiSfgEventsStream.welcome.failed"), e);
 			}
 		}
 
 		@Override
 		public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
 			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.streams.failed"), stream.getName(), code, msg, exc);
+			        "B2BiSfgEventsStream.streams.failed"), stream.getName(), code, msg, exc);
 		}
 
 		@Override
@@ -307,8 +292,10 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		}
 		LOGGER.log(OpLevel.DEBUG, "-------------------------------------");
 
-		String envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
-
+		String envPropDirPath = searchForPropsRoot(getStreamsPropertiesPath());
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
+		}
 		if (Utils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot("."); // NON-NLS
 		}
@@ -330,43 +317,32 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		if (Utils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("user.dir")); // NON-NLS
 		}
-		
+
 		if (Utils.isEmpty(envPropDirPath)) {
 			throw new RuntimeException("Property root path not found");
 		}
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME;
 
 		LOGGER.log(OpLevel.DEBUG,
-				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.b2bi.props.root"),
-				envPropDirPath);
+		        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.b2bi.props.root"),
+		        envPropDirPath);
 
 		return envPropDirPath;
 	}
 
-	private static String getStreamsPropertiesPath() {
-		LOGGER.log(OpLevel.DEBUG, "Setting Sterling properties");
+	protected static String getStreamsPropertiesPath() {
+		LOGGER.log(OpLevel.DEBUG, "Getting B2Bi properties: {0}" + VENDOR_NAME);
 		Properties properties = Manager.getProperties(VENDOR_NAME);
-
-		LOGGER.log(OpLevel.DEBUG, "Sterling properties: {0}", properties);
-		String propertyPath = null;
-		try {
-			propertyPath = properties.getProperty("propertyPath");
-		} finally {
-			if (propertyPath != null) {
-				LOGGER.log(OpLevel.DEBUG, "Sterling propertyPath found: {0}", propertyPath);
-				return propertyPath;
-			} else {
-
-				LOGGER.log(OpLevel.DEBUG, "Setting Sterling properties");
-				return ENV_PROPS_DIR_PATH + "/" + APP_PATH;
-			}
-		}
+		LOGGER.log(OpLevel.DEBUG, "B2Bi properties: {0}", properties);
+		String propertyPath = properties.getProperty("propertyPath");;
+		LOGGER.log(OpLevel.DEBUG, "B2Bi propertyPath found: {0}", propertyPath);
+		return propertyPath;
 	}
 
 	private static String getSysProperty(String key) {
 		String pValue = System.getProperty(key);
 		LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-				"B2BiSfgEventsStream.checking.sys.property"), key, pValue);
+		        "B2BiSfgEventsStream.checking.sys.property"), key, pValue);
 
 		return pValue;
 	}
@@ -381,9 +357,10 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		}
 		File file = new File(path + pathExt);
 		boolean exists = file.exists();
-		
-		LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-		        "B2BiSfgEventsStream.props.check.file"), file, exists);
+
+		LOGGER.log(OpLevel.DEBUG,
+		        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.props.check.file"),
+		        file, exists);
 		if (exists) {
 			return path;
 		} else {
@@ -393,11 +370,9 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 	protected static String version() {
 		Package objPackage = B2BiSfgEventsStream.class.getPackage();
-		String version2 = objPackage.getImplementationVersion();
-		version2 = version2.substring(0, version2.lastIndexOf('.'));
-
-		LOGGER.log(OpLevel.DEBUG, "--- Resolved {0} package version {1}", VENDOR_NAME, version2);
-
-		return version2;
+		String version = objPackage.getImplementationVersion();
+		version = version.substring(0, version.lastIndexOf('.'));
+		LOGGER.log(OpLevel.DEBUG, "--- Resolved {0} package version {1}", VENDOR_NAME, version);
+		return version;
 	}
 }
