@@ -47,7 +47,6 @@ import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.jkoolcloud.tnt4j.utils.Utils;
 import com.sterlingcommerce.woodstock.event.Event;
-import com.sterlingcommerce.woodstock.util.frame.Manager;
 
 /**
  * Implements IBM Sterling B2Bi {@link com.sterlingcommerce.woodstock.event.Event} XML content stream, where each event
@@ -292,10 +291,8 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		}
 		LOGGER.log(OpLevel.DEBUG, "-------------------------------------");
 
-		String envPropDirPath = searchForPropsRoot(getStreamsPropertiesPath());
-		if (Utils.isEmpty(envPropDirPath)) {
-			envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
-		}
+		String envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
+		
 		if (Utils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot("."); // NON-NLS
 		}
@@ -328,15 +325,6 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		        envPropDirPath);
 
 		return envPropDirPath;
-	}
-
-	protected static String getStreamsPropertiesPath() {
-		LOGGER.log(OpLevel.DEBUG, "Getting B2Bi properties: {0}" + VENDOR_NAME);
-		Properties properties = Manager.getProperties(VENDOR_NAME);
-		LOGGER.log(OpLevel.DEBUG, "B2Bi properties: {0}", properties);
-		String propertyPath = properties.getProperty("propertyPath");;
-		LOGGER.log(OpLevel.DEBUG, "B2Bi propertyPath found: {0}", propertyPath);
-		return propertyPath;
 	}
 
 	private static String getSysProperty(String key) {
