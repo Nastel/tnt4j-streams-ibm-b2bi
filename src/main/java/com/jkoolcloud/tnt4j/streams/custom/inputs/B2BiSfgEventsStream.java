@@ -17,6 +17,7 @@
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -24,7 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.lang3.SystemUtils;
+import org.xml.sax.SAXException;
 
 import com.jkoolcloud.tnt4j.config.TrackerConfigStore;
 import com.jkoolcloud.tnt4j.core.OpLevel;
@@ -71,18 +75,25 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private static final String PROPS_ROOT_DIR_NAME = "properties"; // NON-NLS
 	private static final String VENDOR_NAME = "jkool"; // NON-NLS
 	private static final String APP_PATH = VENDOR_NAME + "/" + version(); // NON-NLS
-	private static final String ENV_PROPS_DIR_PATH = envPropDirPath();
-	private static final String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
+	
+	private static String ENV_PROPS_DIR_PATH;
+	private static String STREAM_PROPERTIES_PATH; // NON-NLS
 
 	private InputStreamListener streamListener = new B2BiStreamListener();
 
 	private boolean ended;
 	private static final Object lockObject = new Object();
 
+	public B2BiSfgEventsStream() {
+		ENV_PROPS_DIR_PATH = envPropDirPath();
+		STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS	
+	}
+	
 	/**
 	 * Initiates stream.
+	 * @throws Exception 
 	 */
-	protected void initStream() {
+	protected void initStream() throws RuntimeException {
 		setName(STREAM_NAME);
 		try {
 			checkPrecondition();
@@ -101,7 +112,8 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			LOGGER.log(OpLevel.CRITICAL,
 			        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.failed"),
 			        e.getLocalizedMessage(), e);
-		}
+			throw new RuntimeException(e);
+		} 
 	}
 
 	private void waitForStreams(long timeOut) throws InterruptedException {
@@ -281,6 +293,12 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		String envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
 
 		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot("."); // NON-NLS
+		}
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot("../.."); // NON-NLS
+		}
+		if (Utils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("INSTALL_DIR"));// NON-NLS
 		}
 		if (Utils.isEmpty(envPropDirPath)) {
@@ -295,10 +313,10 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		if (Utils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("user.dir")); // NON-NLS
 		}
+		
 		if (Utils.isEmpty(envPropDirPath)) {
-			envPropDirPath = searchForPropsRoot("."); // NON-NLS
+			throw new RuntimeException("Property root path not found");
 		}
-
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME;
 
 		LOGGER.log(OpLevel.DEBUG,
@@ -324,8 +342,12 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		if (Utils.isEmpty(path)) {
 			return null;
 		}
-
-		if (new File(path + pathExt).exists()) {
+		File file = new File(path + pathExt);
+		boolean exists = file.exists();
+		
+		LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+		        "B2BiSfgEventsStream.props.check.file"), file, exists);
+		if (exists) {
 			return path;
 		} else {
 			return searchForPropsRoot(new File(path).getParent(), pathExt);
