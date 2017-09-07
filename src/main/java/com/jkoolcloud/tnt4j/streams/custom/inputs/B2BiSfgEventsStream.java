@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.SystemUtils;
@@ -276,7 +277,10 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	 */
 	public static String envPropDirPath() {
 		LOGGER.log(OpLevel.DEBUG, "--- Running JVM System properties ---");
-		LOGGER.log(OpLevel.DEBUG, "{0}", System.getProperties());
+		Properties sProps = System.getProperties();
+		for (Map.Entry<?, ?> spe : sProps.entrySet()) {
+			LOGGER.log(OpLevel.DEBUG, "{0}", spe);
+		}
 		LOGGER.log(OpLevel.DEBUG, "-------------------------------------");
 
 		String envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
@@ -334,12 +338,8 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	}
 
 	private static String version() {
-		// TODO: to make more advanced (dynamic) version handling
-		// Package objPackage = B2BiSfgEventsStream.class.getPackage();
-		// String name = objPackage.getSpecificationTitle();
-		// String version = objPackage.getSpecificationVersion();
-		// String version2 = objPackage.getImplementationVersion();
-
-		return "1.0"; // NON-NLS
+		Package objPackage = B2BiSfgEventsStream.class.getPackage();
+		String version2 = objPackage.getImplementationVersion();
+		return version2;
 	}
 }
