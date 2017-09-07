@@ -17,6 +17,7 @@
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -70,6 +71,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 	private static final String PROPS_ROOT_DIR_NAME = "properties"; // NON-NLS
+	private static final String PROPS_EXT = ".properties"; // NON-NLS
 	private static final String VENDOR_NAME = "jkool"; // NON-NLS
 	private static final String APP_PATH = VENDOR_NAME + "/" + version(); // NON-NLS
 
@@ -316,11 +318,13 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		}
 
 		if (Utils.isEmpty(envPropDirPath)) {
-			throw new RuntimeException("Property root path not found");
+			LOGGER.log(OpLevel.CRITICAL,
+			        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.init.failure"), "Properties root folder not found");
+			throw new RuntimeException("Properties root folder not found");
 		}
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME;
 
-		LOGGER.log(OpLevel.DEBUG,
+		LOGGER.log(OpLevel.INFO,
 		        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.b2bi.props.root"),
 		        envPropDirPath);
 
@@ -336,24 +340,25 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	}
 
 	private static String searchForPropsRoot(String path) {
-		return searchForPropsRoot(path, "/" + PROPS_ROOT_DIR_NAME + "/" + APP_PATH);
+		return searchForPropsRoot(path, "/" + PROPS_ROOT_DIR_NAME + "/" + APP_PATH, new ExtensionFilter(PROPS_EXT));
 	}
 
-	private static String searchForPropsRoot(String path, String pathExt) {
+	private static String searchForPropsRoot(String path, String pathExt, ExtensionFilter filter) {
 		if (Utils.isEmpty(path)) {
 			return null;
 		}
 		File file = new File(path + pathExt);
 		boolean exists = file.exists();
-
+		File [] props = exists? file.listFiles(filter): null;
 		LOGGER.log(OpLevel.DEBUG,
 		        StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.props.check.file"),
-		        file, exists);
+		        file.getAbsolutePath(), exists, (props != null? props.length: 0));
 		if (exists) {
-			return path;
-		} else {
-			return searchForPropsRoot(new File(path).getParent(), pathExt);
-		}
+			if (props != null && props.length > 0) {
+				return path;
+			}
+		} 
+		return searchForPropsRoot(new File(path).getParent(), pathExt, filter);
 	}
 
 	protected static String version() {
@@ -363,4 +368,17 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		LOGGER.log(OpLevel.DEBUG, "--- Resolved {0} package version {1}", VENDOR_NAME, version);
 		return version;
 	}
+}
+
+class ExtensionFilter implements FilenameFilter {
+	String extName;
+	
+	ExtensionFilter(String ext) {
+		extName = ext;
+	}
+	
+    @Override
+    public boolean accept(File dir, String name) {
+    	return name.endsWith(extName);
+    }	
 }
