@@ -16,6 +16,9 @@
 
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
+import java.util.HashMap;
+
+import com.jkoolcloud.tnt4j.config.ConfigException;
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
@@ -39,6 +42,15 @@ public class B2BiSfgEventListener implements EventListener {
 	static {
 		// initialize logging
 		FileEventSinkFactory fileFactory = new FileEventSinkFactory("/tmp/b2bi-event-stream.log"); // NON-NLS
+		try {
+			fileFactory.setConfiguration(new HashMap<String, Object>() {
+				{
+					put("Filter", "com.jkoolcloud.tnt4j.filters.EventLevelTimeFilter");
+				}
+			});
+		} catch (ConfigException e) {
+			e.printStackTrace();
+		}
 		DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
 		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
 
