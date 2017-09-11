@@ -26,7 +26,7 @@ public final class B2BiConstants {
 	/**
 	 * Resource bundle name constant for TNT4J-Streams "B2Bi-plugin" module.
 	 */
-	public static final String RESOURCE_BUNDLE_NAME = "tnt4j-streams-ibm-b2bi"; // NON-NLS
+	public static final String RESOURCE_BUNDLE_NAME = "tnt4j-streams-ibm-b2bi-res"; // NON-NLS
 
 	private B2BiConstants() {
 	}

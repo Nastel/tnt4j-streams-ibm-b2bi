@@ -17,6 +17,7 @@
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -70,10 +71,12 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 	private static final String PROPS_ROOT_DIR_NAME = "properties"; // NON-NLS
+	private static final String PROPS_EXT = ".properties"; // NON-NLS
 	private static final String VENDOR_NAME = "jkool"; // NON-NLS
 	private static final String APP_PATH = VENDOR_NAME + "/" + version(); // NON-NLS
-	private static final String ENV_PROPS_DIR_PATH = envPropDirPath();
-	private static final String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
+
+	private static String ENV_PROPS_DIR_PATH;
+	private static String STREAM_PROPERTIES_PATH; // NON-NLS
 
 	private InputStreamListener streamListener = new B2BiStreamListener();
 
@@ -81,9 +84,20 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private static final Object lockObject = new Object();
 
 	/**
-	 * Initiates stream.
+	 * Constructs a new B2BiSfgEventsStream.
 	 */
-	protected void initStream() {
+	public B2BiSfgEventsStream() {
+		ENV_PROPS_DIR_PATH = envPropDirPath();
+		STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
+	}
+
+	/**
+	 * Initiates stream.
+	 * 
+	 * @throws RuntimeException
+	 *             if stream initialization fails
+	 */
+	protected void initStream() throws RuntimeException {
 		setName(STREAM_NAME);
 		try {
 			checkPrecondition();
@@ -93,7 +107,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			addParsers(parsers);
 
 			Map<String, String> props = new HashMap<>(1);
-			props.put(StreamProperties.PROP_BUFFER_DROP_WHEN_FULL, "false");
+			props.put(StreamProperties.PROP_BUFFER_DROP_WHEN_FULL, "false"); // NON-NLS
 			setProperties(props.entrySet());
 
 			StreamsAgent.runFromAPI(streamListener, null, this);
@@ -102,6 +116,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.failed"),
 					e.getLocalizedMessage(), e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -276,15 +291,21 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	 * @return path of Sterling environment properties directory
 	 */
 	public static String envPropDirPath() {
-		LOGGER.log(OpLevel.DEBUG, "--- Running JVM System properties ---");
+		LOGGER.log(OpLevel.DEBUG, "--- Running JVM System properties ---"); // NON-NLS
 		Properties sProps = System.getProperties();
 		for (Map.Entry<?, ?> spe : sProps.entrySet()) {
-			LOGGER.log(OpLevel.DEBUG, "{0}", spe);
+			LOGGER.log(OpLevel.DEBUG, "{0}", spe); // NON-NLS
 		}
-		LOGGER.log(OpLevel.DEBUG, "-------------------------------------");
+		LOGGER.log(OpLevel.DEBUG, "-------------------------------------"); // NON-NLS
 
 		String envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
 
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot("."); // NON-NLS
+		}
+		if (Utils.isEmpty(envPropDirPath)) {
+			envPropDirPath = searchForPropsRoot("../.."); // NON-NLS
+		}
 		if (Utils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("INSTALL_DIR"));// NON-NLS
 		}
@@ -300,13 +321,18 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		if (Utils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("user.dir")); // NON-NLS
 		}
+
 		if (Utils.isEmpty(envPropDirPath)) {
-			envPropDirPath = searchForPropsRoot("."); // NON-NLS
+			LOGGER.log(OpLevel.CRITICAL,
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.init.failure"),
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+							"B2BiSfgEventsStream.b2bi.props.root.not.found"));
+			throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+					"B2BiSfgEventsStream.b2bi.props.root.not.found"));
 		}
+		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME; // NON-NLS
 
-		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME;
-
-		LOGGER.log(OpLevel.DEBUG,
+		LOGGER.log(OpLevel.INFO,
 				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.b2bi.props.root"),
 				envPropDirPath);
 
@@ -322,24 +348,45 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	}
 
 	private static String searchForPropsRoot(String path) {
-		return searchForPropsRoot(path, "/" + PROPS_ROOT_DIR_NAME + "/" + APP_PATH);
+		return searchForPropsRoot(path, "/" + PROPS_ROOT_DIR_NAME + "/" + APP_PATH, new ExtensionFilter(PROPS_EXT)); // NON-NLS
 	}
 
-	private static String searchForPropsRoot(String path, String pathExt) {
+	private static String searchForPropsRoot(String path, String pathExt, ExtensionFilter filter) {
 		if (Utils.isEmpty(path)) {
 			return null;
 		}
-
-		if (new File(path + pathExt).exists()) {
-			return path;
-		} else {
-			return searchForPropsRoot(new File(path).getParent(), pathExt);
+		File file = new File(path + pathExt);
+		boolean exists = file.exists();
+		File[] props = exists ? file.listFiles(filter) : null;
+		LOGGER.log(OpLevel.DEBUG,
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.props.check.file"),
+				file.getAbsolutePath(), exists, (props != null ? props.length : 0));
+		if (exists) {
+			if (props != null && props.length > 0) {
+				return path;
+			}
 		}
+		return searchForPropsRoot(new File(path).getParent(), pathExt, filter);
 	}
 
-	private static String version() {
+	protected static String version() {
 		Package objPackage = B2BiSfgEventsStream.class.getPackage();
-		String version2 = objPackage.getImplementationVersion();
-		return version2;
+		String version = objPackage.getImplementationVersion();
+		version = version.substring(0, version.lastIndexOf('.'));
+		LOGGER.log(OpLevel.DEBUG, "--- Resolved {0} package version {1}", VENDOR_NAME, version); // NON-NLS
+		return version;
+	}
+}
+
+class ExtensionFilter implements FilenameFilter {
+	String extName;
+
+	ExtensionFilter(String ext) {
+		extName = ext;
+	}
+
+	@Override
+	public boolean accept(File dir, String name) {
+		return name.endsWith(extName);
 	}
 }

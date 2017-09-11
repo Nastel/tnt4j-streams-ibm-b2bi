@@ -19,7 +19,6 @@ package com.jkoolcloud.tnt4j.streams.custom.inputs;
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
-import com.jkoolcloud.tnt4j.sink.impl.FileEventSinkFactory;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.sterlingcommerce.woodstock.event.Event;
@@ -38,7 +37,7 @@ public class B2BiSfgEventListener implements EventListener {
 
 	static {
 		// initialize logging
-		FileEventSinkFactory fileFactory = new FileEventSinkFactory("/tmp/b2bi-event-stream.log"); // NON-NLS
+		B2BiRFileLogger fileFactory = new B2BiRFileLogger("/tmp/b2bi-event-stream.log"); // NON-NLS
 		DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
 		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
 
