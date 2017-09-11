@@ -253,8 +253,10 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.init.failure"),
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfgEventsStream.b2bi.props.root.not.found"));
-			throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+			if (System.getProperty("test") == null) {
+				throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 					"B2BiSfgEventsStream.b2bi.props.root.not.found"));
+			}
 		}
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME; // NON-NLS
 

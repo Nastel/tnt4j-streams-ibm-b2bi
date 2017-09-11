@@ -37,8 +37,10 @@ public class B2BiSfgEventListener implements EventListener {
 
 	static {
 		// initialize logging
-		B2BiRFileLogger fileFactory = new B2BiRFileLogger("/tmp/b2bi-event-stream.log"); // NON-NLS
-		DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
+		if (System.getProperty("test") == null) {
+			B2BiRFileLogger fileFactory = new B2BiRFileLogger("/tmp/b2bi-event-stream.log"); // NON-NLS
+			DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
+		}
 		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
 
 		// initialize stream
