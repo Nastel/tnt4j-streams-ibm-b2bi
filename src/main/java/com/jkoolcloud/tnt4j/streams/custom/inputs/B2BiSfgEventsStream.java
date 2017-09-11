@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -81,7 +83,8 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private InputStreamListener streamListener = new B2BiStreamListener();
 
 	private boolean ended;
-	private static final Object lockObject = new Object();
+	private static final ReentrantLock lockObject = new ReentrantLock();
+	private static final Condition started = lockObject.newCondition();
 
 	/**
 	 * Constructs a new B2BiSfgEventsStream.
@@ -121,10 +124,13 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	}
 
 	private void waitForStreams(long timeOut) throws InterruptedException {
-		synchronized (lockObject) {
+		lockObject.lock();
+		try {
 			LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 					"B2BiSfgEventsStream.waiting.for.streams"));
-			lockObject.wait(timeOut);
+			started.await(timeOut, TimeUnit.MILLISECONDS);
+		} finally {
+			lockObject.unlock();
 		}
 	}
 
@@ -217,9 +223,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 			if (status.equals(StreamStatus.STARTED)) {
 				sendWelcomeMessage(stream);
-				synchronized (lockObject) {
-					lockObject.notifyAll();
-				}
+				started.signal();
 			}
 		}
 
