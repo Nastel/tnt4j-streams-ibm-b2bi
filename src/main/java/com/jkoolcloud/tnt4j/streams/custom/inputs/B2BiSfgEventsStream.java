@@ -128,8 +128,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	@Override
 	protected void start() throws Exception {
 		super.start();
-
-		LOGGER.log(OpLevel.DEBUG,
+		LOGGER.log(OpLevel.INFO,
 				StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, "TNTInputStream.stream.start"),
 				getClass().getSimpleName(), getName());
 	}
@@ -218,12 +217,12 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	 * @return path of Sterling environment properties directory
 	 */
 	protected static String getPropDirPath() {
-		LOGGER.log(OpLevel.DEBUG, "--- Running JVM System properties ---"); // NON-NLS
+		LOGGER.log(OpLevel.INFO, "--- Running JVM System properties ---"); // NON-NLS
 		Properties sProps = System.getProperties();
 		for (Map.Entry<?, ?> spe : sProps.entrySet()) {
-			LOGGER.log(OpLevel.DEBUG, "{0}", spe); // NON-NLS
+			LOGGER.log(OpLevel.INFO, "{0}", spe); // NON-NLS
 		}
-		LOGGER.log(OpLevel.DEBUG, "-------------------------------------"); // NON-NLS
+		LOGGER.log(OpLevel.INFO, "-------------------------------------"); // NON-NLS
 
 		String envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
 
