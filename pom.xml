@@ -368,6 +368,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.sterlingcommerce</groupId>
+            <artifactId>install_foundation</artifactId>
+            <version>${platform.ifcbase.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>1.4.9</version>
@@ -405,13 +411,6 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito-common</artifactId>
             <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sterlingcommerce</groupId>
-            <artifactId>install_foundation</artifactId>
-            <version>${platform.ifcbase.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
