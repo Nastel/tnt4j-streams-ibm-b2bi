@@ -6,7 +6,7 @@
 
     <groupId>com.jkoolcloud.tnt4j.streams</groupId>
     <artifactId>tnt4j-streams-ibm-b2bi</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <prerequisites>
@@ -171,8 +171,7 @@
                 <configuration>
                     <finalName>${release.deploy.finalName}</finalName>
                     <transformers>
-                        <transformer
-                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <manifestEntries>
                                 <Implementation-Vendor>${product.vendor}</Implementation-Vendor>
                                 <Implementation-Title>${product.name}</Implementation-Title>
@@ -369,12 +368,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.sterlingcommerce</groupId>
-            <artifactId>install_foundation</artifactId>
-            <version>${platform.ifcbase.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>1.4.9</version>
@@ -412,6 +405,13 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito-common</artifactId>
             <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sterlingcommerce</groupId>
+            <artifactId>install_foundation</artifactId>
+            <version>${platform.ifcbase.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

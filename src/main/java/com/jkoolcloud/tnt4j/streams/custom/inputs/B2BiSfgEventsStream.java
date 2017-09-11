@@ -376,8 +376,13 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	protected static String version() {
 		Package objPackage = B2BiSfgEventsStream.class.getPackage();
 		String version = objPackage.getImplementationVersion();
-		version = version.substring(0, version.lastIndexOf('.'));
-		LOGGER.log(OpLevel.DEBUG, "--- Resolved {0} package version {1}", VENDOR_NAME, version); // NON-NLS
+		if (version != null) {
+			version = version.substring(0, version.lastIndexOf('.'));
+		} else {
+			version = "1.0";
+			LOGGER.log(OpLevel.DEBUG, "Could not resolved version, defaults to {0}", version);
+		}
+		LOGGER.log(OpLevel.DEBUG, "--- Resolved {0} package version {1}", VENDOR_NAME, version);
 		return version;
 	}
 }
