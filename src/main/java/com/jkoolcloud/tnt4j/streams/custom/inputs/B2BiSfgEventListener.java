@@ -25,7 +25,6 @@ import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.event.EventListener;
 import com.sterlingcommerce.woodstock.event.ExceptionLevel;
 
-
 /**
  * Sterling B2Bi event listener implementation, using {@link B2BiSfgEventsStream} singleton instance to stream
  * {@link #handleEvent(Event)} received {@link Event}'s to JKool Cloud.
