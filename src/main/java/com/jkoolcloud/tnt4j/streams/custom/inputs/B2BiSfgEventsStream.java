@@ -223,7 +223,12 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 			if (status.equals(StreamStatus.STARTED)) {
 				sendWelcomeMessage(stream);
-				started.signalAll();
+				lockObject.lock();
+				try {
+					started.signalAll();
+				} finally {
+					lockObject.unlock();
+				}
 			}
 		}
 
