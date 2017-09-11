@@ -114,7 +114,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			setProperties(props.entrySet());
 
 			StreamsAgent.runFromAPI(streamListener, null, this);
-			waitForStreams(TimeUnit.SECONDS.toMillis(30));
+			waitForStreams(TimeUnit.SECONDS.toNanos(30));
 		} catch (Exception e) {
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.failed"),
@@ -128,7 +128,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		try {
 			LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 					"B2BiSfgEventsStream.waiting.for.streams"));
-			started.await(timeOut, TimeUnit.MILLISECONDS);
+			started.awaitNanos(timeOut);
 		} finally {
 			lockObject.unlock();
 		}
