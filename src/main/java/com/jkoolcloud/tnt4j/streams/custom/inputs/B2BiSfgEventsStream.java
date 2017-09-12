@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -37,14 +35,7 @@ import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.StreamsAgent;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.configure.StreamsConfigLoader;
-import com.jkoolcloud.tnt4j.streams.fields.ActivityField;
-import com.jkoolcloud.tnt4j.streams.fields.ActivityInfo;
-import com.jkoolcloud.tnt4j.streams.fields.StreamFieldType;
 import com.jkoolcloud.tnt4j.streams.inputs.AbstractBufferedStream;
-import com.jkoolcloud.tnt4j.streams.inputs.InputStreamListener;
-import com.jkoolcloud.tnt4j.streams.inputs.StreamStatus;
-import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStream;
-import com.jkoolcloud.tnt4j.streams.outputs.TNTStreamOutput;
 import com.jkoolcloud.tnt4j.streams.parsers.ActivityParser;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
@@ -79,7 +70,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 	private static String ENV_PROPS_DIR_PATH = getPropDirPath();
 	private static String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
-	
+
 	private B2BiStreamListener streamListener;
 	private boolean ended;
 
@@ -118,7 +109,6 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	@Override
 	protected EventSink logger() {
@@ -255,7 +245,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 							"B2BiSfgEventsStream.b2bi.props.root.not.found"));
 			if (System.getProperty("test") == null) {
 				throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.b2bi.props.root.not.found"));
+						"B2BiSfgEventsStream.b2bi.props.root.not.found"));
 			}
 		}
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME; // NON-NLS

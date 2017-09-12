@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
 import java.util.concurrent.TimeUnit;
@@ -32,6 +33,13 @@ import com.jkoolcloud.tnt4j.streams.outputs.TNTStreamOutput;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 
+/**
+ * {@link B2BiSfgEventsStream} listener capable to lock running thread until stream gets started (changes state to
+ * {@link StreamStatus#STARTED} and sends "welcome" event to jKool for a user to know that IBM B2Bi Sterling events
+ * streaming has started.
+ *
+ * @version $Revision: 1 $
+ */
 public class B2BiStreamListener implements InputStreamListener {
 
 	private EventSink LOGGER;
@@ -41,7 +49,19 @@ public class B2BiStreamListener implements InputStreamListener {
 	public B2BiStreamListener(EventSink logger) {
 		LOGGER = logger;
 	}
-	
+
+	/**
+	 * Locks current {@link Thread} until stream state changes to {@link StreamStatus#STARTED}.
+	 *
+	 * @param timeOut
+	 *            the maximum time to wait
+	 * @param unit
+	 *            the time unit of the {@code timeOut} argument
+	 * @throws InterruptedException
+	 *             if the current thread is interrupted
+	 *
+	 * @see #onStatusChange(TNTInputStream, StreamStatus)
+	 */
 	public void waitForStart(long timeOut, TimeUnit unit) throws InterruptedException {
 		lockObject.lock();
 		try {
@@ -55,8 +75,9 @@ public class B2BiStreamListener implements InputStreamListener {
 
 	@Override
 	public void onStatusChange(TNTInputStream<?, ?> stream, StreamStatus status) {
-		LOGGER.log(OpLevel.INFO, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-				"B2BiSfgEventsStream.status.changed"), stream.getName(), status.name());
+		LOGGER.log(OpLevel.INFO,
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.status.changed"),
+				stream.getName(), status.name());
 
 		if (status.equals(StreamStatus.STARTED)) {
 			sendWelcomeMessage(stream);
@@ -70,8 +91,8 @@ public class B2BiStreamListener implements InputStreamListener {
 	}
 
 	/**
-	 * Sends "welcome" message to jKool. It is simple event to inform user, that stream has been initialized on
-	 * Sterling and is ready to process events.
+	 * Sends "welcome" message to jKool. It is simple event to inform user, that stream has been initialized on Sterling
+	 * and is ready to process events.
 	 *
 	 * @param stream
 	 *            the stream instance to send event
@@ -80,8 +101,8 @@ public class B2BiStreamListener implements InputStreamListener {
 		try {
 			ActivityInfo ai = new ActivityInfo();
 			ai.setFieldValue(new ActivityField(StreamFieldType.EventType.name()), "EVENT"); // NON-NLS
-			ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()), StreamsResources
-					.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.welcome.msg"));
+			ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()),
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.welcome.msg"));
 			@SuppressWarnings("unchecked")
 			TNTStreamOutput<ActivityInfo> output = (TNTStreamOutput<ActivityInfo>) stream.getOutput();
 			if (output != null) {
@@ -98,8 +119,9 @@ public class B2BiStreamListener implements InputStreamListener {
 
 	@Override
 	public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
-		LOGGER.log(OpLevel.CRITICAL, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-				"B2BiSfgEventsStream.streams.failed"), stream.getName(), code, msg, exc);
+		LOGGER.log(OpLevel.CRITICAL,
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.streams.failed"),
+				stream.getName(), code, msg, exc);
 	}
 
 	@Override
