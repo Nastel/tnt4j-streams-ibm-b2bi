@@ -50,6 +50,18 @@ public class B2BiStreamListener implements InputStreamListener {
 		LOGGER = logger;
 	}
 
+	/**
+	 * Locks current {@link Thread} until stream state changes to {@link StreamStatus#STARTED}.
+	 *
+	 * @param timeOut
+	 *            the maximum time to wait
+	 * @param unit
+	 *            the time unit of the {@code timeOut} argument
+	 * @throws InterruptedException
+	 *             if the current thread is interrupted
+	 *
+	 * @see #onStatusChange(TNTInputStream, StreamStatus)
+	 */
 	public void waitForStart(long timeOut, TimeUnit unit) throws InterruptedException {
 		lockObject.lock();
 		try {
