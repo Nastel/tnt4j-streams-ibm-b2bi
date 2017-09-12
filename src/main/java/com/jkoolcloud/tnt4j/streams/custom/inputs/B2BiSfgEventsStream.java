@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -37,14 +35,7 @@ import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.StreamsAgent;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.configure.StreamsConfigLoader;
-import com.jkoolcloud.tnt4j.streams.fields.ActivityField;
-import com.jkoolcloud.tnt4j.streams.fields.ActivityInfo;
-import com.jkoolcloud.tnt4j.streams.fields.StreamFieldType;
 import com.jkoolcloud.tnt4j.streams.inputs.AbstractBufferedStream;
-import com.jkoolcloud.tnt4j.streams.inputs.InputStreamListener;
-import com.jkoolcloud.tnt4j.streams.inputs.StreamStatus;
-import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStream;
-import com.jkoolcloud.tnt4j.streams.outputs.TNTStreamOutput;
 import com.jkoolcloud.tnt4j.streams.parsers.ActivityParser;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
@@ -77,21 +68,17 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private static final String VENDOR_NAME = "jkool"; // NON-NLS
 	private static final String APP_PATH = VENDOR_NAME + "/" + version(); // NON-NLS
 
-	private static String ENV_PROPS_DIR_PATH;
-	private static String STREAM_PROPERTIES_PATH; // NON-NLS
+	private static String ENV_PROPS_DIR_PATH = getPropDirPath();
+	private static String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
 
-	private InputStreamListener streamListener = new B2BiStreamListener();
-
+	private B2BiStreamListener streamListener;
 	private boolean ended;
-	private static final ReentrantLock lockObject = new ReentrantLock();
-	private static final Condition started = lockObject.newCondition();
 
 	/**
 	 * Constructs a new B2BiSfgEventsStream.
 	 */
 	public B2BiSfgEventsStream() {
-		ENV_PROPS_DIR_PATH = envPropDirPath();
-		STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
+		streamListener = new B2BiStreamListener(LOGGER);
 	}
 
 	/**
@@ -114,23 +101,12 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			setProperties(props.entrySet());
 
 			StreamsAgent.runFromAPI(streamListener, null, this);
-			waitForStreams(TimeUnit.SECONDS.toNanos(30));
+			streamListener.waitForStart(30, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.failed"),
 					e.getLocalizedMessage(), e);
 			throw new RuntimeException(e);
-		}
-	}
-
-	private void waitForStreams(long timeOut) throws InterruptedException {
-		lockObject.lock();
-		try {
-			LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.waiting.for.streams"));
-			started.awaitNanos(timeOut);
-		} finally {
-			lockObject.unlock();
 		}
 	}
 
@@ -142,8 +118,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	@Override
 	protected void start() throws Exception {
 		super.start();
-
-		LOGGER.log(OpLevel.DEBUG,
+		LOGGER.log(OpLevel.INFO,
 				StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, "TNTInputStream.stream.start"),
 				getClass().getSimpleName(), getName());
 	}
@@ -214,74 +189,6 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		}
 	}
 
-	private static class B2BiStreamListener implements InputStreamListener {
-
-		@Override
-		public void onStatusChange(TNTInputStream<?, ?> stream, StreamStatus status) {
-			LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.status.changed"), stream.getName(), status.name());
-
-			if (status.equals(StreamStatus.STARTED)) {
-				sendWelcomeMessage(stream);
-				lockObject.lock();
-				try {
-					started.signalAll();
-				} finally {
-					lockObject.unlock();
-				}
-			}
-		}
-
-		/**
-		 * Sends "welcome" message to jKool. It is simple event to inform user, that stream has been initialized on
-		 * Sterling and is ready to process events.
-		 *
-		 * @param stream
-		 *            the stream instance to send event
-		 */
-		@SuppressWarnings("unchecked")
-		protected static void sendWelcomeMessage(TNTInputStream<?, ?> stream) {
-			try {
-				ActivityInfo ai = new ActivityInfo();
-				ai.setFieldValue(new ActivityField(StreamFieldType.EventType.name()), "EVENT"); // NON-NLS
-				ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()), StreamsResources
-						.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.welcome.msg"));
-				TNTStreamOutput<ActivityInfo> output = (TNTStreamOutput<ActivityInfo>) stream.getOutput();
-				if (output != null) {
-					output.logItem(ai);
-				} else {
-					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-							"B2BiSfgEventsStream.stream.out.null"));
-				}
-			} catch (Exception e) {
-				LOGGER.log(OpLevel.WARNING, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-						"B2BiSfgEventsStream.welcome.failed"), e);
-			}
-		}
-
-		@Override
-		public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
-			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.streams.failed"), stream.getName(), code, msg, exc);
-		}
-
-		@Override
-		public void onSuccess(TNTInputStream<?, ?> stream) {
-		}
-
-		@Override
-		public void onStreamEvent(TNTInputStream<?, ?> stream, OpLevel level, String message, Object source) {
-		}
-
-		@Override
-		public void onProgressUpdate(TNTInputStream<?, ?> stream, int current, int total) {
-		}
-
-		@Override
-		public void onFinish(TNTInputStream<?, ?> stream, StreamStats stats) {
-		}
-	}
-
 	/**
 	 * Adds operating system dependent prefix to provided file name. If operating system is Windows prefix is
 	 * {@code "file:///"}, {@code "file:/"} - otherwise.
@@ -299,13 +206,13 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	 *
 	 * @return path of Sterling environment properties directory
 	 */
-	public static String envPropDirPath() {
-		LOGGER.log(OpLevel.DEBUG, "--- Running JVM System properties ---"); // NON-NLS
+	protected static String getPropDirPath() {
+		LOGGER.log(OpLevel.INFO, "--- Running JVM System properties ---"); // NON-NLS
 		Properties sProps = System.getProperties();
 		for (Map.Entry<?, ?> spe : sProps.entrySet()) {
-			LOGGER.log(OpLevel.DEBUG, "{0}", spe); // NON-NLS
+			LOGGER.log(OpLevel.INFO, "{0}", spe); // NON-NLS
 		}
-		LOGGER.log(OpLevel.DEBUG, "-------------------------------------"); // NON-NLS
+		LOGGER.log(OpLevel.INFO, "-------------------------------------"); // NON-NLS
 
 		String envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
 
@@ -336,8 +243,10 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.init.failure"),
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfgEventsStream.b2bi.props.root.not.found"));
-			throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.b2bi.props.root.not.found"));
+			if (System.getProperty("test") == null) {
+				throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+						"B2BiSfgEventsStream.b2bi.props.root.not.found"));
+			}
 		}
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME; // NON-NLS
 

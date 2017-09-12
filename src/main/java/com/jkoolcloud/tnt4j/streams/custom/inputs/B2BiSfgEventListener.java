@@ -37,16 +37,18 @@ public class B2BiSfgEventListener implements EventListener {
 
 	static {
 		// initialize logging
-		B2BiRFileLogger fileFactory = new B2BiRFileLogger("/tmp/b2bi-event-stream.log"); // NON-NLS
-		DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
+		if (System.getProperty("test") == null) {
+			B2BiRFileLogger fileFactory = new B2BiRFileLogger("/tmp/b2bi-event-stream.log"); // NON-NLS
+			DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
+		}
 		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
 
 		// initialize stream
-		LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+		LOGGER.log(OpLevel.INFO, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 				"B2BiSfgEventListener.init.stream.instance.start"));
 		tntStream = new B2BiSfgEventsStream();
 		tntStream.initStream();
-		LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+		LOGGER.log(OpLevel.INFO, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 				"B2BiSfgEventListener.init.stream.instance.end"));
 	}
 
@@ -54,7 +56,7 @@ public class B2BiSfgEventListener implements EventListener {
 	 * Constructs a new B2BiSfgEventListener.
 	 */
 	public B2BiSfgEventListener() {
-		LOGGER.log(OpLevel.DEBUG,
+		LOGGER.log(OpLevel.INFO,
 				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventListener.create.new"),
 				getClass().getName(), hashCode());
 	}
