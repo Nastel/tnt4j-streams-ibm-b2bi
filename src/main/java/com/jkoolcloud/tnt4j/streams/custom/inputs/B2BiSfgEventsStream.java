@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -37,19 +35,13 @@ import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.StreamsAgent;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.configure.StreamsConfigLoader;
-import com.jkoolcloud.tnt4j.streams.fields.ActivityField;
-import com.jkoolcloud.tnt4j.streams.fields.ActivityInfo;
-import com.jkoolcloud.tnt4j.streams.fields.StreamFieldType;
 import com.jkoolcloud.tnt4j.streams.inputs.AbstractBufferedStream;
-import com.jkoolcloud.tnt4j.streams.inputs.InputStreamListener;
-import com.jkoolcloud.tnt4j.streams.inputs.StreamStatus;
-import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStream;
-import com.jkoolcloud.tnt4j.streams.outputs.TNTStreamOutput;
 import com.jkoolcloud.tnt4j.streams.parsers.ActivityParser;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.jkoolcloud.tnt4j.utils.Utils;
 import com.sterlingcommerce.woodstock.event.Event;
+import com.sterlingcommerce.woodstock.util.frame.Manager;
 
 /**
  * Implements IBM Sterling B2Bi {@link com.sterlingcommerce.woodstock.event.Event} XML content stream, where each event
@@ -74,14 +66,25 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 	private static final String PROPS_ROOT_DIR_NAME = "properties"; // NON-NLS
 	private static final String PROPS_EXT = ".properties"; // NON-NLS
-	private static final String VENDOR_NAME = "jkool"; // NON-NLS
+	public static final String VENDOR_NAME = "jkool"; // NON-NLS
 	private static final String APP_PATH = VENDOR_NAME + "/" + version(); // NON-NLS
 
 	private static String ENV_PROPS_DIR_PATH = getPropDirPath();
 	private static String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
-	
+
 	private B2BiStreamListener streamListener;
 	private boolean ended;
+
+	private static final Properties sterlingProperties = Manager.getProperties(VENDOR_NAME);
+	static {
+		if (sterlingProperties == null) {
+			LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+					"B2BiSfgEventsStream.props.notFound.sterling"), VENDOR_NAME);
+		} else {
+			LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+					"B2BiSfgEventsStream.props.found.sterling.all"), VENDOR_NAME, sterlingProperties);
+		}
+	}
 
 	/**
 	 * Constructs a new B2BiSfgEventsStream.
@@ -119,7 +122,6 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		}
 	}
 
-
 	@Override
 	protected EventSink logger() {
 		return LOGGER;
@@ -147,6 +149,17 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 				"B2BiSfgEventsStream.props.check.checking.for"), propertyKey);
 		String propertyValue = System.getProperty(propertyKey);
+
+		// Check in sterling properties
+		if (sterlingProperties != null) {
+			String value = sterlingProperties.getProperty(propertyKey);
+			if (value != null) {
+				LOGGER.log(OpLevel.INFO, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+						"B2BiSfgEventsStream.props.found.sterling"), propertyKey, value);
+				System.setProperty(propertyKey, value);
+			}
+		}
+
 		if (propertyValue == null) {
 			System.setProperty(propertyKey, defaultValue);
 			LOGGER.log(OpLevel.TRACE, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
@@ -167,13 +180,16 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfgEventsStream.props.check.file.not.found"),
 					propertyValue, Paths.get(".").toAbsolutePath().normalize().toString()); // NON-NLS
+			if (System.getProperty("test") == null) {
+				throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+						"B2BiSfgEventsStream.b2bi.props.root.not.found"));
+			}
 		}
 	}
 
 	private static void checkPrecondition() throws Exception {
 		checkFileFromProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY,
 				STREAM_PROPERTIES_PATH + "/tnt4j-streams-ibm-b2bi.properties"); // NON-NLS
-		checkFileFromProperty("log4j.configuration", prefixFile(STREAM_PROPERTIES_PATH + "/log4j.properties")); // NON-NLS
 		checkFileFromProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, STREAM_PROPERTIES_PATH + "/tnt4j.properties"); // NON-NLS
 	}
 
@@ -253,10 +269,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.init.failure"),
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfgEventsStream.b2bi.props.root.not.found"));
-			if (System.getProperty("test") == null) {
-				throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.b2bi.props.root.not.found"));
-			}
+
 		}
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME; // NON-NLS
 
@@ -298,8 +311,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	}
 
 	protected static String version() {
-		Package objPackage = B2BiSfgEventsStream.class.getPackage();
-		String version = objPackage.getImplementationVersion();
+		String version = versionFull();
 		if (Utils.isEmpty(version)) {
 			version = "1.0"; // NON-NLS
 			LOGGER.log(OpLevel.DEBUG, "--- Could not resolve package version, defaults to {0}", version); // NON-NLS
@@ -308,6 +320,11 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		}
 		LOGGER.log(OpLevel.DEBUG, "--- Resolved {0} package version {1}", VENDOR_NAME, version); // NON-NLS
 		return version;
+	}
+
+	protected static String versionFull() {
+		Package objPackage = B2BiSfgEventsStream.class.getPackage();
+		return objPackage.getImplementationVersion();
 	}
 }
 

@@ -19,7 +19,9 @@ package com.jkoolcloud.tnt4j.streams.custom.inputs;
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
+import com.jkoolcloud.tnt4j.sink.EventSinkFactory;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
+import com.jkoolcloud.tnt4j.streams.utils.IBMLoggerEventSinkFactory;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.event.EventListener;
@@ -38,14 +40,14 @@ public class B2BiSfgEventListener implements EventListener {
 	static {
 		// initialize logging
 		if (System.getProperty("test") == null) {
-			B2BiRFileLogger fileFactory = new B2BiRFileLogger("/tmp/b2bi-event-stream.log"); // NON-NLS
-			DefaultEventSinkFactory.setDefaultEventSinkFactory(fileFactory);
+			EventSinkFactory loggerFactory = new IBMLoggerEventSinkFactory();
+			DefaultEventSinkFactory.setDefaultEventSinkFactory(loggerFactory);
 		}
 		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
 
 		// initialize stream
 		LOGGER.log(OpLevel.INFO, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-				"B2BiSfgEventListener.init.stream.instance.start"));
+				"B2BiSfgEventListener.init.stream.instance.start"), B2BiSfgEventsStream.versionFull());
 		tntStream = new B2BiSfgEventsStream();
 		tntStream.initStream();
 		LOGGER.log(OpLevel.INFO, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
