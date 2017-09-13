@@ -101,6 +101,7 @@ public class B2BiStreamListener implements InputStreamListener {
 		try {
 			ActivityInfo ai = new ActivityInfo();
 			ai.setFieldValue(new ActivityField(StreamFieldType.EventType.name()), "EVENT"); // NON-NLS
+
 			ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()),
 					StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfgEventsStream.welcome.msg", B2BiSfgEventsStream.versionFull()));
