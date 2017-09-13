@@ -43,17 +43,10 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
     * Run IBM Sterling B2B Integrator `InstallThirdParty.sh` to put the new jars and properties into the Sterling classpath. While 
     installing, vendor is `JKool` and version is `1.0`.
     * Once an event listener is created and made available on the classpath, a simple property change is needed to enable the event listener.
-    Update IBM Sterling B2B Integrator configuration file `sterling_install_location/install/properties/listenerStartup.properties` entry 
-    for listener:
-        ```properties
-              ## PROPERTY_START
-              ## PROPERTY_NAME: Listener.Class.cfx
-              ## PROPERTY_TYPE: String
-              ## PROPERTY_DESCRIPTION
-              ## CFX Event Listeners
-              Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener
-              ## PROPERTY_END
-        ```
+    Update IBM Sterling B2B Integrator configuration customer_overrides.properties to enable TNT4J-Streams-IBM-B2Bi listener 
+
+     `Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener	`
+	
         **Note:** You can comment out this entry to disable the listener.
     * Write stream parsers configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration)
     chapter for more details
@@ -66,6 +59,20 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
 **NOTE:** in case listener does not start - check if `tnt4j-streams-ibm-b2bi` jar is loaded, and configuration properties files are in 
 `/SI/install/properties/jkool/1.0/` directory. There should be 3 of them: `tnt4j.properties`, `tnt4j-streams-ibm-b2bi.properties` and 
 `log4j.properties`.
+
+
+Setting up Sterling logger to usel
+======================================
+
+You need to setup steling logger, failed to do so all log messages are forwaded to system.log. 
+
+You can configure logger in your customer_overrides.properties:
+
+```
+				logService.jkool.logfilename                     = C:/IBM/SI/install/logs/jkool.log
+				logService.jkool.loglevel                        = ALL
+```
+
 
 How to Build TNT4J-Streams-IBM-B2Bi
 =========================================
