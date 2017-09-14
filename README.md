@@ -43,9 +43,10 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
     * Run IBM Sterling B2B Integrator `InstallThirdParty.sh` to put the new jars and properties into the Sterling classpath. While 
     installing, vendor is `JKool` and version is `1.0`.
     * Once an event listener is created and made available on the classpath, a simple property change is needed to enable the event listener.
-    Update IBM Sterling B2B Integrator configuration customer_overrides.properties to enable TNT4J-Streams-IBM-B2Bi listener 
-
-     `Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener	`
+    Update IBM Sterling B2B Integrator configuration customer_overrides.properties to enable TNT4J-Streams-IBM-B2Bi listener: 
+        ```properties
+          Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener
+        ```
 	
         **Note:** You can comment out this entry to disable the listener.
     * Write stream parsers configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration)
@@ -68,9 +69,9 @@ You need to setup steling logger, failed to do so all log messages are forwaded 
 
 You can configure logger in your customer_overrides.properties:
 
-```
-				logService.jkool.logfilename                     = C:/IBM/SI/install/logs/jkool.log
-				logService.jkool.loglevel                        = ALL
+```properties
+    logService.jkool.logfilename                     = C:/IBM/SI/install/logs/jkool.log
+    logService.jkool.loglevel                        = ALL
 ```
 
 

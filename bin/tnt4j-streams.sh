@@ -5,7 +5,6 @@ else
     SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
 fi
 
-RUNDIR=`pwd`
 LIBPATH="$SCRIPTPATH/../*:$SCRIPTPATH/../lib/*"
 TNT4JOPTS="-Dtnt4j.config=$SCRIPTPATH/../config/tnt4j.properties"
 LOG4JOPTS="-Dlog4j.configuration=file:$SCRIPTPATH/../config/log4j.properties"

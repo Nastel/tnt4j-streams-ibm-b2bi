@@ -35,7 +35,7 @@ import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 
 /**
  * {@link B2BiSfgEventsStream} listener capable to lock running thread until stream gets started (changes state to
- * {@link StreamStatus#STARTED} and sends "welcome" event to jKool for a user to know that IBM B2Bi Sterling events
+ * {@link StreamStatus#STARTED} and sends "welcome" event to jKool for a user to know that IBM Sterling B2Bi events
  * streaming has started.
  *
  * @version $Revision: 1 $
@@ -91,8 +91,8 @@ public class B2BiStreamListener implements InputStreamListener {
 	}
 
 	/**
-	 * Sends "welcome" message to jKool. It is simple event to inform user, that stream has been initialized on Sterling
-	 * and is ready to process events.
+	 * Sends "welcome" message to jKool. It is simple event to inform user, that stream has been initialized on IBM
+	 * Sterling B2Bi and is ready to process events.
 	 *
 	 * @param stream
 	 *            the stream instance to send event
@@ -101,7 +101,6 @@ public class B2BiStreamListener implements InputStreamListener {
 		try {
 			ActivityInfo ai = new ActivityInfo();
 			ai.setFieldValue(new ActivityField(StreamFieldType.EventType.name()), "EVENT"); // NON-NLS
-
 			ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()),
 					StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfgEventsStream.welcome.msg", B2BiSfgEventsStream.versionFull()));
