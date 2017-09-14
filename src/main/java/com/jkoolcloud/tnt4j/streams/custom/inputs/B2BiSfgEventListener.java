@@ -21,14 +21,14 @@ import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.sink.EventSinkFactory;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
-import com.jkoolcloud.tnt4j.streams.utils.IBMLoggerEventSinkFactory;
+import com.jkoolcloud.tnt4j.streams.utils.B2BiLoggerEventSinkFactory;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.event.EventListener;
 import com.sterlingcommerce.woodstock.event.ExceptionLevel;
 
 /**
- * Sterling B2Bi event listener implementation, using {@link B2BiSfgEventsStream} singleton instance to stream
+ * IBM Sterling B2Bi event listener implementation, using {@link B2BiSfgEventsStream} singleton instance to stream
  * {@link #handleEvent(Event)} received {@link Event}'s to JKool Cloud.
  *
  * @version $Revision: 1 $
@@ -40,7 +40,7 @@ public class B2BiSfgEventListener implements EventListener {
 	static {
 		// initialize logging
 		if (System.getProperty("test") == null) {
-			EventSinkFactory loggerFactory = new IBMLoggerEventSinkFactory();
+			EventSinkFactory loggerFactory = new B2BiLoggerEventSinkFactory();
 			DefaultEventSinkFactory.setDefaultEventSinkFactory(loggerFactory);
 		}
 		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);

@@ -1,12 +1,25 @@
-package com.jkoolcloud.tnt4j.streams.utils;
+/*
+ * Copyright 2014-2017 JKOOL, LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import static com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventsStream.VENDOR_NAME;
+package com.jkoolcloud.tnt4j.streams.utils;
 
 import java.io.IOException;
 
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.core.Snapshot;
-import com.jkoolcloud.tnt4j.format.EventFormatter;
 import com.jkoolcloud.tnt4j.sink.AbstractEventSink;
 import com.jkoolcloud.tnt4j.source.Source;
 import com.jkoolcloud.tnt4j.tracker.TrackingActivity;
@@ -15,16 +28,28 @@ import com.sterlingcommerce.woodstock.util.frame.log.LogLevel;
 import com.sterlingcommerce.woodstock.util.frame.log.LogService;
 import com.sterlingcommerce.woodstock.util.frame.log.Logger;
 
-public class IBMLoggerEventSink extends AbstractEventSink {
+/**
+ * {@link com.jkoolcloud.tnt4j.sink.EventSink} implementation that routes B2Bi stream log messages to IBM Sterling B2Bi
+ * used logging framework.
+ *
+ * @see TrackingEvent
+ * @see AbstractEventSink
+ * @see OpLevel
+ *
+ * @version $Revision: 1 $
+ */
+public class B2BiLoggerEventSink extends AbstractEventSink {
 
 	private Logger logger;
 
-	public IBMLoggerEventSink(String nm) {
-		super(nm);
-	}
-
-	public IBMLoggerEventSink(String nm, EventFormatter frmt) {
-		super(nm, frmt);
+	/**
+	 * Creates a new B2Bi logger sink.
+	 *
+	 * @param name
+	 *            logger sink name
+	 */
+	public B2BiLoggerEventSink(String name) {
+		super(name);
 		open();
 	}
 
@@ -155,8 +180,9 @@ public class IBMLoggerEventSink extends AbstractEventSink {
 
 	@Override
 	public boolean isSet(OpLevel sev) {
-		if (logger.getLogLevel().equals(LogLevel.ALL.toString()))
+		if (logger.getLogLevel().equals(LogLevel.ALL.toString())) {
 			return true;
+		}
 		switch (sev) {
 		case HALT:
 		case FATAL:
@@ -191,8 +217,8 @@ public class IBMLoggerEventSink extends AbstractEventSink {
 
 	@Override
 	public synchronized void open() {
-		logger = LogService.getLogger(VENDOR_NAME);
-		logger.log("Logger EventSink ready");
+		logger = LogService.getLogger(B2BiConstants.VENDOR_NAME);
+		logger.log("B2Bi Logger EventSink ready");
 	}
 
 	@Override
