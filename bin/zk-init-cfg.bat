@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set RUNDIR=%~p0
+set RUNDIR=%~dp0
 set MAINCLASS=com.jkoolcloud.tnt4j.streams.configure.zookeeper.ZKConfigInit
 
 @echo on
