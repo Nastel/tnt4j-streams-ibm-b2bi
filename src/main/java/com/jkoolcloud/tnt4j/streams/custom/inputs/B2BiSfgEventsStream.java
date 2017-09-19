@@ -47,10 +47,10 @@ import com.sterlingcommerce.woodstock.util.frame.Manager;
  * Implements IBM Sterling B2Bi {@link com.sterlingcommerce.woodstock.event.Event} XML content stream, where each event
  * data is assumed to represent a single activity or event which should be recorded.
  * <p>
- * Incoming Sterling events are piped from
+ * Incoming IBM Sterling B2Bi events are piped from
  * {@link B2BiSfgEventListener#handleEvent(com.sterlingcommerce.woodstock.event.Event)}, so stream configuration does
- * not require stream definition - only parsers configuration is required to map Sterling event data to TNT4J entities
- * fields.
+ * not require stream definition - only parsers configuration is required to map IBM Sterling B2Bi event data to TNT4J
+ * entities fields.
  * <p>
  * This activity stream requires parsers that can support XML data.
  * <p>
@@ -66,8 +66,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private static final String STREAM_NAME = "TNT4J_B2Bi_Stream"; // NON-NLS
 	private static final String PROPS_ROOT_DIR_NAME = "properties"; // NON-NLS
 	private static final String PROPS_EXT = ".properties"; // NON-NLS
-	public static final String VENDOR_NAME = "jkool"; // NON-NLS
-	private static final String APP_PATH = VENDOR_NAME + "/" + version(); // NON-NLS
+	private static final String APP_PATH = B2BiConstants.VENDOR_NAME + "/" + version(); // NON-NLS
 
 	private static String ENV_PROPS_DIR_PATH = getPropDirPath();
 	private static String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
@@ -75,16 +74,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private B2BiStreamListener streamListener;
 	private boolean ended;
 
-	private static final Properties sterlingProperties = Manager.getProperties(VENDOR_NAME);
-	static {
-		if (sterlingProperties == null) {
-			LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.props.notFound.sterling"), VENDOR_NAME);
-		} else {
-			LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.props.found.sterling.all"), VENDOR_NAME, sterlingProperties);
-		}
-	}
+	private static Properties sterlingProperties = null;
 
 	/**
 	 * Constructs a new B2BiSfgEventsStream.
@@ -102,6 +92,9 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	protected void initStream() throws RuntimeException {
 		setName(STREAM_NAME);
 		try {
+			if (System.getProperty("test") == null) {
+				sterlingProperties = Manager.getProperties(B2BiConstants.VENDOR_NAME);
+			}
 			checkPrecondition();
 			StreamsConfigLoader streamsConfig = new StreamsConfigLoader(
 					System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY));
@@ -151,7 +144,15 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		String propertyValue = System.getProperty(propertyKey);
 
 		// Check in sterling properties
-		if (sterlingProperties != null) {
+		if (sterlingProperties == null) {
+			LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+					"B2BiSfgEventsStream.props.notFound.sterling"), B2BiConstants.VENDOR_NAME);
+		} else {
+			LOGGER.log(OpLevel.ERROR,
+					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
+							"B2BiSfgEventsStream.props.found.sterling.all"),
+					B2BiConstants.VENDOR_NAME, sterlingProperties);
+
 			String value = sterlingProperties.getProperty(propertyKey);
 			if (value != null) {
 				LOGGER.log(OpLevel.INFO, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
@@ -228,9 +229,9 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	}
 
 	/**
-	 * Builds Sterling environment properties directory path depending on System properties set.
+	 * Builds IBM Sterling B2Bi environment properties directory path depending on System properties set.
 	 *
-	 * @return path of Sterling environment properties directory
+	 * @return path of IBM Sterling B2Bi environment properties directory
 	 */
 	protected static String getPropDirPath() {
 		LOGGER.log(OpLevel.INFO, "--- Running JVM System properties ---"); // NON-NLS
@@ -269,7 +270,6 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.init.failure"),
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
 							"B2BiSfgEventsStream.b2bi.props.root.not.found"));
-
 		}
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME; // NON-NLS
 
@@ -310,7 +310,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		return searchForPropsRoot(new File(path).getParent(), pathExt, filter);
 	}
 
-	protected static String version() {
+	private static String version() {
 		String version = versionFull();
 		if (Utils.isEmpty(version)) {
 			version = "1.0"; // NON-NLS
@@ -318,10 +318,15 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		} else {
 			version = version.substring(0, version.lastIndexOf('.'));
 		}
-		LOGGER.log(OpLevel.DEBUG, "--- Resolved {0} package version {1}", VENDOR_NAME, version); // NON-NLS
+		LOGGER.log(OpLevel.DEBUG, "--- Resolved {0} package version {1}", B2BiConstants.VENDOR_NAME, version); // NON-NLS
 		return version;
 	}
 
+	/**
+	 * Resolves deployed implementation version of package class belongs to.
+	 *
+	 * @return package implementation version
+	 */
 	protected static String versionFull() {
 		Package objPackage = B2BiSfgEventsStream.class.getPackage();
 		return objPackage.getImplementationVersion();
