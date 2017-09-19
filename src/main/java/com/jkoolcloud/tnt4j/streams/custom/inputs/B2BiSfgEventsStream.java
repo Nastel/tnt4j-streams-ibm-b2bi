@@ -74,7 +74,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private B2BiStreamListener streamListener;
 	private boolean ended;
 
-	private static final Properties sterlingProperties = Manager.getProperties(B2BiConstants.VENDOR_NAME);
+	private static Properties sterlingProperties = null;
 
 	/**
 	 * Constructs a new B2BiSfgEventsStream.
@@ -92,6 +92,9 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	protected void initStream() throws RuntimeException {
 		setName(STREAM_NAME);
 		try {
+			if (System.getProperty("test") == null) {
+				sterlingProperties = Manager.getProperties(B2BiConstants.VENDOR_NAME);
+			}
 			checkPrecondition();
 			StreamsConfigLoader streamsConfig = new StreamsConfigLoader(
 					System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY));
