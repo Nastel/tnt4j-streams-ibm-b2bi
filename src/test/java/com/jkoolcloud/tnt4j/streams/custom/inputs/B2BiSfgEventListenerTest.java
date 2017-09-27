@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -57,9 +58,11 @@ public class B2BiSfgEventListenerTest {
 		}
 
 		if (Utils.isEmpty(System.getProperty("log4j.configuration"))) {
-			File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
-
-			System.setProperty("log4j.configuration", B2BiSfgEventsStream.prefixFile(log4jConfig.getAbsolutePath()));
+			File log4jConfig = new File(B2BiDir + "\\config\\log4j.properties");
+			if (!log4jConfig.exists())
+				throw new RuntimeException();
+			System.setProperty("log4j.configuration",
+					(SystemUtils.IS_OS_WINDOWS ? "file:///" : "file:/") + log4jConfig.getAbsolutePath());
 		}
 
 		if (Utils.isEmpty(System.getProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY))) {
@@ -89,7 +92,7 @@ public class B2BiSfgEventListenerTest {
 			plugin.handleEvent(event);
 		}
 
-		Thread.sleep(50000);
+		Thread.sleep(20000);
 	}
 
 }
