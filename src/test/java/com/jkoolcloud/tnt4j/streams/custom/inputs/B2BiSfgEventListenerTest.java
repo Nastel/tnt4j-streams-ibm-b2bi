@@ -59,8 +59,9 @@ public class B2BiSfgEventListenerTest {
 
 		if (Utils.isEmpty(System.getProperty("log4j.configuration"))) {
 			File log4jConfig = new File(B2BiDir + "\\config\\log4j.properties");
-			if (!log4jConfig.exists())
+			if (!log4jConfig.exists()) {
 				throw new RuntimeException();
+			}
 			System.setProperty("log4j.configuration",
 					(SystemUtils.IS_OS_WINDOWS ? "file:///" : "file:/") + log4jConfig.getAbsolutePath());
 		}
@@ -84,7 +85,7 @@ public class B2BiSfgEventListenerTest {
 
 		B2BiSfgEventListener plugin;
 		for (File file : exampleFiles) {
-			final String fileContent = Files.toString(file, StandardCharsets.UTF_8);
+			String fileContent = Files.toString(file, StandardCharsets.UTF_8);
 			Event event = Event.createEvent(fileContent);
 
 			plugin = new B2BiSfgEventListener();
