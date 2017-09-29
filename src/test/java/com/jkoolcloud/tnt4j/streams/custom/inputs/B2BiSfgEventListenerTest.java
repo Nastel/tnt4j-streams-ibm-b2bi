@@ -58,7 +58,7 @@ public class B2BiSfgEventListenerTest {
 		}
 
 		if (Utils.isEmpty(System.getProperty("log4j.configuration"))) {
-			File log4jConfig = new File(B2BiDir + "\\config\\log4j.properties");
+			File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
 			if (!log4jConfig.exists()) {
 				throw new RuntimeException();
 			}
@@ -92,8 +92,6 @@ public class B2BiSfgEventListenerTest {
 			assertTrue(plugin.isHandled(event.getId(), null, null));
 			plugin.handleEvent(event);
 		}
-
 		Thread.sleep(20000);
 	}
-
 }
