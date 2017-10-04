@@ -65,8 +65,8 @@ public class B2BiStreamListener implements InputStreamListener {
 	public void waitForStart(long timeOut, TimeUnit unit) throws InterruptedException {
 		lockObject.lock();
 		try {
-			LOGGER.log(OpLevel.INFO, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.waiting.for.streams"), timeOut, unit);
+			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+					"B2BiSfgEventsStream.waiting.for.streams", timeOut, unit);
 			started.await(timeOut, unit);
 		} finally {
 			lockObject.unlock();
@@ -75,9 +75,8 @@ public class B2BiStreamListener implements InputStreamListener {
 
 	@Override
 	public void onStatusChange(TNTInputStream<?, ?> stream, StreamStatus status) {
-		LOGGER.log(OpLevel.INFO,
-				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.status.changed"),
-				stream.getName(), status.name());
+		LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+				"B2BiSfgEventsStream.status.changed", stream.getName(), status.name());
 
 		if (status.equals(StreamStatus.STARTED)) {
 			sendWelcomeMessage(stream);
@@ -110,20 +109,19 @@ public class B2BiStreamListener implements InputStreamListener {
 			if (output != null) {
 				output.logItem(ai);
 			} else {
-				LOGGER.log(OpLevel.ERROR, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-						"B2BiSfgEventsStream.stream.out.null"));
+				LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+						"B2BiSfgEventsStream.stream.out.null");
 			}
 		} catch (Exception e) {
-			LOGGER.log(OpLevel.WARNING, StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-					"B2BiSfgEventsStream.welcome.failed"), e);
+			LOGGER.log(OpLevel.WARNING, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+					"B2BiSfgEventsStream.welcome.failed", e);
 		}
 	}
 
 	@Override
 	public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
-		LOGGER.log(OpLevel.CRITICAL,
-				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.streams.failed"),
-				stream.getName(), code, msg, exc);
+		LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+				"B2BiSfgEventsStream.streams.failed", stream.getName(), code, msg, exc);
 	}
 
 	@Override
