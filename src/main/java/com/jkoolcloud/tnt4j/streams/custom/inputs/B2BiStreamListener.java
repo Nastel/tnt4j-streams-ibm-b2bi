@@ -22,21 +22,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.EventSink;
-import com.jkoolcloud.tnt4j.streams.fields.ActivityField;
-import com.jkoolcloud.tnt4j.streams.fields.ActivityInfo;
-import com.jkoolcloud.tnt4j.streams.fields.StreamFieldType;
 import com.jkoolcloud.tnt4j.streams.inputs.InputStreamListener;
 import com.jkoolcloud.tnt4j.streams.inputs.StreamStatus;
 import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStream;
 import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStream.StreamStats;
-import com.jkoolcloud.tnt4j.streams.outputs.TNTStreamOutput;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 
 /**
  * {@link B2BiSfgEventsStream} listener capable to lock running thread until stream gets started (changes state to
- * {@link StreamStatus#STARTED} and sends "welcome" event to jKool for a user to know that IBM Sterling B2Bi events
- * streaming has started.
+ * {@link StreamStatus#STARTED}.
  *
  * @version $Revision: 1 $
  */
@@ -79,42 +74,12 @@ public class B2BiStreamListener implements InputStreamListener {
 				"B2BiSfgEventsStream.status.changed", stream.getName(), status.name());
 
 		if (status.equals(StreamStatus.STARTED)) {
-			sendWelcomeMessage(stream);
 			lockObject.lock();
 			try {
 				started.signalAll();
 			} finally {
 				lockObject.unlock();
 			}
-		}
-	}
-
-	/**
-	 * Sends "welcome" message to jKool. It is simple event to inform user, that stream has been initialized on IBM
-	 * Sterling B2Bi and is ready to process events.
-	 *
-	 * @param stream
-	 *            the stream instance to send event
-	 */
-	protected void sendWelcomeMessage(TNTInputStream<?, ?> stream) {
-		try {
-			ActivityInfo ai = new ActivityInfo();
-			ai.setFieldValue(new ActivityField(StreamFieldType.EventType.name()), "EVENT"); // NON-NLS
-			ai.setFieldValue(new ActivityField(StreamFieldType.EventName.name()), "B2Bi Welcome"); // NON-NLS
-			ai.setFieldValue(new ActivityField(StreamFieldType.Message.name()),
-					StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
-							"B2BiSfgEventsStream.welcome.msg", B2BiSfgEventsStream.versionFull()));
-			@SuppressWarnings("unchecked")
-			TNTStreamOutput<ActivityInfo> output = (TNTStreamOutput<ActivityInfo>) stream.getOutput();
-			if (output != null) {
-				output.logItem(ai);
-			} else {
-				LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-						"B2BiSfgEventsStream.stream.out.null");
-			}
-		} catch (Exception e) {
-			LOGGER.log(OpLevel.WARNING, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-					"B2BiSfgEventsStream.welcome.failed", e);
 		}
 	}
 
