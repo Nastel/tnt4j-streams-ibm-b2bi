@@ -46,7 +46,8 @@ public class B2BiStreamListener implements InputStreamListener {
 	}
 
 	/**
-	 * Locks current {@link Thread} until stream state changes to {@link StreamStatus#STARTED}.
+	 * Locks current {@link Thread} until stream state changes to {@link StreamStatus#STARTED} or
+	 * {@link StreamStatus#FAILURE}.
 	 *
 	 * @param timeOut
 	 *            the maximum time to wait
@@ -73,7 +74,7 @@ public class B2BiStreamListener implements InputStreamListener {
 		LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 				"B2BiSfgEventsStream.status.changed", stream.getName(), status.name());
 
-		if (status.equals(StreamStatus.STARTED)) {
+		if (status == StreamStatus.STARTED || status == StreamStatus.FAILURE) {
 			lockObject.lock();
 			try {
 				started.signalAll();
