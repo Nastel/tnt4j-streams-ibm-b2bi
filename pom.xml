@@ -193,6 +193,17 @@
                             <shadedPattern>b2bi.org.apache.commons.lang3</shadedPattern>
                         </relocation>
                     </relocations>
+                    <filters>
+                        <!-- Remove jars contained signatures -->
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                 </configuration>
                 <executions>
                     <execution>
