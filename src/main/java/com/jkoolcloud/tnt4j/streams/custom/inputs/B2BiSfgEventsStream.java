@@ -54,7 +54,8 @@ import com.sterlingcommerce.woodstock.util.frame.Manager;
  * <p>
  * This activity stream requires parsers that can support XML data.
  * <p>
- * This activity stream supports properties from {@link AbstractBufferedStream} (and higher hierarchy streams).
+ * This activity stream configuration supports properties from {@link AbstractBufferedStream} (and higher hierarchy
+ * streams).
  *
  * @version $Revision: 1 $
  *
