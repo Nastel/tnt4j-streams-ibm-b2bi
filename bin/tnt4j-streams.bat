@@ -8,12 +8,9 @@ set LOG4JOPTS=-Dlog4j.configuration="file:%RUNDIR%..\config\log4j.properties"
 REM set LOGBACKOPTS=-Dlogback.configurationFile="file:%RUNDIR%..\config\logback.xml"
 set STREAMSOPTS=%STREAMSOPTS% %LOG4JOPTS% %TNT4JOPTS%
 
-if "%MAINCLASS%" == "" goto set_default_main
-goto run_stream
+IF ["%MAINCLASS%"] EQU [""] (
+  set MAINCLASS=com.jkoolcloud.tnt4j.streams.StreamsAgent
+)
 
-:set_default_main
-set MAINCLASS=com.jkoolcloud.tnt4j.streams.StreamsAgent
-
-:run_stream
 @echo on
 java %STREAMSOPTS% -classpath "%LIBPATH%" %MAINCLASS% %*
