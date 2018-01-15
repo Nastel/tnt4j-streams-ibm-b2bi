@@ -194,10 +194,10 @@
                         </relocation>
                     </relocations>
                     <filters>
-                        <!-- Remove jars contained signatures -->
                         <filter>
                             <artifact>*:*</artifact>
                             <excludes>
+                                <!-- Remove jars contained signatures -->
                                 <exclude>META-INF/*.SF</exclude>
                                 <exclude>META-INF/*.DSA</exclude>
                                 <exclude>META-INF/*.RSA</exclude>
