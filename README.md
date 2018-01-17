@@ -26,7 +26,7 @@ Importing TNT4J-Streams-IBM-B2Bi project into IDE
 ## Eclipse
 * Select File->Import...->Maven->Existing Maven Projects
 * Click 'Next'
-* In 'Root directory' field select path of directory where You have downloaded (checked out from git)
+* In 'Root directory' field select path of directory where you have downloaded (checked out from git)
 TNT4J-Streams project
 * Click 'OK'
 * Dialog fills in with project modules details
@@ -48,7 +48,7 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
           Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener
         ```
 	
-        **Note:** You can comment out this entry to disable the listener.
+        **Note:** you can comment out this entry to disable the listener.
     * Write stream parsers configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration)
     chapter for more details
     * Configure Java system properties for IBM Sterling B2B Integrator startup:
@@ -65,7 +65,7 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
 Setting up Sterling logger to usel
 ======================================
 
-You need to setup steling logger, failed to do so all log messages are forwaded to system.log. 
+You need to setup Sterling logger, failed to do so all log messages are forwarded to system.log. 
 
 You can configure logger in your customer_overrides.properties:
 
@@ -88,7 +88,7 @@ defined dependencies automatically.
 
 ### Manually installed dependencies
 
-**NOTE:** If you have build and installed TNT4J-Streams into Your local maven repository, you don't need to install
+**NOTE:** If you have build and installed TNT4J-Streams into your local maven repository, you don't need to install
 it manually.
 
 Some of required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this 
