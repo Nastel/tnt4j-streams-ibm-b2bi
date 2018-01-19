@@ -7,7 +7,9 @@
         <format>zip</format>
         <format>tar.gz</format>
     </formats>
-    <includeBaseDirectory>false</includeBaseDirectory>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <baseDirectory>${release.deploy.finalName}</baseDirectory>
+
     <fileSets>
         <fileSet>
             <directory>${release.deploy.dir}/${release.deploy.finalName}</directory>
