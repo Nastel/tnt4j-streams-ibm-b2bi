@@ -39,7 +39,7 @@ import com.jkoolcloud.tnt4j.streams.inputs.AbstractBufferedStream;
 import com.jkoolcloud.tnt4j.streams.parsers.ActivityParser;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
-import com.jkoolcloud.tnt4j.utils.Utils;
+import com.jkoolcloud.tnt4j.streams.utils.Utils;
 import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.util.frame.Manager;
 
@@ -109,8 +109,8 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			StreamsAgent.runFromAPI(streamListener, null, this);
 			streamListener.waitForStart(30, TimeUnit.SECONDS);
 		} catch (Exception e) {
-			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-					"B2BiSfgEventsStream.failed", e.getLocalizedMessage(), e);
+			Utils.logThrowable(LOGGER, OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+					"B2BiSfgEventsStream.failed", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -206,7 +206,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			}
 			return addInputToBuffer(event.toXMLString());
 		} catch (Exception exc) {
-			LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+			Utils.logThrowable(LOGGER, OpLevel.ERROR, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.buffer.add.failed", getName(), exc);
 			throw exc;
 		}

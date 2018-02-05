@@ -87,7 +87,7 @@ public class B2BiStreamListener implements InputStreamListener {
 	@Override
 	public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
 		LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-				"B2BiSfgEventsStream.streams.failed", stream.getName(), code, msg, exc);
+				"B2BiSfgEventsStream.streams.failed", stream.getName(), code, msg, exc); // NOTE: exception logging
 	}
 
 	@Override
