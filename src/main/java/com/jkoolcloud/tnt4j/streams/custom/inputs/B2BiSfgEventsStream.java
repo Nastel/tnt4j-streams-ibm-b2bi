@@ -27,6 +27,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.xml.sax.SAXException;
 
 import com.jkoolcloud.tnt4j.config.TrackerConfigStore;
 import com.jkoolcloud.tnt4j.core.OpLevel;
@@ -108,6 +109,9 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 			StreamsAgent.runFromAPI(streamListener, null, this);
 			streamListener.waitForStart(30, TimeUnit.SECONDS);
+		} catch (SAXException | IllegalStateException e) {
+			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+					"B2BiSfgEventsStream.cfg.error", Utils.getExceptionMessages(e));
 		} catch (Exception e) {
 			Utils.logThrowable(LOGGER, OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.failed", e);
