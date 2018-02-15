@@ -48,6 +48,7 @@
     </distributionManagement>
 
     <properties>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.resources.encoding>UTF-8</project.resources.encoding>
@@ -173,7 +174,7 @@
                             <manifestEntries>
                                 <Implementation-Vendor>${product.vendor}</Implementation-Vendor>
                                 <Implementation-Title>${product.name}</Implementation-Title>
-                                <Implementation-Version>${project.version}</Implementation-Version>
+                                <Implementation-Version>${project.version}-${maven.build.timestamp}</Implementation-Version>
                                 <Main-Class>com.jkoolcloud.tnt4j.streams.StreamsAgent</Main-Class>
                             </manifestEntries>
                         </transformer>
