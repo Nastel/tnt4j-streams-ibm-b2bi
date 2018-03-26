@@ -6,4 +6,5 @@ else
 fi
 
 MAINCLASS="com.jkoolcloud.tnt4j.streams.configure.zookeeper.ZKConfigInit"
-./tnt4j-streams.sh -c -f:$SCRIPTPATH/../config/zk-init-cfg.properties
+# sourcing instead of executing to pass variables
+. ./tnt4j-streams.sh -c -f:$SCRIPTPATH/../config/zk-init-cfg.properties
