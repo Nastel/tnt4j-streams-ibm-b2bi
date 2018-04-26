@@ -59,16 +59,14 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 		case HALT:
 		case FATAL:
 		case CRITICAL:
+			logger.logCritical(String.valueOf(event));
+			break;
 		case FAILURE:
 		case ERROR:
 			logger.logError(String.valueOf(event));
 			break;
 		case DEBUG:
 			logger.logDebug(String.valueOf(event));
-			break;
-		case INFO:
-		case NONE:
-			logger.logInfo(String.valueOf(event));
 			break;
 		case TRACE:
 			logger.logCommTrace(String.valueOf(event));
@@ -77,6 +75,9 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 		case WARNING:
 			logger.logWarn(String.valueOf(event));
 			break;
+		case NONE:
+			break;
+		case INFO:
 		default:
 			logger.logInfo(String.valueOf(event));
 			break;
@@ -89,16 +90,14 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 		case HALT:
 		case FATAL:
 		case CRITICAL:
+			logger.logCritical(String.valueOf(activity));
+			break;
 		case FAILURE:
 		case ERROR:
 			logger.logError(String.valueOf(activity));
 			break;
 		case DEBUG:
 			logger.logDebug(String.valueOf(activity));
-			break;
-		case INFO:
-		case NONE:
-			logger.logInfo(String.valueOf(activity));
 			break;
 		case TRACE:
 			logger.logCommTrace(String.valueOf(activity));
@@ -107,6 +106,9 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 		case WARNING:
 			logger.logWarn(String.valueOf(activity));
 			break;
+		case NONE:
+			break;
+		case INFO:
 		default:
 			logger.logInfo(String.valueOf(activity));
 			break;
@@ -119,16 +121,14 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 		case HALT:
 		case FATAL:
 		case CRITICAL:
+			logger.logCritical(String.valueOf(snapshot));
+			break;
 		case FAILURE:
 		case ERROR:
 			logger.logError(String.valueOf(snapshot));
 			break;
 		case DEBUG:
 			logger.logDebug(String.valueOf(snapshot));
-			break;
-		case INFO:
-		case NONE:
-			logger.logInfo(String.valueOf(snapshot));
 			break;
 		case TRACE:
 			logger.logCommTrace(String.valueOf(snapshot));
@@ -137,6 +137,9 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 		case WARNING:
 			logger.logWarn(String.valueOf(snapshot));
 			break;
+		case NONE:
+			break;
+		case INFO:
 		default:
 			logger.logInfo(String.valueOf(snapshot));
 			break;
@@ -149,6 +152,8 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 		case HALT:
 		case FATAL:
 		case CRITICAL:
+			logger.logCritical(Utils.format(String.valueOf(msg), args));
+			break;
 		case FAILURE:
 		case ERROR:
 			logger.logError(Utils.format(String.valueOf(msg), args));
@@ -156,19 +161,18 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 		case DEBUG:
 			logger.logDebug(Utils.format(String.valueOf(msg), args));
 			break;
-		case INFO:
-		case NONE:
-			logger.logInfo(Utils.format(String.valueOf(msg), args));
-			break;
 		case TRACE:
 			logger.logCommTrace(Utils.format(String.valueOf(msg), args));
 			break;
 		case NOTICE:
 		case WARNING:
-			logger.logWarn(String.valueOf(Utils.format(String.valueOf(msg), args)));
+			logger.logWarn(Utils.format(String.valueOf(msg), args));
 			break;
+		case NONE:
+			break;
+		case INFO:
 		default:
-			logger.logInfo(String.valueOf(Utils.format(String.valueOf(msg), args)));
+			logger.logInfo(Utils.format(String.valueOf(msg), args));
 			break;
 		}
 	}
@@ -187,21 +191,22 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 		case HALT:
 		case FATAL:
 		case CRITICAL:
+			return logger.getLogLevel().equals(LogLevel.CRITICAL.toString());
 		case FAILURE:
 		case ERROR:
 			return logger.getLogLevel().equals(LogLevel.ERROR.toString());
 		case DEBUG:
 			return logger.getLogLevel().equals(LogLevel.DEBUG.toString());
-		case INFO:
-		case NONE:
-			return logger.getLogLevel().equals(LogLevel.NONE.toString());
 		case TRACE:
 			return logger.getLogLevel().equals(LogLevel.COMMTRACE.toString());
 		case NOTICE:
 		case WARNING:
 			return logger.getLogLevel().equals(LogLevel.WARN.toString());
+		case NONE:
+			return logger.getLogLevel().equals(LogLevel.NONE.toString());
+		case INFO:
 		default:
-			return logger.getLogLevel().equals(LogLevel.ERROR.toString());
+			return logger.getLogLevel().equals(LogLevel.INFO.toString());
 		}
 	}
 
