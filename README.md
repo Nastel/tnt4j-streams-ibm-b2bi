@@ -62,7 +62,7 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
 `log4j.properties`.
 
 
-Setting up Sterling logger to usel
+Setting up Sterling logger to use
 ======================================
 
 You need to setup Sterling logger, failed to do so all log messages are forwarded to system.log. 
