@@ -9,9 +9,9 @@
     <version>1.0.13-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <prerequisites>
-        <maven>3.0.0</maven>
-    </prerequisites>
+    <!--<prerequisites>-->
+    <!--<maven>3.0.0</maven>-->
+    <!--</prerequisites>-->
 
     <name>tnt4j-streams-ibm-b2bi</name>
     <url>${project.organization.url}</url>

@@ -12,9 +12,9 @@
     <name>tnt4j-streams-ibm-b2bi-dep-install</name>
     <description>Installs TNT4J-Streams-IBM-B2Bi 3rd party dependencies</description>
 
-    <prerequisites>
-        <maven>3.0.0</maven>
-    </prerequisites>
+    <!--<prerequisites>-->
+    <!--<maven>3.0.0</maven>-->
+    <!--</prerequisites>-->
 
     <build>
         <defaultGoal>initialize</defaultGoal>
