@@ -103,7 +103,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			Collection<ActivityParser> parsers = streamsConfig.getParsers();
 			addParsers(parsers);
 
-			Map<String, String> props = new HashMap<>(1);
+			Map<String, String> props = new HashMap<>();
 			props.put(StreamProperties.PROP_BUFFER_DROP_WHEN_FULL, "false"); // NON-NLS
 			setProperties(props.entrySet());
 
