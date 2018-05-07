@@ -181,10 +181,8 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			LOGGER.log(OpLevel.TRACE, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.props.check.file.not.found", propertyValue,
 					Paths.get(".").toAbsolutePath().normalize().toString()); // NON-NLS
-			if (System.getProperty("test") == null) {
-				throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-						"B2BiSfgEventsStream.b2bi.props.root.not.found"));
-			}
+			throw new RuntimeException(StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
+					"B2BiSfgEventsStream.b2bi.props.root.not.found", propertyKey, filePath));
 		}
 	}
 
