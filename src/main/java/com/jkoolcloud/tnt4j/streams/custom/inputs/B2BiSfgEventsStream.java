@@ -103,7 +103,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			Collection<ActivityParser> parsers = streamsConfig.getParsers();
 			addParsers(parsers);
 
-			Map<String, String> props = new HashMap<>(1);
+			Map<String, String> props = new HashMap<>();
 			props.put(StreamProperties.PROP_BUFFER_DROP_WHEN_FULL, "false"); // NON-NLS
 			setProperties(props.entrySet());
 
@@ -181,10 +181,8 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			LOGGER.log(OpLevel.TRACE, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.props.check.file.not.found", propertyValue,
 					Paths.get(".").toAbsolutePath().normalize().toString()); // NON-NLS
-			if (System.getProperty("test") == null) {
-				throw new RuntimeException(StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-						"B2BiSfgEventsStream.b2bi.props.root.not.found"));
-			}
+			throw new RuntimeException(StreamsResources.getStringFormatted(B2BiConstants.RESOURCE_BUNDLE_NAME,
+					"B2BiSfgEventsStream.b2bi.props.root.not.found", propertyKey, filePath));
 		}
 	}
 
@@ -269,7 +267,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.init.failure"),
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-							"B2BiSfgEventsStream.b2bi.props.root.not.found"));
+							"B2BiSfgEventsStream.b2bi.props.root.env.not.defined"));
 		}
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME; // NON-NLS
 
