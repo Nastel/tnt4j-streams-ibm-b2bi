@@ -267,7 +267,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.init.failure"),
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
-							"B2BiSfgEventsStream.b2bi.props.root.not.found"));
+							"B2BiSfgEventsStream.b2bi.props.root.env.not.defined"));
 		}
 		envPropDirPath = envPropDirPath + "/" + PROPS_ROOT_DIR_NAME; // NON-NLS
 
