@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.inputs.InputStreamListener;
@@ -86,8 +88,10 @@ public class B2BiStreamListener implements InputStreamListener {
 
 	@Override
 	public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
-		LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-				"B2BiSfgEventsStream.streams.failed", stream.getName(), code, msg, exc); // NOTE: exception logging
+		LOGGER.log(OpLevel.CRITICAL,
+				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.streams.failed"),
+				stream.getName(), StringUtils.defaultIfEmpty(code, ""), StringUtils.defaultIfEmpty(msg, ""),
+				exc == null ? "" : exc);
 	}
 
 	@Override
