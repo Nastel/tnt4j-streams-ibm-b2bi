@@ -20,8 +20,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -48,6 +52,16 @@ public class B2BiSfgEventListenerTest {
 
 	private static final String B2BiDir = "./"; // NON-NLS
 
+	@BeforeClass
+	public static void initEnv() {
+		System.setProperty("vendorFile", "vendor.properties"); // NON-NLS
+	}
+
+	@AfterClass
+	public static void cleanupEnv() {
+		System.clearProperty("vendorFile"); // NON-NLS
+	}
+
 	@Test
 	public void testStartStreams() throws Exception {
 
@@ -72,20 +86,19 @@ public class B2BiSfgEventListenerTest {
 			System.setProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, tnt4jConfig.getAbsolutePath());
 		}
 
-		File[] exampleFiles;
 		String exampleFilesPath = System.getProperty("tnt4j.b2biSampleEvents");
 		if (exampleFilesPath == null) {
 			exampleFilesPath = B2BiDir + "/samples/B2Bi/Events/*.xml"; // NON-NLS
 		}
 
-		exampleFiles = Utils.searchFiles(exampleFilesPath); // NON-NLS
+		Path[] exampleFiles = Utils.searchFiles(exampleFilesPath, FileSystems.getDefault()); // NON-NLS
 
 		Logger loggerMock = Mockito.mock(Logger.class, Mockito.RETURNS_MOCKS);
 		Whitebox.setInternalState(Event.class, loggerMock);
 
 		B2BiSfgEventListener plugin;
-		for (File file : exampleFiles) {
-			String fileContent = Files.toString(file, StandardCharsets.UTF_8);
+		for (Path filePath : exampleFiles) {
+			String fileContent = Files.toString(filePath.toFile(), StandardCharsets.UTF_8);
 			Event event = Event.createEvent(fileContent);
 
 			plugin = new B2BiSfgEventListener();

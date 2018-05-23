@@ -9,6 +9,6 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <baseDirectory>${release.deploy.finalName}</baseDirectory>
     <componentDescriptors>
-        <componentDescriptor>src/assembly/deployComponent.xml</componentDescriptor>
+        <componentDescriptor>src/assembly/deployComponent_dev.xml</componentDescriptor>
     </componentDescriptors>
 </assembly>
