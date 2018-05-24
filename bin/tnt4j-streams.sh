@@ -11,12 +11,14 @@ if [ -z "$TNT4J_PROPERTIES" ]; then
   TNT4J_PROPERTIES="$SCRIPTPATH/../config/tnt4j.properties"
 fi
 TNT4JOPTS="-Dtnt4j.config=$TNT4J_PROPERTIES"
+#TNT4JOPTS=${TNT4JOPTS:-"-Dtnt4j.config=$SCRIPTPATH/../config/tnt4j.properties"}
 
 # log4j file override
 if [ -z "$LOG4J_PROPERTIES" ]; then
   LOG4J_PROPERTIES="$SCRIPTPATH/../config/log4j.properties"
 fi
 LOG4JOPTS="-Dlog4j.configuration=file:$LOG4J_PROPERTIES"
+#LOG4JOPTS=${LOG4JOPTS:-"-Dlog4j.configuration=file:$SCRIPTPATH/../config/log4j.properties"}
 
 #LOGBACKOPTS="-Dlogback.configurationFile=file:$SCRIPTPATH/../config/logback.xml"
 STREAMSOPTS="$STREAMSOPTS $LOG4JOPTS $TNT4JOPTS"
