@@ -2,7 +2,7 @@
 TNT4J Streams for IBM Sterling B2B Integrator.
 
 TNT4J-Streams-IBM-B2Bi is extension of TNT4J-Streams to give ability of streaming IBM Sterling B2B Integrator events as activity events to 
-JKoolCloud.
+[jKoolCloud](https://www.jkoolcloud.com).
 
 TNT4J-Streams-IBM-B2Bi is under Apache v2.0 license.
 
@@ -15,7 +15,7 @@ Why TNT4J-Streams-IBM-B2Bi
  * Plugs into IBM Sterling B2B Integrator as `com.sterlingcommerce.woodstock.event.EventListener`.
  
 Many components in the B2Bi/SFG system generate events during the course of normal processing. In the case of SFG, all of the visibility 
-data shown in the SFG tracking UI is raised as event data and sent to JKoolCloud via an event listener. Each event is sent through an 
+data shown in the SFG tracking UI is raised as event data and sent to jKoolCloud via an event listener. Each event is sent through an 
 in-memory concurrent queue data structure.
  
 Protocol adapters also generate events during connect, disconnect and file transfer. 

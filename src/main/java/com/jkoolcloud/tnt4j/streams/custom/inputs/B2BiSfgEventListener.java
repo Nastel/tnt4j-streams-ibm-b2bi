@@ -29,7 +29,7 @@ import com.sterlingcommerce.woodstock.event.ExceptionLevel;
 
 /**
  * IBM Sterling B2Bi event listener implementation, using {@link B2BiSfgEventsStream} singleton instance to stream
- * {@link #handleEvent(Event)} received {@link Event}'s to JKoolCloud.
+ * {@link #handleEvent(Event)} received {@link Event}'s to jKoolCloud.
  *
  * @version $Revision: 1 $
  */
