@@ -27,4 +27,4 @@ if [ "$MAINCLASS" == "" ]; then
 	MAINCLASS="com.jkoolcloud.tnt4j.streams.StreamsAgent"
 fi
 
-java $STREAMSOPTS -classpath "$LIBPATH" $MAINCLASS $*
+"$JAVA_HOME/bin/java" $STREAMSOPTS -classpath "$LIBPATH" $MAINCLASS $*
