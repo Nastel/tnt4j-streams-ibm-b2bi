@@ -17,4 +17,4 @@ IF ["%MAINCLASS%"] EQU [""] (
 )
 
 @echo on
-java %STREAMSOPTS% -classpath "%LIBPATH%" %MAINCLASS% %*
+"%JAVA_HOME%\bin\java" %STREAMSOPTS% -classpath "%LIBPATH%" %MAINCLASS% %*
