@@ -20,8 +20,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -72,7 +76,7 @@ public class B2BiSfgEventListenerTest {
 			System.setProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, tnt4jConfig.getAbsolutePath());
 		}
 
-		File[] exampleFiles;
+		Path[] exampleFiles;
 		String exampleFilesPath = System.getProperty("tnt4j.b2biSampleEvents");
 		if (exampleFilesPath == null) {
 			exampleFilesPath = B2BiDir + "/samples/B2Bi/Events/*.xml"; // NON-NLS
@@ -84,8 +88,8 @@ public class B2BiSfgEventListenerTest {
 		Whitebox.setInternalState(Event.class, loggerMock);
 
 		B2BiSfgEventListener plugin;
-		for (File file : exampleFiles) {
-			String fileContent = Files.toString(file, StandardCharsets.UTF_8);
+		for (Path file : exampleFiles) {
+			String fileContent = Files.toString(file.toFile(), StandardCharsets.UTF_8);
 			Event event = Event.createEvent(fileContent);
 
 			plugin = new B2BiSfgEventListener();
