@@ -76,7 +76,7 @@ public class B2BiSfgEventListenerTest {
 			System.setProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, tnt4jConfig.getAbsolutePath());
 		}
 
-		Path[] exampleFiles;
+		File[] exampleFiles;
 		String exampleFilesPath = System.getProperty("tnt4j.b2biSampleEvents");
 		if (exampleFilesPath == null) {
 			exampleFilesPath = B2BiDir + "/samples/B2Bi/Events/*.xml"; // NON-NLS
@@ -88,8 +88,8 @@ public class B2BiSfgEventListenerTest {
 		Whitebox.setInternalState(Event.class, loggerMock);
 
 		B2BiSfgEventListener plugin;
-		for (Path file : exampleFiles) {
-			String fileContent = Files.toString(file.toFile(), StandardCharsets.UTF_8);
+		for (File file : exampleFiles) {
+			String fileContent = Files.toString(file, StandardCharsets.UTF_8);
 			Event event = Event.createEvent(fileContent);
 
 			plugin = new B2BiSfgEventListener();
