@@ -54,7 +54,7 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 	}
 
 	@Override
-	protected void _log(TrackingEvent event) throws Exception {
+	protected void _log(TrackingEvent event) throws IOException {
 		switch (event.getSeverity()) {
 		case HALT:
 		case FATAL:
@@ -85,7 +85,7 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 	}
 
 	@Override
-	protected void _log(TrackingActivity activity) throws Exception {
+	protected void _log(TrackingActivity activity) throws IOException {
 		switch (activity.getSeverity()) {
 		case HALT:
 		case FATAL:
@@ -116,7 +116,7 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 	}
 
 	@Override
-	protected void _log(Snapshot snapshot) throws Exception {
+	protected void _log(Snapshot snapshot) throws IOException {
 		switch (snapshot.getSeverity()) {
 		case HALT:
 		case FATAL:
@@ -147,7 +147,7 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 	}
 
 	@Override
-	protected void _log(long ttl, Source src, OpLevel sev, String msg, Object... args) throws Exception {
+	protected void _log(long ttl, Source src, OpLevel sev, String msg, Object... args) throws IOException {
 		switch (sev) {
 		case HALT:
 		case FATAL:
