@@ -112,8 +112,8 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		} catch (SAXException | IllegalStateException e) {
 			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.cfg.error", Utils.getExceptionMessages(e));
-		} catch (Exception e) {
-			Utils.logThrowable(LOGGER, OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+		} catch (Throwable e) {
+			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.failed", e);
 			throw new RuntimeException(e);
 		}
@@ -208,7 +208,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			}
 			return addInputToBuffer(event.toXMLString());
 		} catch (Exception exc) {
-			Utils.logThrowable(LOGGER, OpLevel.ERROR, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+			LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.buffer.add.failed", getName(), exc);
 			throw exc;
 		}

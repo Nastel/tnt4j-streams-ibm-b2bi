@@ -16,8 +16,6 @@
 
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
-import java.io.IOException;
-
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
@@ -83,7 +81,7 @@ public class B2BiSfgEventListener implements EventListener {
 					"B2BiSfgEventListener.handle.event", event.toXMLString(), hashCode(), tntStream.hashCode());
 			tntStream.handleSterlingEvent(event);
 		} else {
-			throw new IOException(this.getClass().getName() + " not initialized");
+			throw new RuntimeException(this.getClass().getName() + " not initialized");
 		}
 	}
 
@@ -92,7 +90,9 @@ public class B2BiSfgEventListener implements EventListener {
 		if (LOGGER != null) {
 			LOGGER.log(OpLevel.TRACE, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 				"B2BiSfgEventListener.is.handled", eventId, hashCode(), tntStream.hashCode());
+			return true;
+		} else {
+			throw new RuntimeException(this.getClass().getName() + " not initialized");			
 		}
-		return true;
 	}
 }
