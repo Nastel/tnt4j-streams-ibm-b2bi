@@ -111,7 +111,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			streamListener.waitForStart(30, TimeUnit.SECONDS);
 		} catch (SAXException | IllegalStateException e) {
 			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-					"B2BiSfgEventsStream.cfg.error", Utils.getExceptionMessages(e));
+					"B2BiSfgEventsStream.cfg.error", Utils.getExceptionMessages(e), e);
 		} catch (Throwable e) {
 			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.failed", e);

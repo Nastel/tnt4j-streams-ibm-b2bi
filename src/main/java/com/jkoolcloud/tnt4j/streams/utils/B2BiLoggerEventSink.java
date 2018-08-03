@@ -223,7 +223,7 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 	@Override
 	public synchronized void open() {
 		logger = LogService.getLogger(B2BiConstants.VENDOR_NAME);
-		logger.log("B2Bi Logger EventSink ready");
+		logger.log("B2Bi Logger EventSink open: vendor=" + B2BiConstants.VENDOR_NAME + ", name=" + getName());
 	}
 
 	@Override
