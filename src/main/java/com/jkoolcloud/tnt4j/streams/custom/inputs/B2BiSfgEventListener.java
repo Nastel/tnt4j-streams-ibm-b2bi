@@ -16,6 +16,8 @@
 
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
+import java.io.IOException;
+
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
@@ -34,46 +36,63 @@ import com.sterlingcommerce.woodstock.event.ExceptionLevel;
  * @version $Revision: 1 $
  */
 public class B2BiSfgEventListener implements EventListener {
-	private static final EventSink LOGGER;
-	private static final B2BiSfgEventsStream tntStream;
+	private static EventSink LOGGER;
+	private static B2BiSfgEventsStream tntStream;
 
 	static {
-		// initialize logging
-		EventSinkFactory loggerFactory = new B2BiLoggerEventSinkFactory();
-		DefaultEventSinkFactory.setDefaultEventSinkFactory(loggerFactory);
-		LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
-
-		// initialize stream
-		LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-				"B2BiSfgEventListener.init.stream.instance.start", B2BiSfgEventsStream.versionFull());
-		tntStream = new B2BiSfgEventsStream();
-		tntStream.initStream();
-		LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-				"B2BiSfgEventListener.init.stream.instance.end");
+		_initStreams();
 	}
 
+	private static void _initStreams() {
+		try {
+			// initialize logging
+			if (Boolean.getBoolean("b2bi.test.env")) {
+				EventSinkFactory loggerFactory = new B2BiLoggerEventSinkFactory();
+				DefaultEventSinkFactory.setDefaultEventSinkFactory(loggerFactory);
+			}
+			LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
+			// initialize stream
+			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+			        "B2BiSfgEventListener.init.stream.instance.start", B2BiSfgEventsStream.versionFull());
+			tntStream = new B2BiSfgEventsStream();
+			tntStream.initStream();
+			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+			        "B2BiSfgEventListener.init.stream.instance.end");
+		} catch (Throwable e) {
+			e.printStackTrace();
+			throw e;
+		}		
+	}
+	
 	/**
 	 * Constructs a new B2BiSfgEventListener.
 	 */
 	public B2BiSfgEventListener() {
-		LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+		if (LOGGER != null) {
+			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 				"B2BiSfgEventListener.create.new", getClass().getName(), hashCode());
+		} else {
+			throw new RuntimeException(this.getClass().getName() + " not initialized");
+		}
 	}
 
 	@Override
 	public void handleEvent(Event event) throws Exception {
-		LOGGER.log(OpLevel.TRACE, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-				"B2BiSfgEventListener.handle.event", event.toXMLString(), hashCode(), tntStream.hashCode());
-
-		tntStream.handleSterlingEvent(event);
+		if (tntStream != null) {
+			LOGGER.log(OpLevel.TRACE, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+					"B2BiSfgEventListener.handle.event", event.toXMLString(), hashCode(), tntStream.hashCode());
+			tntStream.handleSterlingEvent(event);
+		} else {
+			throw new IOException(this.getClass().getName() + " not initialized");
+		}
 	}
 
 	@Override
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
-		LOGGER.log(OpLevel.TRACE, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+		if (LOGGER != null) {
+			LOGGER.log(OpLevel.TRACE, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 				"B2BiSfgEventListener.is.handled", eventId, hashCode(), tntStream.hashCode());
-
-		// TODO: filtering by event id and schema key
+		}
 		return true;
 	}
 }
