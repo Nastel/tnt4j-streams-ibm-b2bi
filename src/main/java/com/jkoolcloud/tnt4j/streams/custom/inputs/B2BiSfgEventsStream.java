@@ -94,7 +94,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	protected void initStream() throws RuntimeException {
 		setName(STREAM_NAME);
 		try {
-			if (System.getProperty("test") == null) {
+			if (System.getProperty("b2bi.test.env") == null) {
 				sterlingProperties = Manager.getProperties(B2BiConstants.VENDOR_NAME);
 			}
 			checkPrecondition();
