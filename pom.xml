@@ -191,10 +191,6 @@
                             <pattern>org.apache.commons.lang3</pattern>
                             <shadedPattern>b2bi.org.apache.commons.lang3</shadedPattern>
                         </relocation>
-						<relocation>
-                            <pattern>javax.xml</pattern>
-                            <shadedPattern>b2bi.javax.xml</shadedPattern>
-                        </relocation>
                     </relocations>
                     <filters>
                         <filter>
