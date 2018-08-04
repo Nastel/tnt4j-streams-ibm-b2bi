@@ -16,6 +16,7 @@
 
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
+import static com.jkoolcloud.tnt4j.streams.utils.B2BiConstants.B2BI_TEST_ENV;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -54,6 +55,7 @@ public class B2BiSfgEventListenerTest {
 
 	@Test
 	public void testStartStreams() throws Exception {
+		System.setProperty(B2BI_TEST_ENV, "true");
 
 		if (Utils.isEmpty(System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY))) {
 			File streamsConfig = new File(B2BiDir + "/samples/B2Bi/tnt4j-streams-ibm-b2bi.properties");

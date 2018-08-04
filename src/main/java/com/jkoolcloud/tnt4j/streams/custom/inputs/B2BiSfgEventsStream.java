@@ -44,6 +44,8 @@ import com.jkoolcloud.tnt4j.streams.utils.Utils;
 import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.util.frame.Manager;
 
+import static com.jkoolcloud.tnt4j.streams.utils.B2BiConstants.B2BI_TEST_ENV;
+
 /**
  * Implements IBM Sterling B2Bi {@link com.sterlingcommerce.woodstock.event.Event} XML content stream, where each event
  * data is assumed to represent a single activity or event which should be recorded.
@@ -70,6 +72,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	private static final String PROPS_EXT = ".properties"; // NON-NLS
 	private static final String APP_PATH = B2BiConstants.VENDOR_NAME + "/" + version(); // NON-NLS
 
+
 	private static String ENV_PROPS_DIR_PATH = getPropDirPath();
 	private static String STREAM_PROPERTIES_PATH = ENV_PROPS_DIR_PATH + "/" + APP_PATH; // NON-NLS
 
@@ -94,7 +97,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	protected void initStream() throws RuntimeException {
 		setName(STREAM_NAME);
 		try {
-			if (!Boolean.getBoolean("b2bi.test.env")) {
+			if (!Boolean.getBoolean(B2BI_TEST_ENV)) {
 				sterlingProperties = Manager.getProperties(B2BiConstants.VENDOR_NAME);
 			}
 			checkPrecondition();

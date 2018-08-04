@@ -32,6 +32,10 @@ public final class B2BiConstants {
 	 * IBM Sterling B2Bi events streaming plugin vendor name.
 	 */
 	public static final String VENDOR_NAME = "jkool"; // NON-NLS
+	/**
+	 * Name of system variable witch flags test run, and no native sterling logger should be used
+	 */
+	public static final String B2BI_TEST_ENV = "b2bi.test.env";
 
 	private B2BiConstants() {
 	}

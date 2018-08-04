@@ -27,6 +27,8 @@ import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.event.EventListener;
 import com.sterlingcommerce.woodstock.event.ExceptionLevel;
 
+import static com.jkoolcloud.tnt4j.streams.utils.B2BiConstants.B2BI_TEST_ENV;
+
 /**
  * IBM Sterling B2Bi event listener implementation, using {@link B2BiSfgEventsStream} singleton instance to stream
  * {@link #handleEvent(Event)} received {@link Event}'s to jKoolCloud.
@@ -44,7 +46,7 @@ public class B2BiSfgEventListener implements EventListener {
 	private static void _initStreams() {
 		try {
 			// initialize logging
-			if (!Boolean.getBoolean("b2bi.test.env")) {
+			if (!Boolean.getBoolean(B2BI_TEST_ENV)) {
 				EventSinkFactory loggerFactory = new B2BiLoggerEventSinkFactory();
 				DefaultEventSinkFactory.setDefaultEventSinkFactory(loggerFactory);
 			}
