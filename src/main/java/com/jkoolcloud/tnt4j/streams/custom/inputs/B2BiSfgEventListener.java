@@ -44,7 +44,7 @@ public class B2BiSfgEventListener implements EventListener {
 	private static void _initStreams() {
 		try {
 			// initialize logging
-			if (Boolean.getBoolean("b2bi.test.env")) {
+			if (!Boolean.getBoolean("b2bi.test.env")) {
 				EventSinkFactory loggerFactory = new B2BiLoggerEventSinkFactory();
 				DefaultEventSinkFactory.setDefaultEventSinkFactory(loggerFactory);
 			}
