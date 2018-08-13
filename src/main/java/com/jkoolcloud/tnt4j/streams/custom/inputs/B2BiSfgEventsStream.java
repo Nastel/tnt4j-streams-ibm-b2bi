@@ -16,6 +16,8 @@
 
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
+import static com.jkoolcloud.tnt4j.streams.utils.B2BiConstants.B2BI_TEST_ENV;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.file.Files;
@@ -94,7 +96,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	protected void initStream() throws RuntimeException {
 		setName(STREAM_NAME);
 		try {
-			if (System.getProperty("test") == null) {
+			if (!Boolean.getBoolean(B2BI_TEST_ENV)) {
 				sterlingProperties = Manager.getProperties(B2BiConstants.VENDOR_NAME);
 			}
 			checkPrecondition();
@@ -111,9 +113,9 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			streamListener.waitForStart(30, TimeUnit.SECONDS);
 		} catch (SAXException | IllegalStateException e) {
 			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-					"B2BiSfgEventsStream.cfg.error", Utils.getExceptionMessages(e));
-		} catch (Exception e) {
-			Utils.logThrowable(LOGGER, OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+					"B2BiSfgEventsStream.cfg.error", Utils.getExceptionMessages(e), e);
+		} catch (Throwable e) {
+			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.failed", e);
 			throw new RuntimeException(e);
 		}
@@ -208,7 +210,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			}
 			return addInputToBuffer(event.toXMLString());
 		} catch (Exception exc) {
-			Utils.logThrowable(LOGGER, OpLevel.ERROR, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
+			LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
 					"B2BiSfgEventsStream.buffer.add.failed", getName(), exc);
 			throw exc;
 		}
