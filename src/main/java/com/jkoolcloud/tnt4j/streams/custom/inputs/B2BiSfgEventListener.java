@@ -16,6 +16,8 @@
 
 package com.jkoolcloud.tnt4j.streams.custom.inputs;
 
+import static com.jkoolcloud.tnt4j.streams.utils.B2BiConstants.B2BI_TEST_ENV;
+
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
@@ -26,8 +28,6 @@ import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.sterlingcommerce.woodstock.event.Event;
 import com.sterlingcommerce.woodstock.event.EventListener;
 import com.sterlingcommerce.woodstock.event.ExceptionLevel;
-
-import static com.jkoolcloud.tnt4j.streams.utils.B2BiConstants.B2BI_TEST_ENV;
 
 /**
  * IBM Sterling B2Bi event listener implementation, using {@link B2BiSfgEventsStream} singleton instance to stream
@@ -53,24 +53,24 @@ public class B2BiSfgEventListener implements EventListener {
 			LOGGER = DefaultEventSinkFactory.defaultEventSink(B2BiSfgEventListener.class);
 			// initialize stream
 			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-			        "B2BiSfgEventListener.init.stream.instance.start", B2BiSfgEventsStream.versionFull());
+					"B2BiSfgEventListener.init.stream.instance.start", B2BiSfgEventsStream.versionFull());
 			tntStream = new B2BiSfgEventsStream();
 			tntStream.initStream();
 			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-			        "B2BiSfgEventListener.init.stream.instance.end");
+					"B2BiSfgEventListener.init.stream.instance.end");
 		} catch (Throwable e) {
 			e.printStackTrace();
 			throw e;
-		}		
+		}
 	}
-	
+
 	/**
 	 * Constructs a new B2BiSfgEventListener.
 	 */
 	public B2BiSfgEventListener() {
 		if (LOGGER != null) {
 			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-				"B2BiSfgEventListener.create.new", getClass().getName(), hashCode());
+					"B2BiSfgEventListener.create.new", getClass().getName(), hashCode());
 		} else {
 			throw new RuntimeException(this.getClass().getName() + " not initialized");
 		}
@@ -91,10 +91,10 @@ public class B2BiSfgEventListener implements EventListener {
 	public boolean isHandled(String eventId, String schemaKey, ExceptionLevel exceptionLevel) {
 		if (LOGGER != null) {
 			LOGGER.log(OpLevel.TRACE, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),
-				"B2BiSfgEventListener.is.handled", eventId, hashCode(), tntStream.hashCode());
+					"B2BiSfgEventListener.is.handled", eventId, hashCode(), tntStream.hashCode());
 			return true;
 		} else {
-			throw new RuntimeException(this.getClass().getName() + " not initialized");			
+			throw new RuntimeException(this.getClass().getName() + " not initialized");
 		}
 	}
 }

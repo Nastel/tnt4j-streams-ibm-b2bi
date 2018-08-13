@@ -33,9 +33,9 @@ public final class B2BiConstants {
 	 */
 	public static final String VENDOR_NAME = "jkool"; // NON-NLS
 	/**
-	 * Name of system variable witch flags test run, and no native sterling logger should be used
+	 * Name of System Property used to flag test run not using native Sterling logger.
 	 */
-	public static final String B2BI_TEST_ENV = "b2bi.test.env";
+	public static final String B2BI_TEST_ENV = "b2bi.test.env"; // NON-NLS
 
 	private B2BiConstants() {
 	}
