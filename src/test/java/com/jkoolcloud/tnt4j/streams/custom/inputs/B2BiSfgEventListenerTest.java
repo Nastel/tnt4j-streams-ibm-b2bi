@@ -48,7 +48,7 @@ import com.sterlingcommerce.woodstock.util.frame.log.Logger;
  */
 @RunWith(PowerMockRunner.class)
 @SuppressStaticInitializationFor("com.sterlingcommerce.woodstock.event.Event")
-@PowerMockIgnore({ "javax.net.ssl.*", "javax.security.auth.x500.X500Principal" })
+@PowerMockIgnore({ "javax.net.ssl.*", "javax.security.auth.x500.X500Principal", "javax.management.*" })
 public class B2BiSfgEventListenerTest {
 
 	private static final String B2BiDir = "./"; // NON-NLS
@@ -68,7 +68,7 @@ public class B2BiSfgEventListenerTest {
 		System.setProperty(B2BI_TEST_ENV, "true");
 
 		if (Utils.isEmpty(System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY))) {
-			File streamsConfig = new File(B2BiDir + "/samples/B2Bi/tnt4j-streams-ibm-b2bi.properties");
+			File streamsConfig = new File(B2BiDir + "../samples/B2Bi/tnt4j-streams-ibm-b2bi.properties");
 
 			System.setProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, streamsConfig.getAbsolutePath());
 		}
@@ -90,7 +90,7 @@ public class B2BiSfgEventListenerTest {
 
 		String exampleFilesPath = System.getProperty("tnt4j.b2biSampleEvents");
 		if (exampleFilesPath == null) {
-			exampleFilesPath = B2BiDir + "/samples/B2Bi/Events/*.xml"; // NON-NLS
+			exampleFilesPath = B2BiDir + "../samples/B2Bi/Events/*.xml"; // NON-NLS
 		}
 
 		Path[] exampleFiles = Utils.searchFiles(exampleFilesPath, FileSystems.getDefault()); // NON-NLS
