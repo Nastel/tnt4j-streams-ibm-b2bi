@@ -21,6 +21,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.AfterClass;
@@ -91,14 +93,14 @@ public class B2BiSfgEventListenerTest {
 			exampleFilesPath = B2BiDir + "../samples/B2Bi/Events/*.xml"; // NON-NLS
 		}
 
-		File[] exampleFiles = Utils.searchFiles(exampleFilesPath); // NON-NLS
+		Path[] exampleFiles = Utils.searchFiles(exampleFilesPath, FileSystems.getDefault()); // NON-NLS
 
 		Logger loggerMock = Mockito.mock(Logger.class, Mockito.RETURNS_MOCKS);
 		Whitebox.setInternalState(Event.class, loggerMock);
 
 		B2BiSfgEventListener plugin;
-		for (File file : exampleFiles) {
-			String fileContent = Files.toString(file, StandardCharsets.UTF_8);
+		for (Path filePath : exampleFiles) {
+			String fileContent = Files.toString(filePath.toFile(), StandardCharsets.UTF_8);
 			Event event = Event.createEvent(fileContent);
 
 			plugin = new B2BiSfgEventListener();

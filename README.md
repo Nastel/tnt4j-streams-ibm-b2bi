@@ -13,13 +13,13 @@ Why TNT4J-Streams-IBM-B2Bi
 ======================================
 
  * Plugs into IBM Sterling B2B Integrator as `com.sterlingcommerce.woodstock.event.EventListener`.
- 
+
 Many components in the B2Bi/SFG system generate events during the course of normal processing. In the case of SFG, all of the visibility 
 data shown in the SFG tracking UI is raised as event data and sent to jKoolCloud via an event listener. Each event is sent through an 
 in-memory concurrent queue data structure.
- 
-Protocol adapters also generate events during connect, disconnect and file transfer. 
- 
+
+Protocol adapters also generate events during connect, disconnect and file transfer.
+
 Importing TNT4J-Streams-IBM-B2Bi project into IDE
 ======================================
 
@@ -47,7 +47,7 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
         ```properties
           Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener
         ```
-	
+
         **Note:** you can comment out this entry to disable the listener.
     * Write stream parsers configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration)
     chapter for more details
@@ -56,16 +56,15 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
         * `log4j.configuration` - referring logger configuration. See `./config/log4j.properties`
         * `tnt4j.config` - referring TNT4J configuration. See `./config/tnt4j.properties`
          **NOTE:** Do not forget to set cloud TOKEN value by changing property `event.sink.factory.Token`.
-		 
+
 **NOTE:** in case listener does not start - check if `tnt4j-streams-ibm-b2bi` jar is loaded, and configuration properties files are in 
 `/SI/install/properties/jkool/1.0/` directory. There should be 3 of them: `tnt4j.properties`, `tnt4j-streams-ibm-b2bi.properties` and 
 `log4j.properties`.
 
-
 Setting up Sterling logger to use
 ======================================
 
-You need to setup Sterling logger, failed to do so all log messages are forwarded to system.log. 
+You need to setup Sterling logger, failed to do so all log messages are forwarded to system.log.
 
 You can configure logger in your customer_overrides.properties:
 
@@ -73,7 +72,6 @@ You can configure logger in your customer_overrides.properties:
     logService.jkool.logfilename                     = C:/IBM/SI/install/logs/jkool.log
     logService.jkool.loglevel                        = ALL
 ```
-
 
 How to Build TNT4J-Streams-IBM-B2Bi
 =========================================
@@ -128,7 +126,7 @@ So resuming build process quick "how to build" steps would be like this:
 3. if `tnt4j-streams` not built yet build it: run `mvn clean install` for a [`pom.xml`](https://github.com/Nastel/tnt4j-streams/blob/master/pom.xml) 
 file located in `tnt4j-streams` directory. 
 4. now you can build `tnt4j-streams-ibm-b2bi`: run `mvn clean install` for a [`pom.xml`](./pom.xml) file located in `tnt4j-streams-ibm-b2bi` 
-directory. 
+directory.
 
 ## Running samples
 
@@ -154,4 +152,3 @@ Its handy to check parser configuration before deploying it to Sterling machine.
 generated either jKoolCloud to see that listener behaves like expected. Ensure that you've changed TOKEN in `tnt4j.properties`. Test events 
 situated in `samples/B2Bi/events` directory. You could add or change these as you like. Edit `bat/sh` script if your environment 
 configuration properties values are different.
-
