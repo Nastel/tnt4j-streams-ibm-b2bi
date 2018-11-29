@@ -207,6 +207,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 		try {
 			if (SchemaKey.WORKFLOW_WF_EVENT_SERVICE_ENDED.key().equals(event.getSchemaKey())) {
 				ended = true;
+				offerDieMarker();
 			}
 			return addInputToBuffer(event.toXMLString());
 		} catch (Exception exc) {
