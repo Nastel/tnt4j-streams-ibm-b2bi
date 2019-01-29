@@ -50,7 +50,7 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 	 */
 	public B2BiLoggerEventSink(String name) {
 		super(name);
-		open();
+		_open();
 	}
 
 	@Override
@@ -221,13 +221,13 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 	}
 
 	@Override
-	public synchronized void open() {
+	protected synchronized void _open() {
 		logger = LogService.getLogger(B2BiConstants.VENDOR_NAME);
 		logger.log("B2Bi Logger EventSink open: vendor=" + B2BiConstants.VENDOR_NAME + ", name=" + getName());
 	}
 
 	@Override
-	public void close() throws IOException {
+	protected void _close() throws IOException {
 		logger = null;
 	}
 }
