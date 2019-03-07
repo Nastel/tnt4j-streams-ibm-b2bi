@@ -200,6 +200,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	 *
 	 * @param event
 	 *            event instance to handle
+	 * @return {@code true} if input data is added to buffer, {@code false} - otherwise
 	 * @throws Exception
 	 *             if adding event XML data to buffer fails
 	 */
