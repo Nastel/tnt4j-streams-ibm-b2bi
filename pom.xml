@@ -6,7 +6,7 @@
 
     <groupId>com.jkoolcloud.tnt4j.streams</groupId>
     <artifactId>tnt4j-streams-ibm-b2bi</artifactId>
-    <version>1.0.17</version>
+    <version>1.0.18</version>
     <packaging>jar</packaging>
 
     <!--<prerequisites>-->
@@ -79,7 +79,7 @@
         <gpg.skip.sign>true</gpg.skip.sign>
         <build.assemblies.attach>false</build.assemblies.attach>
 
-        <tnt4j.streams.version>1.6.0-SNAPSHOT</tnt4j.streams.version>
+        <tnt4j.streams.version>1.6.0</tnt4j.streams.version>
         <platform.ifcbase.version>1.3</platform.ifcbase.version>
         <powermock.version>1.7.3</powermock.version>
     </properties>
