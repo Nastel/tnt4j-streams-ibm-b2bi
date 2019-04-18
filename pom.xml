@@ -84,19 +84,6 @@
         <powermock.version>1.7.3</powermock.version>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>doclint-java8-disable</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <properties>
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
-                <javadoc.failOnError>false</javadoc.failOnError>
-            </properties>
-        </profile>
-    </profiles>
-
     <build>
         <defaultGoal>clean install</defaultGoal>
         <resources>
@@ -229,7 +216,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.0</version>
                 <configuration>
                     <!--<aggregate>true</aggregate>-->
                     <doctitle>${product.name.hr}</doctitle>
@@ -246,8 +233,8 @@
                     <version>true</version>
                     <nodeprecatedlist>false</nodeprecatedlist>
                     <nodeprecated>false</nodeprecated>
-                    <additionalOptions>${javadoc.opts}</additionalOptions>
-                    <failOnError>${javadoc.failOnError}</failOnError>
+                    <failOnError>false</failOnError>
+                    <doclint>all</doclint>
                 </configuration>
                 <executions>
                     <execution>
