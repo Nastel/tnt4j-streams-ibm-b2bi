@@ -2,9 +2,9 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
-    <id>${project.build.finalName}-zip_deploy</id>
+    <id>${project.build.finalName}-gz_deploy</id>
     <formats>
-        <format>zip</format>
+        <format>tar.gz</format>
     </formats>
     <includeBaseDirectory>true</includeBaseDirectory>
     <baseDirectory>${release.deploy.finalName}</baseDirectory>
@@ -20,7 +20,7 @@
                 <exclude>**/*.jar</exclude>
             </excludes>
             <useDefaultExcludes>false</useDefaultExcludes>
-            <lineEnding>crlf</lineEnding>
+            <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
             <directory>${release.deploy.dir}/${release.deploy.finalName}</directory>
