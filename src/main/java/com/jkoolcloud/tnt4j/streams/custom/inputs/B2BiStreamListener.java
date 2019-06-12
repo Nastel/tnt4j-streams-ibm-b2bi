@@ -27,6 +27,7 @@ import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.inputs.InputStreamListener;
 import com.jkoolcloud.tnt4j.streams.inputs.StreamStatus;
 import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStream;
+import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStreamStatistics;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 
@@ -86,7 +87,7 @@ public class B2BiStreamListener implements InputStreamListener {
 	}
 
 	@Override
-	public void onFinish(TNTInputStream<?, ?> stream) {
+	public void onFinish(TNTInputStream<?, ?> stream, TNTInputStreamStatistics stats) {
 
 	}
 
