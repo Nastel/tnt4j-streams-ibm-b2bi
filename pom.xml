@@ -78,8 +78,12 @@
         <test.deploy.assembly>src/assembly/testJarAssembly.xml</test.deploy.assembly>
         <test.deploy.dir>${release.deploy.dir}/${release.deploy.finalName}</test.deploy.dir>
 
-        <skipTests>true</skipTests>
-        <gpg.skip.sign>true</gpg.skip.sign>
+        <skip.source.pack>true</skip.source.pack>
+        <skip.javadoc.pack>true</skip.javadoc.pack>
+        <skip.assembly.pack>true</skip.assembly.pack>
+        <skip.tests>true</skip.tests>
+        <skip.gpg.sign>true</skip.gpg.sign>
+
         <build.assemblies.attach>false</build.assemblies.attach>
 
         <tnt4j.streams.version>1.9.0-SNAPSHOT</tnt4j.streams.version>
@@ -97,6 +101,21 @@
             </activation>
             <properties>
                 <assembly.line.endings>crlf</assembly.line.endings>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>pack-bin</id>
+            <properties>
+                <skip.assembly.pack>false</skip.assembly.pack>
+            </properties>
+        </profile>
+        <profile>
+            <id>pack-all</id>
+            <properties>
+                <skip.source.pack>false</skip.source.pack>
+                <skip.javadoc.pack>false</skip.javadoc.pack>
+                <skip.assembly.pack>false</skip.assembly.pack>
             </properties>
         </profile>
     </profiles>
@@ -221,6 +240,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.1.0</version>
+                <configuration>
+                    <skipSource>${skip.source.pack}</skipSource>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -252,6 +274,7 @@
                     <nodeprecated>false</nodeprecated>
                     <failOnError>false</failOnError>
                     <doclint>all</doclint>
+                    <skip>${skip.javadoc.pack}</skip>
                 </configuration>
                 <executions>
                     <execution>
@@ -266,6 +289,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.0</version>
+                <configuration>
+                    <attach>${build.assemblies.attach}</attach>
+                    <finalName>${release.deploy.finalName}</finalName>
+                    <skipAssembly>${skip.assembly.pack}</skipAssembly>
+                </configuration>
                 <executions>
                     <execution>
                         <id>test-assembly</id>
@@ -279,8 +307,6 @@
                                 <descriptor>${test.deploy.assembly}</descriptor>
                             </descriptors>
                             <outputDirectory>${test.deploy.dir}</outputDirectory>
-                            <attach>${build.assemblies.attach}</attach>
-                            <finalName>${release.deploy.finalName}</finalName>
                         </configuration>
                     </execution>
                     <execution>
@@ -297,8 +323,6 @@
                                 <descriptor>${release.deploy.gz.assembly}</descriptor>
                             </descriptors>
                             <outputDirectory>${release.deploy.dir}</outputDirectory>
-                            <attach>${build.assemblies.attach}</attach>
-                            <finalName>${release.deploy.finalName}</finalName>
                         </configuration>
                     </execution>
                 </executions>
@@ -308,7 +332,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
                 <configuration>
-                    <skipTests>${skipTests}</skipTests>
+                    <skipTests>${skip.tests}</skipTests>
                     <systemProperties>
                         <property>
                             <name>tnt4j.config</name>
@@ -325,6 +349,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.6</version>
+                <configuration>
+                    <skip>${skip.gpg.sign}</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -332,9 +359,6 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
-                        <configuration>
-                            <skip>${gpg.skip.sign}</skip>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
