@@ -111,8 +111,11 @@ Download the above libraries and place into the `tnt4j-streams-ibm-b2bi/lib` dir
 **NOTE:** also see TNT4J-Streams README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#manually-installed-dependencies).
 
 ## Building
-   * to build project and make release assemblies run maven goals `clean package`
-   * to build project, make release assemblies and install to local repo run maven goals `clean install`
+* To build the project, run maven goals `clean package`
+* To build the project and install to local repo, run maven goals `clean install`
+* To make distributable release assemblies use one of profiles: `pack-bin` or `pack-all`:
+    * containing only binary distribution: run `mvn -P pack-bin`
+    * containing binary, source and javadoc distribution: run `mvn -P pack-all`
 
 Release assemblies are built to `../build/tnt4j-streams-ibm-b2bi` directory.
 
