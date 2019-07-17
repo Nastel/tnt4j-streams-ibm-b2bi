@@ -31,8 +31,8 @@ hs_err_pid*
 /**/logs
 /**/temp
 
+.idea
 /**/*.iml
 
 /**/_dev
 /**/*_dev.*
-/target/
