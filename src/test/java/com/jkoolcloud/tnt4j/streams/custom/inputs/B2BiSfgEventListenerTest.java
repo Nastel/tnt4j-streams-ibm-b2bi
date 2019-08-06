@@ -23,6 +23,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.AfterClass;
@@ -107,6 +108,6 @@ public class B2BiSfgEventListenerTest {
 			assertTrue(plugin.isHandled(event.getId(), null, null));
 			plugin.handleEvent(event);
 		}
-		Thread.sleep(20000);
+		TimeUnit.SECONDS.sleep(20);
 	}
 }
