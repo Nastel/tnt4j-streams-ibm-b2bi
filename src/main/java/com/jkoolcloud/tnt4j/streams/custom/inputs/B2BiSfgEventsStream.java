@@ -38,6 +38,7 @@ import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.StreamsAgent;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.configure.StreamsConfigLoader;
+import com.jkoolcloud.tnt4j.streams.configure.build.POJOStreamsBuilder;
 import com.jkoolcloud.tnt4j.streams.inputs.AbstractBufferedStream;
 import com.jkoolcloud.tnt4j.streams.parsers.ActivityParser;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
@@ -109,7 +110,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			props.put(StreamProperties.PROP_BUFFER_DROP_WHEN_FULL, "false"); // NON-NLS
 			setProperties(props.entrySet());
 
-			StreamsAgent.runFromAPI(streamListener, null, this);
+			StreamsAgent.runFromAPI(new POJOStreamsBuilder().addStream(this).setStreamListener(streamListener));
 			streamListener.waitForStart(30, TimeUnit.SECONDS);
 		} catch (SAXException | IllegalStateException e) {
 			LOGGER.log(OpLevel.CRITICAL, StreamsResources.getBundle(B2BiConstants.RESOURCE_BUNDLE_NAME),

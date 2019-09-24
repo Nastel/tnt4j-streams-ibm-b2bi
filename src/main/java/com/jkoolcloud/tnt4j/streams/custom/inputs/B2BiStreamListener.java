@@ -27,7 +27,7 @@ import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.inputs.InputStreamListener;
 import com.jkoolcloud.tnt4j.streams.inputs.StreamStatus;
 import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStream;
-import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStream.StreamStats;
+import com.jkoolcloud.tnt4j.streams.inputs.TNTInputStreamStatistics;
 import com.jkoolcloud.tnt4j.streams.utils.B2BiConstants;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 
@@ -87,6 +87,10 @@ public class B2BiStreamListener implements InputStreamListener {
 	}
 
 	@Override
+	public void onFinish(TNTInputStream<?, ?> stream, TNTInputStreamStatistics stats) {
+	}
+
+	@Override
 	public void onFailure(TNTInputStream<?, ?> stream, String msg, Throwable exc, String code) {
 		LOGGER.log(OpLevel.CRITICAL,
 				StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.streams.failed"),
@@ -106,7 +110,4 @@ public class B2BiStreamListener implements InputStreamListener {
 	public void onProgressUpdate(TNTInputStream<?, ?> stream, int current, int total) {
 	}
 
-	@Override
-	public void onFinish(TNTInputStream<?, ?> stream, StreamStats stats) {
-	}
 }
