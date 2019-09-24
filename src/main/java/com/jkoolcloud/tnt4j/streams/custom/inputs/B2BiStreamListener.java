@@ -88,7 +88,6 @@ public class B2BiStreamListener implements InputStreamListener {
 
 	@Override
 	public void onFinish(TNTInputStream<?, ?> stream, TNTInputStreamStatistics stats) {
-
 	}
 
 	@Override

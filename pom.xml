@@ -14,7 +14,7 @@
     <!--</prerequisites>-->
 
     <name>tnt4j-streams-ibm-b2bi</name>
-    <url>${project.organization.url}</url>
+    <url>https://github.com/Nastel/tnt4j-streams-ibm-b2bi</url>
     <description>TNT4J Streams for IBM Sterling B2B Integrator</description>
     <licenses>
         <license>
@@ -86,7 +86,7 @@
 
         <build.assemblies.attach>false</build.assemblies.attach>
 
-        <tnt4j.streams.version>1.9.0</tnt4j.streams.version>
+        <tnt4j.streams.version>1.10.0-SNAPSHOT</tnt4j.streams.version>
         <platform.ifcbase.version>1.3</platform.ifcbase.version>
         <powermock.version>1.7.3</powermock.version>
     </properties>
