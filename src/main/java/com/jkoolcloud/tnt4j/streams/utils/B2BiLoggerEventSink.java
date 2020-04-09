@@ -50,7 +50,6 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 	 */
 	public B2BiLoggerEventSink(String name) {
 		super(name);
-		_open();
 	}
 
 	@Override
