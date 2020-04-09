@@ -183,6 +183,8 @@ public class B2BiLoggerEventSink extends AbstractEventSink {
 
 	@Override
 	public boolean isSet(OpLevel sev) {
+		_checkState();
+
 		if (logger.getLogLevel().equals(LogLevel.ALL.toString())) {
 			return true;
 		}
