@@ -107,7 +107,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 			addParsers(parsers);
 
 			Map<String, String> props = new HashMap<>();
-			props.put(StreamProperties.PROP_BUFFER_DROP_WHEN_FULL, "false"); // NON-NLS
+			props.put(StreamProperties.PROP_FULL_BUFFER_ADD_POLICY, "WAIT"); // NON-NLS
 			setProperties(props.entrySet());
 
 			StreamsAgent.runFromAPI(new POJOStreamsBuilder().addStream(this).setStreamListener(streamListener));
