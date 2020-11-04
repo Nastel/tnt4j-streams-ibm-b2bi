@@ -212,6 +212,10 @@
                         <excludes>
                             <exclude>org.powermock:*</exclude>
                             <exclude>com.sterlingcommerce:*</exclude>
+                            <!-- Zookeeper dependency and its transitives -->
+                            <!--exclude>org.apache.zookeeper:*</exclude>
+                            <exclude>io.netty:*</exclude>
+                            <exclude>org.apache.yetus:audience-annotations</exclude-->
                         </excludes>
                     </artifactSet>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
