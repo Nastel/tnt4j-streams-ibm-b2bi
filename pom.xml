@@ -9,10 +9,6 @@
     <version>1.0.25-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <!--<prerequisites>-->
-    <!--<maven>3.0.0</maven>-->
-    <!--</prerequisites>-->
-
     <name>tnt4j-streams-ibm-b2bi</name>
     <url>https://github.com/Nastel/tnt4j-streams-ibm-b2bi</url>
     <description>TNT4J Streams for IBM Sterling B2B Integrator</description>
@@ -67,7 +63,7 @@
         <java.compiler.verbose>false</java.compiler.verbose>
 
         <release.deploy.name>${project.artifactId}</release.deploy.name>
-        <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
+        <release.deploy.dir>build/</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
         <release.deploy.zip.assembly>src/assembly/zipDeployAssembly.xml</release.deploy.zip.assembly>
         <release.deploy.gz.assembly>src/assembly/gzDeployAssembly.xml</release.deploy.gz.assembly>
