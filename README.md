@@ -81,19 +81,19 @@ How to Build TNT4J-Streams-IBM-B2Bi
 * [Apache Maven 3](https://maven.apache.org/)
 * [TNT4J-Streams](https://github.com/Nastel/tnt4j-streams) `core` module in particular
 
-All other required dependencies are defined in project [`pom.xml`](./pom.xml) file. If maven is running online mode it should download these 
+All other required dependencies are defined in project [`pom.xml`](./pom.xml) file. If Maven is running online mode it should download these 
 defined dependencies automatically.
 
 ### Manually installed dependencies
 
-**NOTE:** If you have build and installed TNT4J-Streams into your local maven repository, you don't need to install
+**NOTE:** If you have build and installed TNT4J-Streams into your local Maven repository, you don't need to install
 it manually.
 
 Some of required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this 
-case we would recommend to download those dependencies manually into [`lib`](./lib/) directory and install into local maven repository by 
-running maven script [`lib/pom.xml`](./lib/pom.xml) using `initialize` goal.
+case we would recommend to download those dependencies manually into [`lib`](./lib/) directory and install into local Maven repository by 
+running Maven script [`lib/pom.xml`](./lib/pom.xml) using `initialize` goal.
 
-**NOTE:** `TNT4J-Streams-IBM-B2Bi` project will be ready to build only when manually downloaded libraries will be installed to local maven 
+**NOTE:** `TNT4J-Streams-IBM-B2Bi` project will be ready to build only when manually downloaded libraries will be installed to local Maven 
 repository.
 
 What to download manually or copy from your existing IBM Sterling B2B Integrator installation:
@@ -111,16 +111,16 @@ Download the above libraries and place into the `tnt4j-streams-ibm-b2bi/lib` dir
 **NOTE:** also see TNT4J-Streams README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#manually-installed-dependencies).
 
 ## Building
-* To build the project, run maven goals `clean package`
-* To build the project and install to local repo, run maven goals `clean install`
+* To build the project, run Maven goals `clean package`
+* To build the project and install to local repo, run Maven goals `clean install`
 * To make distributable release assemblies use one of profiles: `pack-bin` or `pack-all`:
     * containing only binary distribution: run `mvn -P pack-bin`
     * containing binary, source and javadoc distribution: run `mvn -P pack-all`
 
 Release assemblies are built to `build/` directory.
 
-**NOTE:** sometimes maven fails to correctly handle dependencies. If dependency configuration looks fine, but maven still complains about 
-missing dependencies try to delete local maven repository by hand: e.g., on MS Windows delete contents of `c:\Users\[username]\.m2\repository` 
+**NOTE:** sometimes Maven fails to correctly handle dependencies. If dependency configuration looks fine, but Maven still complains about 
+missing dependencies try to delete local Maven repository by hand: e.g., on MS Windows delete contents of `c:\Users\[username]\.m2\repository` 
 directory.
 
 So resuming build process quick "how to build" steps would be like this:
@@ -143,7 +143,7 @@ Testing of TNT4J-Streams-IBM-B2Bi
 * [Mockito](http://mockito.org/)
 * [PowerMock](http://powermock.github.io/)
 
-## Testing using maven
+## Testing using Maven
 Maven tests run is disabled by default. To enable Maven to run tests set Maven command line argument 
 `-DskipTests=false`.
 
