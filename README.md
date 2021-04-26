@@ -117,7 +117,7 @@ Download the above libraries and place into the `tnt4j-streams-ibm-b2bi/lib` dir
     * containing only binary distribution: run `mvn -P pack-bin`
     * containing binary, source and javadoc distribution: run `mvn -P pack-all`
 
-Release assemblies are built to `../build/tnt4j-streams-ibm-b2bi` directory.
+Release assemblies are built to `build/` directory.
 
 **NOTE:** sometimes maven fails to correctly handle dependencies. If dependency configuration looks fine, but maven still complains about 
 missing dependencies try to delete local maven repository by hand: e.g., on MS Windows delete contents of `c:\Users\[username]\.m2\repository` 
