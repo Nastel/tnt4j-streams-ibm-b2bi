@@ -13,7 +13,7 @@
     <description>Installs TNT4J-Streams-IBM-B2Bi 3rd party dependencies</description>
 
     <build>
-        <defaultGoal>initialize</defaultGoal>
+        <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
