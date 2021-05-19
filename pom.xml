@@ -144,7 +144,7 @@
     <repositories>
         <repository>
             <id>oss.sonatype.org-snapshot</id>
-            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
@@ -326,6 +326,7 @@
                 <configuration>
                     <attach>${build.assemblies.attach}</attach>
                     <finalName>${release.deploy.finalName}</finalName>
+                    <tarLongFileMode>gnu</tarLongFileMode>
                 </configuration>
                 <executions>
                     <execution>
