@@ -1,5 +1,11 @@
 # tnt4j-streams-ibm-b2bi
 
+-----------------------
+**NOTE:** `tnt4j-streams-ibm-b2bi` version `1.0.26` migrated logger to `log4j2`. In case you have changed default `tnt4j-streams-ibm-b2bi`
+logger configuration using previous `tnt4j-streams-ibm-b2bi` versions, please check new logger configuration
+file [log4j2.xml](./config/log4j2.xml).
+-----------------------
+
 TNT4J Streams for IBM Sterling B2B Integrator.
 
 TNT4J-Streams-IBM-B2Bi is extension of TNT4J-Streams to give ability of streaming IBM Sterling B2B Integrator events as activity events to
