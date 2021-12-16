@@ -7,7 +7,7 @@ fi
 
 LIBPATH="$SCRIPTPATH/../tnt4j-streams-ibm-b2bi-1.0.25-runnableTest.jar"
 TNT4JOPTS="-Dtnt4j.config=$SCRIPTPATH/../config/tnt4j.properties"
-LOG4JOPTS="-Dlog4j.configuration=file:/$SCRIPTPATH/../config/log4j.properties"
+LOG4JOPTS="-Dlog4j2.configurationFile=file:/$SCRIPTPATH/../config/log4j2.xml"
 PARSER_CONFIG="-Dtnt4j.streams.config=$SCRIPTPATH/../samples/B2Bi/tnt4j-streams-ibm-b2bi.properties"
 EVENTS_DIR="-Dtnt4j.b2biSampleEvents=$SCRIPTPATH/../samples/B2Bi/Events/*.xml"
 STREAMSOPTS=$STREAMSOPTS $LOG4JOPTS $TNT4JOPTS $EVENTS_DIR $PARSER_CONFIG "-Dtest=true"

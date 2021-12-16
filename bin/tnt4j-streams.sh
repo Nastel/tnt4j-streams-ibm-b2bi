@@ -7,24 +7,31 @@ fi
 
 LIBPATH="$LIBPATH:$SCRIPTPATH/../*:$SCRIPTPATH/../lib/*"
 # tnt4j file override
-if [ -z "$TNT4J_PROPERTIES" ]; then
+if [[ -z "$TNT4J_PROPERTIES" ]]; then
   TNT4J_PROPERTIES="$SCRIPTPATH/../config/tnt4j.properties"
 fi
 TNT4JOPTS="-Dtnt4j.config=$TNT4J_PROPERTIES"
 #TNT4JOPTS=${TNT4JOPTS:-"-Dtnt4j.config=$SCRIPTPATH/../config/tnt4j.properties"}
 
 # log4j file override
-if [ -z "$LOG4J_PROPERTIES" ]; then
-  LOG4J_PROPERTIES="$SCRIPTPATH/../config/log4j.properties"
+if [[ -z "$LOG4J_PROPERTIES" ]]; then
+  LOG4J_PROPERTIES="$SCRIPTPATH/../config/log4j2.xml"
 fi
-LOG4JOPTS="-Dlog4j.configuration=file:$LOG4J_PROPERTIES"
-#LOG4JOPTS=${LOG4JOPTS:-"-Dlog4j.configuration=file:$SCRIPTPATH/../config/log4j.properties"}
+LOG4JOPTS="-Dlog4j2.configurationFile=file:$LOG4J_PROPERTIES"
+#LOG4JOPTS=${LOG4JOPTS:-"-Dlog4j2.configurationFile=file:$SCRIPTPATH/../config/log4j2.xml"}
 
 #LOGBACKOPTS="-Dlogback.configurationFile=file:$SCRIPTPATH/../config/logback.xml"
 STREAMSOPTS="$STREAMSOPTS $LOG4JOPTS $TNT4JOPTS"
 
-if [ "$MAINCLASS" == "" ]; then
+if [[ "$MAINCLASS" == "" ]]; then
 	MAINCLASS="com.jkoolcloud.tnt4j.streams.StreamsAgent"
 fi
+JAVA_EXEC="java"
+if [[ "$JAVA_HOME" == "" ]]; then
+  echo '"JAVA_HOME" env. variable is not defined!..'
+else
+  echo 'Will use java from:' "$JAVA_HOME"
+  JAVA_EXEC="$JAVA_HOME/bin/java"
+fi
 
-"$JAVA_HOME/bin/java" $STREAMSOPTS -classpath "$LIBPATH" $MAINCLASS $*
+$JAVA_EXEC $STREAMSOPTS -classpath "$LIBPATH" $MAINCLASS $*

@@ -7,8 +7,8 @@ rem tnt4j property override
 IF ["%TNT4J_PROPERTIES%"] EQU [""] set TNT4J_PROPERTIES=%RUNDIR%..\config\tnt4j.properties
 set TNT4JOPTS=-Dtnt4j.config="%TNT4J_PROPERTIES%"
 rem log4j property override
-IF ["%LOG4J_PROPERTIES%"] EQU [""] set LOG4J_PROPERTIES=%RUNDIR%..\config\log4j.properties
-set LOG4JOPTS=-Dlog4j.configuration="file:%LOG4J_PROPERTIES%"
+IF ["%LOG4J_PROPERTIES%"] EQU [""] set LOG4J_PROPERTIES=%RUNDIR%..\config\log4j2.xml
+set LOG4JOPTS=-Dlog4j2.configurationFile="file:%LOG4J_PROPERTIES%"
 REM set LOGBACKOPTS=-Dlogback.configurationFile="file:%RUNDIR%..\config\logback.xml"
 set STREAMSOPTS=%STREAMSOPTS% %LOG4JOPTS% %TNT4JOPTS%
 
@@ -16,5 +16,13 @@ IF ["%MAINCLASS%"] EQU [""] (
   set MAINCLASS=com.jkoolcloud.tnt4j.streams.StreamsAgent
 )
 
+set JAVA_EXEC="java"
+IF ["%JAVA_HOME%"] EQU [""] (
+  echo "JAVA_HOME" env. variable is not defined!..
+) else (
+  echo Will use java from: "%JAVA_HOME%"
+  set JAVA_EXEC="%JAVA_HOME%\bin\java"
+)
+
 @echo on
-"%JAVA_HOME%\bin\java" %STREAMSOPTS% -classpath "%LIBPATH%" %MAINCLASS% %*
+%JAVA_EXEC% %STREAMSOPTS% -classpath "%LIBPATH%" %MAINCLASS% %*
