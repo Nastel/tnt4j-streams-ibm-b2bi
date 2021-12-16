@@ -74,12 +74,12 @@ public class B2BiSfgEventListenerTest {
 			System.setProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, streamsConfig.getAbsolutePath());
 		}
 
-		if (Utils.isEmpty(System.getProperty("log4j.configuration"))) {
-			File log4jConfig = new File(B2BiDir + "/config/log4j.properties");
+		if (Utils.isEmpty(System.getProperty("log4j2.configurationFile"))) {
+			File log4jConfig = new File(B2BiDir + "/config/log4j2.xml");
 			if (!log4jConfig.exists()) {
 				throw new RuntimeException();
 			}
-			System.setProperty("log4j.configuration",
+			System.setProperty("log4j2.configurationFile",
 					(SystemUtils.IS_OS_WINDOWS ? "file:///" : "file:/") + log4jConfig.getAbsolutePath());
 		}
 
