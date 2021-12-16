@@ -25,10 +25,10 @@
         <Property name="tnt4j.activities.log.filename">logs/tnt4j-streams-activities.log</Property>
     </Properties>
     <Appenders>
-        <!-- ### direct log messages to file rolling daily ### -->
+        <!-- ### direct log messages to file rolling on startup and size based ### -->
         <RollingFile name="tnt4j_file"
                      fileName="${tnt4j.streams.log.filename}"
-                     filePattern="${tnt4j.streams.log.filename}.%d{yyyy-MM-dd}.%i.gz"
+                     filePattern="${tnt4j.streams.log.filename}.%i.gz"
                      ignoreExceptions="false">
             <Policies>
                 <OnStartupTriggeringPolicy/>
