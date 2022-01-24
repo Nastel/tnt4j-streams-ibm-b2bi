@@ -13,7 +13,7 @@ file [log4j2.xml](./config/log4j2.xml).
 1. `Log4j2` changed configuration file definition System property name from `log4j.configuration` to `log4j2.configurationFile`.
 1. See [Log4j 2.x migration guide](https://logging.apache.org/log4j/2.x/manual/migration.html) and
    [Log4j 2.x configuration reference](https://logging.apache.org/log4j/2.0/manual/configuration.html) for more details
-1. `Log4j2` used asynchronous logging techniques notably increases application performance comparing to `Log4j12`. See
+1. `Log4j2` used asynchronous logging techniques noticeably increases application performance comparing to `Log4j12`. See
    [Log4j 2.x Asynchronous Logging Performance report](https://logging.apache.org/log4j/2.x/manual/async.html#Asynchronous_Logging_Performance)
    as reference.
 -----------------------
