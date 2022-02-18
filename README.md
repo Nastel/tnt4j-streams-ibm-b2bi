@@ -1,6 +1,7 @@
 # tnt4j-streams-ibm-b2bi
 
 -----------------------
+
 **NOTE:** `tnt4j-streams-ibm-b2bi` version `1.0.26` migrated logger to `log4j2`. In case you have changed default `tnt4j-streams-ibm-b2bi`
 logger configuration using previous `tnt4j-streams-ibm-b2bi` versions, please check new logger configuration
 file [log4j2.xml](./config/log4j2.xml).
@@ -16,6 +17,7 @@ file [log4j2.xml](./config/log4j2.xml).
 1. `Log4j2` used asynchronous logging techniques noticeably increases application performance comparing to `Log4j12`. See
    [Log4j 2.x Asynchronous Logging Performance report](https://logging.apache.org/log4j/2.x/manual/async.html#Asynchronous_Logging_Performance)
    as reference.
+
 -----------------------
 
 TNT4J Streams for IBM Sterling B2B Integrator.
@@ -33,9 +35,9 @@ Why TNT4J-Streams-IBM-B2Bi
 
 * Plugs into IBM Sterling B2B Integrator as `com.sterlingcommerce.woodstock.event.EventListener`.
 
-Many components in the B2Bi/SFG system generate events during the course of normal processing. In the case of SFG, all of the visibility
-data shown in the SFG tracking UI is raised as event data and sent to jKoolCloud via an event listener. Each event is sent through an
-in-memory concurrent queue data structure.
+Many components in the B2Bi/SFG system generate events during the course of normal processing. In the case of SFG, all the visibility data
+shown in the SFG tracking UI is raised as event data and sent to jKoolCloud via an event listener. Each event is sent through an in-memory
+concurrent queue data structure.
 
 Protocol adapters also generate events during connect, disconnect and file transfer.
 
@@ -66,9 +68,9 @@ chapter ['Running TNT4J-Streams'](https://github.com/Nastel/tnt4j-streams/blob/m
       installing, vendor is `JKool` and version is `1.0`.
     * Once an event listener is created and made available on the classpath, a simple property change is needed to enable the event
       listener. Update IBM Sterling B2B Integrator configuration customer_overrides.properties to enable TNT4J-Streams-IBM-B2Bi listener:
-        ```properties
-          Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener
-        ```
+      ```properties
+      Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener
+      ```
 
       **Note:** you can comment out this entry to disable the listener.
     * Write stream parsers configuration file.
@@ -87,13 +89,12 @@ chapter ['Running TNT4J-Streams'](https://github.com/Nastel/tnt4j-streams/blob/m
 Setting up Sterling logger to use
 ======================================
 
-You need to setup Sterling logger, failed to do so all log messages are forwarded to system.log.
+You need to set up Sterling logger, failed to do so all log messages are forwarded to system.log.
 
 You can configure logger in your customer_overrides.properties:
-
 ```properties
-    logService.jkool.logfilename=C:/IBM/SI/install/logs/jkool.log
-    logService.jkool.loglevel=ALL
+logService.jkool.logfilename=C:/IBM/SI/install/logs/jkool.log
+logService.jkool.loglevel=ALL
 ```
 
 How to Build TNT4J-Streams-IBM-B2Bi
@@ -113,7 +114,7 @@ defined dependencies automatically.
 **NOTE:** If you have build and installed TNT4J-Streams into your local Maven repository, you don't need to install it manually.
 
 Some of required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this
-case we would recommend to download those dependencies manually into [`lib`](./lib/) directory and install into local Maven repository by
+case we would recommend downloading those dependencies manually into [`lib`](./lib) directory and install into local Maven repository by
 running Maven script [`lib/pom.xml`](./lib/pom.xml) using `initialize` goal.
 
 **NOTE:** `TNT4J-Streams-IBM-B2Bi` project will be ready to build only when manually downloaded libraries will be installed to local Maven
@@ -158,7 +159,7 @@ So resuming build process quick "how to build" steps would be like this:
 
 ## Running samples
 
-See 'Running TNT4J-Streams-IBM-B2Bi' chapter section ['Samples'](#samples).
+See 'Running TNT4J-Streams-IBM-B2Bi' chapter section ['TNT4J-Streams-IBM-B2Bi can be run'](#tnt4j-streams-ibm-b2bi-can-be-run).
 
 Testing of TNT4J-Streams-IBM-B2Bi
 =========================================
@@ -180,7 +181,7 @@ Maven tests run is disabled by default. To enable Maven to run tests set Maven c
 
 ## Running the test in local environment
 
-Its handy to check parser configuration before deploying it to Sterling machine. To do so run `runTest.bat/runTest.sh` and check the logs
+It's handy to check parser configuration before deploying it to Sterling machine. To do so run `runTest.bat/runTest.sh` and check the logs
 generated either jKoolCloud to see that listener behaves like expected. Ensure that you've changed TOKEN in `tnt4j.properties`. Test events
 situated in `samples/B2Bi/events` directory. You could add or change these as you like. Edit `bat/sh` script if your environment
 configuration properties values are different.
