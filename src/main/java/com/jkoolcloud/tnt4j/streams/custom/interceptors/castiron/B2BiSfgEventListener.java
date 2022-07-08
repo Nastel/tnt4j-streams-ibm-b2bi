@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 JKOOL, LLC.
+ * Copyright 2014-2022 JKOOL, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jkoolcloud.tnt4j.streams.custom.inputs;
+package com.jkoolcloud.tnt4j.streams.custom.interceptors.castiron;
 
 import static com.jkoolcloud.tnt4j.streams.utils.B2BiConstants.B2BI_TEST_ENV;
 

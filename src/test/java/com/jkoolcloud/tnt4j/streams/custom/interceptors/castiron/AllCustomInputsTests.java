@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 JKOOL, LLC.
+ * Copyright 2014-2022 JKOOL, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.jkoolcloud.tnt4j.streams;
+package com.jkoolcloud.tnt4j.streams.custom.interceptors.castiron;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-
-import com.jkoolcloud.tnt4j.streams.custom.interceptors.castiron.AllCustomInputsTests;
 
 /**
  * @author akausinis
  * @version 1.0
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ AllCustomInputsTests.class })
-public class AllB2BiStreamTests {
+@Suite.SuiteClasses({ B2BiSfgEventListenerTest.class })
+public class AllCustomInputsTests {
 }

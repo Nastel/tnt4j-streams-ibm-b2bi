@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 JKOOL, LLC.
+ * Copyright 2014-2022 JKOOL, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package com.jkoolcloud.tnt4j.streams.custom.inputs;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-
 /**
+ * Custom TNT4J-Streams input to intercept IBM Cast Iron events data.
+ *
  * @author akausinis
  * @version 1.0
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ B2BiSfgEventListenerTest.class })
-public class AllCustomInputsTests {
-}
+
+package com.jkoolcloud.tnt4j.streams.custom.interceptors.castiron;

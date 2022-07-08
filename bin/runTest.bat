@@ -10,5 +10,5 @@ set EVENTS_DIR=-Dtnt4j.b2biSampleEvents="%RUNDIR%..\samples\B2Bi\Events\*.xml"
 set STREAMSOPTS=%STREAMSOPTS% %LOG4JOPTS% %TNT4JOPTS% %EVENTS_DIR% %PARSER_CONFIG%
 
 @echo on
-java -cp "%LIBPATH%" %STREAMSOPTS% org.junit.runner.JUnitCore com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListenerTest
+java -cp "%LIBPATH%" %STREAMSOPTS% org.junit.runner.JUnitCore com.jkoolcloud.tnt4j.streams.custom.interceptors.castiron.B2BiSfgEventListenerTest
 pause

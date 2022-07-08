@@ -69,7 +69,7 @@ chapter ['Running TNT4J-Streams'](https://github.com/Nastel/tnt4j-streams/blob/m
     * Once an event listener is created and made available on the classpath, a simple property change is needed to enable the event
       listener. Update IBM Sterling B2B Integrator configuration customer_overrides.properties to enable TNT4J-Streams-IBM-B2Bi listener:
       ```properties
-      Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.inputs.B2BiSfgEventListener
+      Listener.Class.jkoolcloud=com.jkoolcloud.tnt4j.streams.custom.interceptors.castiron.B2BiSfgEventListener
       ```
 
       **Note:** you can comment out this entry to disable the listener.
