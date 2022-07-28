@@ -25,6 +25,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -68,13 +69,13 @@ public class B2BiSfgEventListenerTest {
 	public void testStartStreams() throws Exception {
 		System.setProperty(B2BI_TEST_ENV, "true");
 
-		if (Utils.isEmpty(System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY))) {
+		if (StringUtils.isEmpty(System.getProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY))) {
 			File streamsConfig = new File(B2BiDir + "../samples/B2Bi/tnt4j-streams-ibm-b2bi.properties");
 
 			System.setProperty(StreamsConfigLoader.STREAMS_CONFIG_KEY, streamsConfig.getAbsolutePath());
 		}
 
-		if (Utils.isEmpty(System.getProperty("log4j2.configurationFile"))) {
+		if (StringUtils.isEmpty(System.getProperty("log4j2.configurationFile"))) {
 			File log4jConfig = new File(B2BiDir + "/config/log4j2.xml");
 			if (!log4jConfig.exists()) {
 				throw new RuntimeException();
@@ -83,7 +84,7 @@ public class B2BiSfgEventListenerTest {
 					(SystemUtils.IS_OS_WINDOWS ? "file:///" : "file:/") + log4jConfig.getAbsolutePath());
 		}
 
-		if (Utils.isEmpty(System.getProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY))) {
+		if (StringUtils.isEmpty(System.getProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY))) {
 			File tnt4jConfig = new File(B2BiDir + "/config/tnt4j.properties");
 
 			System.setProperty(TrackerConfigStore.TNT4J_PROPERTIES_KEY, tnt4jConfig.getAbsolutePath());
