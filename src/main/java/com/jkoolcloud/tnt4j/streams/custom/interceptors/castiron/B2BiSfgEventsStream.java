@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.xml.sax.SAXException;
 
@@ -246,29 +247,29 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 		String envPropDirPath = searchForPropsRoot(getSysProperty("PROP_DIR")); // NON-NLS
 
-		if (Utils.isEmpty(envPropDirPath)) {
+		if (StringUtils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot("."); // NON-NLS
 		}
-		if (Utils.isEmpty(envPropDirPath)) {
+		if (StringUtils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot("../.."); // NON-NLS
 		}
-		if (Utils.isEmpty(envPropDirPath)) {
+		if (StringUtils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("INSTALL_DIR"));// NON-NLS
 		}
-		if (Utils.isEmpty(envPropDirPath)) {
+		if (StringUtils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("APP_DIR")); // NON-NLS
 		}
-		if (Utils.isEmpty(envPropDirPath)) {
+		if (StringUtils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("HOME_DIR")); // NON-NLS
 		}
-		if (Utils.isEmpty(envPropDirPath)) {
+		if (StringUtils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("NOAPP_HOME")); // NON-NLS
 		}
-		if (Utils.isEmpty(envPropDirPath)) {
+		if (StringUtils.isEmpty(envPropDirPath)) {
 			envPropDirPath = searchForPropsRoot(getSysProperty("user.dir")); // NON-NLS
 		}
 
-		if (Utils.isEmpty(envPropDirPath)) {
+		if (StringUtils.isEmpty(envPropDirPath)) {
 			LOGGER.log(OpLevel.CRITICAL,
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME, "B2BiSfgEventsStream.init.failure"),
 					StreamsResources.getString(B2BiConstants.RESOURCE_BUNDLE_NAME,
@@ -295,7 +296,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 	}
 
 	private static String searchForPropsRoot(String path, String pathExt, ExtensionFilter filter) {
-		if (Utils.isEmpty(path)) {
+		if (StringUtils.isEmpty(path)) {
 			return null;
 		}
 		File file = new File(path + pathExt);
@@ -314,7 +315,7 @@ public class B2BiSfgEventsStream extends AbstractBufferedStream<String> {
 
 	private static String version() {
 		String version = versionFull();
-		if (Utils.isEmpty(version)) {
+		if (StringUtils.isEmpty(version)) {
 			version = "1.0"; // NON-NLS
 			LOGGER.log(OpLevel.DEBUG, "--- Could not resolve package version, defaults to {0}", version); // NON-NLS
 		} else {
