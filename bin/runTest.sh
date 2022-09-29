@@ -5,7 +5,7 @@ else
     SCRIPTPATH=$(cd "$(dirname "$BASH_SOURCE")" ; pwd -P)
 fi
 
-LIBPATH="$SCRIPTPATH/../tnt4j-streams-ibm-b2bi-1.0.28-runnableTest.jar"
+LIBPATH="$SCRIPTPATH/../tnt4j-streams-ibm-b2bi-1.0.29-runnableTest.jar"
 TNT4JOPTS="-Dtnt4j.config=$SCRIPTPATH/../config/tnt4j.properties"
 LOG4JOPTS="-Dlog4j2.configurationFile=file:/$SCRIPTPATH/../config/log4j2.xml"
 PARSER_CONFIG="-Dtnt4j.streams.config=$SCRIPTPATH/../samples/B2Bi/tnt4j-streams-ibm-b2bi.properties"
