@@ -21,7 +21,7 @@
 
     <groupId>com.jkoolcloud.tnt4j.streams</groupId>
     <artifactId>tnt4j-streams-ibm-b2bi</artifactId>
-    <version>1.0.30-SNAPSHOT</version>
+    <version>1.0.31-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>tnt4j-streams-ibm-b2bi</name>
