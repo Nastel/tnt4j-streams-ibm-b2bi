@@ -2,7 +2,7 @@
 setlocal
 
 set RUNDIR=%~dp0
-set LIBPATH=%RUNDIR%..\tnt4j-streams-ibm-b2bi-1.0.29-runnableTest.jar
+set LIBPATH=%RUNDIR%..\tnt4j-streams-ibm-b2bi-1.0.30-runnableTest.jar
 set TNT4JOPTS=-Dtnt4j.config="%RUNDIR%..\config\tnt4j.properties"
 set LOG4JOPTS=-Dlog4j2.configurationFile="file:///%RUNDIR%..\config\log4j2.xml"
 set PARSER_CONFIG=-Dtnt4j.streams.config="%RUNDIR%..\samples\B2Bi\tnt4j-streams-ibm-b2bi.properties"
