@@ -68,7 +68,7 @@
     </Appenders>
     <Loggers>
         <!-- ### jKool LLC TNT4J Streams log level and appenders used -->
-        <AsyncLogger name="com.jkoolcloud.tnt4j.streams" level="DEBUG">
+        <AsyncLogger name="com.jkoolcloud.tnt4j.streams" level="INFO">
             <AppenderRef ref="tnt4j_file"/>
         </AsyncLogger>
         <!-- ### tnt4j API logger -->
@@ -76,9 +76,9 @@
             <AppenderRef ref="tnt4j_file"/>
         </AsyncLogger-->
         <!-- ### jesl API logger -->
-        <AsyncLogger name="com.jkoolcloud.jesl" level="DEBUG">
+        <!--AsyncLogger name="com.jkoolcloud.jesl" level="DEBUG">
             <AppenderRef ref="tnt4j_file"/>
-        </AsyncLogger>
+        </AsyncLogger-->
         <!-- #### streamed activity entities logger #### -->
         <AsyncLogger name="com.jkoolcloud.tnt4j.streams.activities_log" level="INFO" additivity="false">
             <AppenderRef ref="activities_log"/>
