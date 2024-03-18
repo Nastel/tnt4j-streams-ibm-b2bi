@@ -2,6 +2,12 @@
 
 -----------------------
 
+**NOTE:** `tnt4j-streams-ibm-b2bi` version `2.x` migrated to Java 11.
+
+Latest Java 8 compliant `tnt4j-streams-ibm-b2bi` version is `1.0.x`.
+
+-----------------------
+
 **NOTE:** `tnt4j-streams-ibm-b2bi` version `1.0.26` migrated logger to `log4j2`. In case you have changed default `tnt4j-streams-ibm-b2bi`
 logger configuration using previous `tnt4j-streams-ibm-b2bi` versions, please check new logger configuration
 file [log4j2.xml](./config/log4j2.xml).
